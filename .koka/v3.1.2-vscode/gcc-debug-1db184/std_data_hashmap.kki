@@ -1,0 +1,778 @@
+// This module provides a bucket hashmap 
+module interface std/data/hashmap
+ 
+//------------------------------
+//#kki: import declarations
+ 
+import std/core/types = std/core/types pub = "";
+import std/core/hnd = std/core/hnd pub = "";
+import std/core/exn = std/core/exn pub = "";
+import std/core/bool = std/core/bool pub = "";
+import std/core/order = std/core/order pub = "";
+import std/core/char = std/core/char pub = "";
+import std/core/int = std/core/int pub = "";
+import std/core/vector = std/core/vector pub = "";
+import std/core/string = std/core/string pub = "";
+import std/core/sslice = std/core/sslice pub = "";
+import std/core/list = std/core/list pub = "";
+import std/core/maybe = std/core/maybe pub = "";
+import std/core/either = std/core/either pub = "";
+import std/core/tuple = std/core/tuple pub = "";
+import std/core/show = std/core/show pub = "";
+import std/core/debug = std/core/debug pub = "";
+import std/core/delayed = std/core/delayed pub = "";
+import std/core/console = std/core/console pub = "";
+import std/test/test = std/test/test pub = "";
+import std/test/bench = std/test/bench pub = "";
+import std/core = std/core = "";
+import std/core-extras = std/core-extras = "";
+import std/test = std/test = "";
+import std/num/int64 = std/num/int64 = "";
+import std/num/random = std/num/random = "";
+import std/data/hash = std/data/hash = "";
+ 
+//------------------------------
+//#kki: external imports
+ 
+ 
+//------------------------------
+//#kki: fixity declarations
+ 
+ 
+//------------------------------
+//#kki: local imported aliases
+ 
+// An alias for pure effects: a pure function always returns the same result
+// when called with the same arguments but may not terminate or raise an exception.
+local alias std/core/pure[52,1,52,26] :: E = <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> = 1;
+ 
+//------------------------------
+//#kki: type declarations
+ 
+pub type hash-map[17,1,20,14] <a,b> :: (V, V) -> V {
+  pub con Hash-map[17,12,17,19](data: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, amount: std/core/types/int, seed: std/core/types/int64){8,2,8} : forall<a,b> (data : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, amount : std/core/types/int, seed : std/core/types/int64) -> (hash-map :: (V, V) -> V)<a,b>;
+};
+ 
+//------------------------------
+//#kki: declarations
+ 
+// Automatically generated. Retrieves the `data` constructor field of the `:hash-map` type.
+pub  fun hash-map/data[18,3,18,6] : forall<a,b> (^ @this : (hash-map :: (V, V) -> V)<a,b>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>;
+// Automatically generated. Retrieves the `amount` constructor field of the `:hash-map` type.
+pub  fun hash-map/amount[19,3,19,8] : forall<a,b> (^ @this : (hash-map :: (V, V) -> V)<a,b>) -> std/core/types/int;
+// Automatically generated. Retrieves the `seed` constructor field of the `:hash-map` type.
+pub  fun hash-map/seed[20,3,20,6] : forall<a,b> (^ @this : (hash-map :: (V, V) -> V)<a,b>) -> std/core/types/int64;
+pub  fun hash-map/@copy[17,12,17,19] : forall<a,b> (@this : (hash-map :: (V, V) -> V)<a,b>, data : (std/core/types/@optional :: V -> V)<(std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>, amount : (std/core/types/@optional :: V -> V)<std/core/types/int>, seed : (std/core/types/@optional :: V -> V)<std/core/types/int64>) -> (hash-map :: (V, V) -> V)<a,b>;
+// monadic lift
+ fun random/@mlift-hash-map@10297[1,0,1,0] : forall<a,b> (capacity : (std/core/types/@optional :: V -> V)<std/core/types/int>, @y-x10095 : std/core/types/int64) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> (hash-map :: (V, V) -> V)<a,b>;
+// Creates a hash-map with a specified inital `capacity`.
+// If zero then the hash-map will set capacity to 1.
+// Random effect is needed to initalize the seed.
+pub  fun random/hash-map[25,9,25,23] : forall<a,b> (capacity : (std/core/types/@optional :: V -> V)<std/core/types/int>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> (hash-map :: (V, V) -> V)<a,b>;
+// Creates a hash-map with a specified inital `capacity`.
+// If zero then the hash-map will set capacity to 1.
+// The seed is initalized using the thread's id.
+pub  fun thread/hash-map[31,9,31,23] : forall<a,b> (capacity : (std/core/types/@optional :: V -> V)<std/core/types/int>) -> (hash-map :: (V, V) -> V)<a,b>;
+// Creates a hash-map with a specified inital `capacity` and a user defined `seed`.
+// If zero then the hash-map will set capacity to 1.
+pub  fun random/hash-map-seeded[36,9,36,30] : forall<a,b> (seed : std/core/types/int64, capacity : (std/core/types/@optional :: V -> V)<std/core/types/int>) -> (hash-map :: (V, V) -> V)<a,b>;
+// Fetches the amount of items in the hash-map
+pub  fun length[166,9,166,14] : forall<a,b> (hm : (hash-map :: (V, V) -> V)<a,b>) -> std/core/types/int;
+// This helper function either clears out a vector if it is unique or creates a new vector if it isn't unique.
+ fun helper/resize[80,5,80,17] : forall<a,b> (v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>;
+// Removes all buckets from the hash-map, effectively clearing the hash-map.
+pub  fun clear[170,9,170,13] : forall<a,b> (hm : (hash-map :: (V, V) -> V)<a,b>) -> (hash-map :: (V, V) -> V)<a,b>;
+// Invoke a function `f` for each key-value of the hash-map.
+pub  fun foreach[232,9,232,15] : forall<(e :: E),a,b> (hm : (hash-map :: (V, V) -> V)<a,b>, f : (a, b) -> (e :: E) ()) -> (e :: E) ();
+// This helper will use `buckets` to allow for a `div`-less use of `unsafe-set` to set values in vector `v`.
+ fun helper/rehash[109,5,109,17] : forall<a,b> (v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, buckets : (std/core/types/list :: V -> V)<(a, b)>, seed : std/core/types/int64, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>;
+// Rehash will overwrite vector `v` with values from `buckets` if it is unique, otherwise it will use `unsafe-set`
+pub  fun rehash[92,9,92,14] : forall<a,b> (v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, buckets : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, seed : std/core/types/int64, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>;
+// Resizes a hash-map with `new-capacity` being the new capacity of the hashmap. 
+// If `new-capacity` is smaller than the capacity of the hash-map then there will be more hash collisions.
+pub  fun resize[62,9,62,14] : forall<a,b> (hm : (hash-map :: (V, V) -> V)<a,b>, new-capacity : std/core/types/int, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (hash-map :: (V, V) -> V)<a,b>;
+// Internal function that dictates when to resize the hash-map. This can be overridden with implicits.
+pub  fun when-resize[119,9,119,19] : (table-size : std/core/types/int, item-count : std/core/types/int) -> std/core/types/bool;
+// Internal function that determines the new size of a hash-map when inserting. This can be overridden with implicits.
+pub  fun resizer[126,9,126,15] : (table-size : std/core/types/int, item-count : std/core/types/int) -> std/core/types/int;
+// Invoke a function `f` for each key of the hash-map.
+pub  fun foreach-key[239,9,239,19] : forall<(e :: E),a,b> (hm : (hash-map :: (V, V) -> V)<a,b>, f : (a) -> (e :: E) ()) -> (e :: E) ();
+// Invoke a function `f` for each value of the hash-map.
+pub  fun foreach-value[246,9,246,21] : forall<(e :: E),a,b> (hm : (hash-map :: (V, V) -> V)<a,b>, f : (b) -> (e :: E) ()) -> (e :: E) ();
+ fun mb/(==)[253,5,253,11] : (a : (std/core/types/maybe :: V -> V)<std/core/types/int>, b : (std/core/types/maybe :: V -> V)<std/core/types/int>) -> std/core/types/bool;
+// Inserts a `value` into the hash-map with a given `key`.
+pub  fun insert[130,9,130,14] : forall<a,b> (hm : (hash-map :: (V, V) -> V)<a,b>, key : a, value : b, ?hash : (a, std/core/types/int64) -> std/core/types/int, ?(==) : (a, a) -> std/core/types/bool, ?when-resize : (std/core/types/int, std/core/types/int) -> std/core/types/bool, ?resizer : (std/core/types/int, std/core/types/int) -> std/core/types/int) -> (hash-map :: (V, V) -> V)<a,b>;
+ fun from-list-helper[53,5,53,20] : forall<a,b> (hm : (hash-map :: (V, V) -> V)<a,b>, l : (std/core/types/list :: V -> V)<(a, b)>, ?hash : (a, std/core/types/int64) -> std/core/types/int, ?(==) : (a, a) -> std/core/types/bool) -> (hash-map :: (V, V) -> V)<a,b>;
+// monadic lift
+ fun random/list/@mlift-hash-map@10298[1,0,1,0] : forall<a,b> (xs : (std/core/types/list :: V -> V)<(a, b)>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int, @y-x10106 : (hash-map :: (V, V) -> V)<a,b>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> (hash-map :: (V, V) -> V)<a,b>;
+// Creates a hash-map from a list `xs`. This hash-map has the same capacity as the length of the list `xs`.
+// Random effect is needed to initalize the seed.
+pub  fun random/list/hash-map[41,9,41,28] : forall<a,b> (xs : (std/core/types/list :: V -> V)<(a, b)>, ?hash : (a, std/core/types/int64) -> std/core/types/int, ?(==) : (a, a) -> std/core/types/bool) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> (hash-map :: (V, V) -> V)<a,b>;
+// Creates a hash-map from a list `xs`. This hash-map has the same capacity as the length of the list `xs`.
+// Random effect is needed to initalize the seed.
+pub  fun thread/list/hash-map[46,9,46,28] : forall<a,b> (xs : (std/core/types/list :: V -> V)<(a, b)>, ?hash : (a, std/core/types/int64) -> std/core/types/int, ?(==) : (a, a) -> std/core/types/bool) -> (hash-map :: (V, V) -> V)<a,b>;
+// Creates a hash-map from a list `xs` and with a `seed`. This hash-map has the same capacity as the length of the list `xs`.
+pub  fun list/hash-map-seeded[50,9,50,28] : forall<a,b> (xs : (std/core/types/list :: V -> V)<(a, b)>, seed : std/core/types/int64, ?hash : (a, std/core/types/int64) -> std/core/types/int, ?(==) : (a, a) -> std/core/types/bool) -> (hash-map :: (V, V) -> V)<a,b>;
+// Removes a value from the hash-map with a given `key`.
+pub  fun remove[146,9,146,14] : forall<a,b> (hm : (hash-map :: (V, V) -> V)<a,b>, key : a, ?hash : (a, std/core/types/int64) -> std/core/types/int, ?(==) : (a, a) -> std/core/types/bool) -> (hash-map :: (V, V) -> V)<a,b>;
+// Attempts to retreve a value from the hash-map with a given `key`. Returns `Nothing` if the key is invalid.
+pub  fun get[158,9,158,11] : forall<a,b> (hm : (hash-map :: (V, V) -> V)<a,b>, key : a, ?hash : (a, std/core/types/int64) -> std/core/types/int, ?(==) : (a, a) -> std/core/types/bool) -> (std/core/types/maybe :: V -> V)<b>;
+// monadic lift
+ fun effect/@mlift-map@10299[1,0,1,0] : forall<a,b,c,d,(e :: E)> (hm : (hash-map :: (V, V) -> V)<a,b>, new-data : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, d)>>) -> (e :: E) (hash-map :: (V, V) -> V)<c,d>;
+// Applies a function `f` to each key-value of the hash-map via a tuple.
+pub  fun effect/map[218,9,218,18] : forall<a,b,c,d,(e :: E)> (hm : (hash-map :: (V, V) -> V)<a,b>, f : ((a, b)) -> (e :: E) (c, d)) -> (e :: E) (hash-map :: (V, V) -> V)<c,d>;
+// Applies a function `f` to each key-value of the hash-map via a tuple.
+pub  fun unique/map[224,9,224,18] : forall<a,b,c,d> (hm : (hash-map :: (V, V) -> V)<a,b>, f : ((a, b)) -> (c, d)) -> (hash-map :: (V, V) -> V)<c,d>;
+// monadic lift
+ fun effect/@mlift-map-values@10300[1,0,1,0] : forall<a,(e :: E),b> (key : b, @y-x10109 : a) -> (e :: E) (b, a);
+// monadic lift
+ fun effect/@mlift-map-values@10301[1,0,1,0] : forall<a,b,(e :: E),c> (hm : (hash-map :: (V, V) -> V)<c,a>, new-data : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, b)>>) -> (e :: E) (hash-map :: (V, V) -> V)<c,b>;
+// Applies a function `f` to each value of the hash-map.
+pub  fun effect/map-values[182,9,182,25] : forall<a,b,(e :: E),c> (hm : (hash-map :: (V, V) -> V)<c,a>, f : (a) -> (e :: E) b) -> (e :: E) (hash-map :: (V, V) -> V)<c,b>;
+// Applies a function `f` to each value of the hash-map.
+pub  fun unique/map-values[190,9,190,25] : forall<a,b,c> (hm : (hash-map :: (V, V) -> V)<c,a>, f : (a) -> b) -> (hash-map :: (V, V) -> V)<c,b>;
+// monadic lift
+ fun effect/@mlift-map-keys@10302[1,0,1,0] : forall<a,(e :: E),b> (value : b, @y-x10113 : a) -> (e :: E) (a, b);
+// monadic lift
+ fun effect/@mlift-map-keys@10303[1,0,1,0] : forall<a,b,(e :: E),c> (hm : (hash-map :: (V, V) -> V)<a,c>, new-data : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(b, c)>>) -> (e :: E) (hash-map :: (V, V) -> V)<b,c>;
+// Applies a function `f` to each key of the hash-map.
+pub  fun effect/map-keys[200,9,200,23] : forall<a,b,(e :: E),c> (hm : (hash-map :: (V, V) -> V)<a,c>, f : (a) -> (e :: E) b) -> (e :: E) (hash-map :: (V, V) -> V)<b,c>;
+// Applies a function `f` to each key of the hash-map.
+pub  fun unique/map-keys[208,9,208,23] : forall<a,b,c> (hm : (hash-map :: (V, V) -> V)<a,c>, f : (a) -> b) -> (hash-map :: (V, V) -> V)<b,c>;
+// monadic lift
+ fun @mlift-test-hash-map@10304[1,0,1,0] : forall<(h :: H)> (@y-x10161 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> std/core/types/int;
+// monadic lift
+ fun @mlift-test-hash-map@10305[1,0,1,0] : forall<(h :: H)> (hm@4@0 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, i@2 : std/core/types/int, @y-x10158 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10306[1,0,1,0] : forall<(h :: H)> (hm@4@0 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, wild_@9 : ()) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> std/core/types/int;
+// monadic lift
+ fun @mlift-test-hash-map@10307[1,0,1,0] : forall<(h :: H)> (hm@4@0 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, wild_@8 : ()) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> std/core/types/int;
+// monadic lift
+ fun @mlift-test-hash-map@10308[1,0,1,0] : forall<(h :: H)> (hm@4@0 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, @y-x10156 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> std/core/types/int;
+// monadic lift
+ fun @mlift-test-hash-map@10309[1,0,1,0] : forall<(h :: H)> (hm@4@0 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, i@1 : std/core/types/int, @y-x10153 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10310[1,0,1,0] : forall<(h :: H)> (hm@4@0 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, wild_@7 : ()) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10311[1,0,1,0] : forall<(h :: H)> (@y-x10152 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10312[1,0,1,0] : forall<(h :: H)> (@y-x10146 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> std/core/types/int;
+// monadic lift
+ fun @mlift-test-hash-map@10313[1,0,1,0] : forall<(h :: H)> (hm@3 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, wild_@5 : ()) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> std/core/types/int;
+// monadic lift
+ fun @mlift-test-hash-map@10314[1,0,1,0] : forall<(h :: H)> (hm@3 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, @y-x10144 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> std/core/types/int;
+// monadic lift
+ fun @mlift-test-hash-map@10315[1,0,1,0] : forall<(h :: H)> (hm@3 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, i@0 : std/core/types/int, @y-x10141 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10316[1,0,1,0] : forall<(h :: H)> (hm@3 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, wild_@4 : ()) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10317[1,0,1,0] : forall<(h :: H)> (@y-x10140 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10318[1,0,1,0] : (wild_@6 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10319[1,0,1,0] : forall<(h :: H)> (hm@2 : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>>, i : std/core/types/int, @y-x10132 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10320[1,0,1,0] : forall<(h :: H)> (wild_@2 : ()) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> std/core/types/bool;
+// monadic lift
+ fun @mlift-test-hash-map@10321[1,0,1,0] : forall<(h :: H)> (@y-x10131 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10322[1,0,1,0] : (wild_@3 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10323[1,0,1,0] : (hm@1@0 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10324[1,0,1,0] : (wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10325[1,0,1,0] : (hm@0 : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10326[1,0,1,0] : (wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10327[1,0,1,0] : (hm : (hash-map :: (V, V) -> V)<std/core/types/int,std/core/types/int>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-test-hash-map@10328[1,0,1,0] : (wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/test/test/test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> ();
+ fun test-hash-map[259,5,259,17] : () -> <(std/core/pure :: E),(std/core/console/console :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/num/random/random :: (E, V) -> V)>> ();
+ 
+//------------------------------
+//#kki: external declarations
+ 
+ 
+//------------------------------
+//#kki: inline definitions
+ 
+//.inline-section
+specialize "**"  fun foreach // inline size: 1
+  = forall<(e :: E),a,b> fn<(e :: E)>(hm: (hash-map :: (V, V) -> V)<a,b>, f: (a, b) -> (e :: E) ()){
+    std/core/for<(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) -> std/core/types/int,(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) -> (e :: E) std/core/types/int>((fn(v: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>){
+        (std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>(v))));
+      }))((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>((fn(@this: (hash-map :: (V, V) -> V)<a,b>){
+        (match (@this) {
+          ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x;
+        });
+      }))(hm)))), (fn<(e :: E)>(i: std/core/types/int){
+        (std/core/list/foreach<(a, b),(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, index : std/core/types/ssize_t) -> (std/core/types/list :: V -> V)<(a, b)>,(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, index : std/core/types/ssize_t) -> (e :: E) (std/core/types/list :: V -> V)<(a, b)>>((std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>))((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>((fn(@this@0: (hash-map :: (V, V) -> V)<a,b>){
+              (match (@this@0) {
+                ((@skip std/data/hashmap/Hash-map((@x@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,b>))
+                   -> @x@0;
+              });
+            }))(hm)), (std/core/types/@open<(std/core/types/total :: E),(e :: E),(i : std/core/types/int) -> std/core/types/ssize_t,(i : std/core/types/int) -> (e :: E) std/core/types/ssize_t>(std/core/int/ssize_t)(i)))), (fn<(e :: E)>(entry: (a, b)){
+            (match (entry) {
+              ((@skip std/core/types/Tuple2((key: a) : a, (value: b) : b) : (a, b) ) as @pat@3: (a, b))
+                 -> f(key, value);
+            });
+          })));
+      }));
+  };
+specialize "**"  fun foreach-key // inline size: 1
+  = forall<(e :: E),a,b> fn<(e :: E)>(hm: (hash-map :: (V, V) -> V)<a,b>, f: (a) -> (e :: E) ()){
+    std/core/for<(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) -> std/core/types/int,(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) -> (e :: E) std/core/types/int>((fn(v: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>){
+        (std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>(v))));
+      }))((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>((fn(@this: (hash-map :: (V, V) -> V)<a,b>){
+        (match (@this) {
+          ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x;
+        });
+      }))(hm)))), (fn<(e :: E)>(i: std/core/types/int){
+        (std/core/list/foreach<(a, b),(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, index : std/core/types/ssize_t) -> (std/core/types/list :: V -> V)<(a, b)>,(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, index : std/core/types/ssize_t) -> (e :: E) (std/core/types/list :: V -> V)<(a, b)>>((std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>))((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>((fn(@this@0: (hash-map :: (V, V) -> V)<a,b>){
+              (match (@this@0) {
+                ((@skip std/data/hashmap/Hash-map((@x@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,b>))
+                   -> @x@0;
+              });
+            }))(hm)), (std/core/types/@open<(std/core/types/total :: E),(e :: E),(i : std/core/types/int) -> std/core/types/ssize_t,(i : std/core/types/int) -> (e :: E) std/core/types/ssize_t>(std/core/int/ssize_t)(i)))), (fn<(e :: E)>(entry: (a, b)){
+            (f((match (entry) {
+              ((@skip std/core/types/Tuple2((key: a) : a, (@pat@0@1: b) : b) : (a, b) ) as @pat@3: (a, b))
+                 -> key;
+            })));
+          })));
+      }));
+  };
+specialize "**"  fun foreach-value // inline size: 1
+  = forall<(e :: E),a,b> fn<(e :: E)>(hm: (hash-map :: (V, V) -> V)<a,b>, f: (b) -> (e :: E) ()){
+    std/core/for<(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) -> std/core/types/int,(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) -> (e :: E) std/core/types/int>((fn(v: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>){
+        (std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>(v))));
+      }))((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>((fn(@this: (hash-map :: (V, V) -> V)<a,b>){
+        (match (@this) {
+          ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x;
+        });
+      }))(hm)))), (fn<(e :: E)>(i: std/core/types/int){
+        (std/core/list/foreach<(a, b),(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, index : std/core/types/ssize_t) -> (std/core/types/list :: V -> V)<(a, b)>,(v : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, index : std/core/types/ssize_t) -> (e :: E) (std/core/types/list :: V -> V)<(a, b)>>((std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>))((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>((fn(@this@0: (hash-map :: (V, V) -> V)<a,b>){
+              (match (@this@0) {
+                ((@skip std/data/hashmap/Hash-map((@x@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,b>))
+                   -> @x@0;
+              });
+            }))(hm)), (std/core/types/@open<(std/core/types/total :: E),(e :: E),(i : std/core/types/int) -> std/core/types/ssize_t,(i : std/core/types/int) -> (e :: E) std/core/types/ssize_t>(std/core/int/ssize_t)(i)))), (fn<(e :: E)>(entry: (a, b)){
+            (f((match (entry) {
+              ((@skip std/core/types/Tuple2((@pat@0@1: a) : a, (value: b) : b) : (a, b) ) as @pat@3: (a, b))
+                 -> value;
+            })));
+          })));
+      }));
+  };
+specialize "___*"  fun from-list-helper // inline size: 1
+  = forall<a,b> fn(hm: (hash-map :: (V, V) -> V)<a,b>, l: (std/core/types/list :: V -> V)<(a, b)>, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int, @implicit/(==): (a, a) -> std/core/types/bool){
+    (match (l) {
+      ((std/core/types/Nil() : (std/core/types/list :: V -> V)<(a, b)> ) as @pat: ((std/core/types/list :: V -> V)<(a, b)>))
+         -> hm;
+      ((@skip std/core/types/Cons(((@skip std/core/types/Tuple2((key: a) : a, (value: b) : b) : (a, b) ) as @pat@1: (a, b)) : (a, b), (xs: (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/list :: V -> V)<(a, b)> ) as @pat@0: ((std/core/types/list :: V -> V)<(a, b)>))
+         -> std/data/hashmap/from-list-helper<a,b>((std/data/hashmap/insert<a,b>(hm, key, value, @implicit/hash, @implicit/(==), std/data/hashmap/when-resize, std/data/hashmap/resizer)), xs, @implicit/hash, @implicit/(==));
+    });
+  };
+specialize "_*_*"  fun get // inline size: 1
+  = forall<a,b> fn(hm: (hash-map :: (V, V) -> V)<a,b>, key: a, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int, @implicit/(==): (a, a) -> std/core/types/bool){
+    val the-hash[159,7,159,14] : std/core/types/int
+      = @implicit/hash(key, (match (hm) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@1: std/core/types/int) : std/core/types/int, (@x: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x;
+        }));
+    val position[160,7,160,14] : std/core/types/int
+      = std/core/int/(%)(the-hash, (std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>((match (hm) {
+          ((@skip std/data/hashmap/Hash-map((@x@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x@0;
+        }))))));
+    (match ((std/core/list/filter<(a, b),(std/core/types/total :: E)>((std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>((match (hm) {
+          ((@skip std/data/hashmap/Hash-map((@x@1: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@1: std/core/types/int) : std/core/types/int, (@pat@1@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@3: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x@1;
+        }), (std/core/int/ssize_t(position)))), (fn(x: (a, b)){
+        (@implicit/(==)((match (x) {
+            ((@skip std/core/types/Tuple2((@x@2: a) : a, (@pat@0@2: b) : b) : (a, b) ) as @pat@4: (a, b))
+               -> @x@2;
+          }), key));
+      })))) {
+      ((std/core/types/Cons((x@0: (a, b)) : (a, b), (@pat@0@3: (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/list :: V -> V)<(a, b)> ) as @pat@5: ((std/core/types/list :: V -> V)<(a, b)>))
+         -> std/core/types/Just<b>((match (x@0) {
+          ((@skip std/core/types/Tuple2((@pat@0@4: a) : a, (@x@3: b) : b) : (a, b) ) as @pat@6: (a, b))
+             -> @x@3;
+        }));
+      ((@skip std/core/types/Nil() : (std/core/types/list :: V -> V)<(a, b)> ) as @pat@1@2: ((std/core/types/list :: V -> V)<(a, b)>))
+         -> std/core/types/Nothing<b>;
+    });
+  };
+specialize "_*__*__"  fun insert // inline size: 1
+  = forall<a,b> fn(hm: (hash-map :: (V, V) -> V)<a,b>, key: a, value: b, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int, @implicit/(==): (a, a) -> std/core/types/bool, @implicit/when-resize: (std/core/types/int, std/core/types/int) -> std/core/types/bool, @implicit/resizer: (std/core/types/int, std/core/types/int) -> std/core/types/int){
+    val the-hash[131,7,131,14] : std/core/types/int
+      = @implicit/hash(key, (match (hm) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@1: std/core/types/int) : std/core/types/int, (@x: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x;
+        }));
+    val position[132,7,132,14] : std/core/types/int
+      = std/core/int/(%)(the-hash, (std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>((match (hm) {
+          ((@skip std/data/hashmap/Hash-map((@x@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x@0;
+        }))))));
+    val new-hm[133,7,133,12] : (hash-map :: (V, V) -> V)<a,b>
+      = (match (hm) {
+        ((@skip std/data/hashmap/Hash-map((data: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (amount: std/core/types/int) : std/core/types/int, (seed: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@3: ((hash-map :: (V, V) -> V)<a,b>))
+           -> val xs@10027[1,0,1,0] : (std/core/types/list :: V -> V)<(a, b)>
+                = std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>(data, (std/core/int/ssize_t(position)));
+              val old-bucket-size[135,11,135,25] : std/core/types/int
+                = std/core/list/@lift-length@4947<(a, b)>(xs@10027, 0);
+              val bucket[136,11,136,16] : (std/core/types/list :: V -> V)<(a, b)>
+                = std/core/types/Cons<(a, b)>((std/core/types/Tuple2<a,b>(key, value)), (std/core/list/filter<(a, b),(std/core/types/total :: E)>((std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>(data, (std/core/int/ssize_t(position)))), (fn(x: (a, b)){
+                      val b@10028[1,0,1,0] : std/core/types/bool
+                            = (@implicit/(==)((match (x) {
+                                ((@skip std/core/types/Tuple2((@x@1: a) : a, (@pat@0@2: b) : b) : (a, b) ) as @pat@5: (a, b))
+                                   -> @x@1;
+                              }), key));
+                      (match (b@10028) {
+                        ((std/core/types/True() : std/core/types/bool ) as @pat@4: std/core/types/bool)
+                           -> std/core/types/False;
+                        ((@skip std/core/types/False() : std/core/types/bool ) as @pat@0@1: std/core/types/bool)
+                           -> std/core/types/True;
+                      });
+                    }))));
+              val new-data[137,11,137,18] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>
+                = std/core-extras/unsafe-set<(std/core/types/list :: V -> V)<(a, b)>>(data, position, bucket);
+              val xs@0@10030[1,0,1,0] : (std/core/types/list :: V -> V)<(a, b)>
+                = std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>(new-data, (std/core/int/ssize_t(position)));
+              val new-amount[138,11,138,20] : std/core/types/int
+                = (match ((std/core/int/(<)(old-bucket-size, (std/core/list/@lift-length@4947<(a, b)>(xs@0@10030, 0))))) {
+                  ((std/core/types/True() : std/core/types/bool ) as @pat@0@3: std/core/types/bool)
+                     -> std/core/int/int-add(amount, 1);
+                  ((@skip std/core/types/False() : std/core/types/bool ) as @pat@1@1: std/core/types/bool)
+                     -> amount;
+                });
+          std/data/hashmap/Hash-map<a,b>(new-data, new-amount, seed);
+      });
+    (match ((@implicit/when-resize((std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>((match (new-hm) {
+        ((@skip std/data/hashmap/Hash-map((@x@2: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@4: std/core/types/int) : std/core/types/int, (@pat@1@2: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@6: ((hash-map :: (V, V) -> V)<a,b>))
+           -> @x@2;
+      }))))), (match (new-hm) {
+        ((@skip std/data/hashmap/Hash-map((@pat@0@5: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@x@3: std/core/types/int) : std/core/types/int, (@pat@1@3: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@7: ((hash-map :: (V, V) -> V)<a,b>))
+           -> @x@3;
+      })))) {
+      ((std/core/types/True() : std/core/types/bool ) as @pat@2@0: std/core/types/bool)
+         -> std/data/hashmap/resize<a,b>(new-hm, (@implicit/resizer((std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>((match (new-hm) {
+              ((@skip std/data/hashmap/Hash-map((@x@4: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@6: std/core/types/int) : std/core/types/int, (@pat@1@4: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@8: ((hash-map :: (V, V) -> V)<a,b>))
+                 -> @x@4;
+            }))))), (match (new-hm) {
+              ((@skip std/data/hashmap/Hash-map((@pat@0@7: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@x@5: std/core/types/int) : std/core/types/int, (@pat@1@5: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@9: ((hash-map :: (V, V) -> V)<a,b>))
+                 -> @x@5;
+            }))), @implicit/hash);
+      ((@skip std/core/types/False() : std/core/types/bool ) as @pat@3@0: std/core/types/bool)
+         -> new-hm;
+    });
+  };
+specialize "****"  fun rehash // inline size: 1
+  = forall<a,b> fn(v: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, buckets: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, seed: std/core/types/int64, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int){
+    (match ((std/core-extras/is-vec-unique<(std/core/types/list :: V -> V)<(a, b)>>(v))) {
+      ((std/core/types/True() : std/core/types/bool ) as @pat: std/core/types/bool)
+         -> val _[94,5,94,19] : ()
+                  = std/core/vector/foreach<(std/core/types/list :: V -> V)<(a, b)>,(std/core/types/total :: E)>(buckets, (fn(bucket: (std/core/types/list :: V -> V)<(a, b)>){
+                      (std/core/list/foreach<(a, b),(std/core/types/total :: E)>(bucket, (fn(entry: (a, b)){
+                          (match (entry) {
+                            ((@skip std/core/types/Tuple2((key: a) : a, (@pat@1: b) : b) : (a, b) ) as @pat@0: (a, b))
+                               -> val the-hash[97,13,97,20] : std/core/types/int
+                                    = @implicit/hash(key, seed);
+                                  val position[98,13,98,20] : std/core/types/int
+                                    = std/core/int/(%)(the-hash, (std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>(v)))));
+                              (match ((std/core/vector/at<(std/core/types/list :: V -> V)<(a, b)>>(v, position))) {
+                                ((std/core/types/Nothing() : (std/core/types/maybe :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>> ) as @pat@2: ((std/core/types/maybe :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>))
+                                   -> std/core/types/Unit;
+                                ((@skip std/core/types/Just((xs: (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/maybe :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>> ) as @pat@3: ((std/core/types/maybe :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>))
+                                   -> std/core-extras/unsafe-assign<(std/core/types/list :: V -> V)<(a, b)>>(v, (std/core/int/ssize_t(position)), (std/core/types/Cons<(a, b)>(entry, xs)));
+                              });
+                          });
+                        })));
+                    }));
+        v;
+      ((@skip std/core/types/False() : std/core/types/bool ) as @pat@4: std/core/types/bool)
+         -> val bkts[105,9,105,12] : (std/core/types/list :: V -> V)<(a, b)>
+                  = std/core/list/flatmap<(std/core/types/list :: V -> V)<(a, b)>,(a, b),(std/core/types/total :: E)>((std/core/vector/vlist<(std/core/types/list :: V -> V)<(a, b)>>(buckets, (std/core/types/@None<(std/core/types/list :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>))), (fn(x: (std/core/types/list :: V -> V)<(a, b)>){
+                      x;
+                    }));
+        std/data/hashmap/#helper/rehash<a,b>(v, bkts, seed, @implicit/hash);
+    });
+  };
+specialize "_*_*"  fun remove // inline size: 1
+  = forall<a,b> fn(hm: (hash-map :: (V, V) -> V)<a,b>, key: a, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int, @implicit/(==): (a, a) -> std/core/types/bool){
+    val the-hash[147,7,147,14] : std/core/types/int
+      = @implicit/hash(key, (match (hm) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@1: std/core/types/int) : std/core/types/int, (@x: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x;
+        }));
+    val position[148,7,148,14] : std/core/types/int
+      = std/core/int/(%)(the-hash, (std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>((match (hm) {
+          ((@skip std/data/hashmap/Hash-map((@x@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x@0;
+        }))))));
+    (match (hm) {
+      ((@skip std/data/hashmap/Hash-map((data: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (amount: std/core/types/int) : std/core/types/int, (seed: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@3: ((hash-map :: (V, V) -> V)<a,b>))
+         -> val xs@10051[1,0,1,0] : (std/core/types/list :: V -> V)<(a, b)>
+              = std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>(data, (std/core/int/ssize_t(position)));
+            val old-bucket-size[151,11,151,25] : std/core/types/int
+              = std/core/list/@lift-length@4947<(a, b)>(xs@10051, 0);
+            val bucket[152,11,152,16] : (std/core/types/list :: V -> V)<(a, b)>
+              = std/core/list/filter<(a, b),(std/core/types/total :: E)>((std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>(data, (std/core/int/ssize_t(position)))), (fn(x: (a, b)){
+                  val b@10052[1,0,1,0] : std/core/types/bool
+                        = (@implicit/(==)((match (x) {
+                            ((@skip std/core/types/Tuple2((@x@1: a) : a, (@pat@0@2: b) : b) : (a, b) ) as @pat@5: (a, b))
+                               -> @x@1;
+                          }), key));
+                  (match (b@10052) {
+                    ((std/core/types/True() : std/core/types/bool ) as @pat@4: std/core/types/bool)
+                       -> std/core/types/False;
+                    ((@skip std/core/types/False() : std/core/types/bool ) as @pat@0@1: std/core/types/bool)
+                       -> std/core/types/True;
+                  });
+                }));
+            val new-data[153,11,153,18] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>
+              = std/core-extras/unsafe-set<(std/core/types/list :: V -> V)<(a, b)>>(data, position, bucket);
+            val xs@0@10054[1,0,1,0] : (std/core/types/list :: V -> V)<(a, b)>
+              = std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>(new-data, (std/core/int/ssize_t(position)));
+            val new-amount[154,11,154,20] : std/core/types/int
+              = (match ((std/core/int/(>)(old-bucket-size, (std/core/list/@lift-length@4947<(a, b)>(xs@0@10054, 0))))) {
+                ((std/core/types/True() : std/core/types/bool ) as @pat@0@3: std/core/types/bool)
+                   -> std/core/int/int-sub(amount, 1);
+                ((@skip std/core/types/False() : std/core/types/bool ) as @pat@1@1: std/core/types/bool)
+                   -> amount;
+              });
+        std/data/hashmap/Hash-map<a,b>(new-data, new-amount, seed);
+    });
+  };
+specialize "__*"  fun resize // inline size: 1
+  = forall<a,b> fn(hm: (hash-map :: (V, V) -> V)<a,b>, new-capacity: std/core/types/int, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int){
+    val buckets[63,7,63,13] : forall<c,d> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, d)>>
+          = forall<c,d> val n@10019[1,0,1,0] : std/core/types/int
+                              = std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>((match (hm) {
+                                ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+                                   -> @x;
+                              }))));
+          std/core/vector/vector-alloc<(std/core/types/list :: V -> V)<(c, d)>,(std/core/types/total :: E)>((std/core/int/ssize_t(n@10019)), (std/core/types/Nil<(c, d)>));
+    (match (hm) {
+      ((@skip std/data/hashmap/Hash-map((data: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (size: std/core/types/int) : std/core/types/int, (seed: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,b>))
+         -> val _@0[66,7,66,24] : ()
+              = std/core/for<(std/core/types/total :: E)>((std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>(data)))), (fn(i: std/core/types/int){
+                  (match ((std/core/vector/at<(std/core/types/list :: V -> V)<(a, b)>>(data, i))) {
+                    ((std/core/types/Nothing() : (std/core/types/maybe :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>> ) as @pat@0@0: ((std/core/types/maybe :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>))
+                       -> std/core/types/Unit;
+                    ((@skip std/core/types/Just((x: (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/maybe :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>> ) as @pat@1@0: ((std/core/types/maybe :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>))
+                       -> val _[70,13,70,40] : ()
+                                = std/core-extras/drop-at<(std/core/types/list :: V -> V)<(_c, _d)>>((buckets<_c,_c>), (std/core/int/ssize_t(i)));
+                      std/core-extras/unsafe-assign<(std/core/types/list :: V -> V)<(a, b)>>((buckets<a,b>), (std/core/int/ssize_t(i)), x);
+                  });
+                }));
+            val new-data[74,11,74,18] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>
+              = std/core-extras/realloc<(std/core/types/list :: V -> V)<(a, b)>>(data, (std/core/int/ssize_t(new-capacity)));
+        std/data/hashmap/Hash-map<a,b>((std/data/hashmap/rehash<a,b>((std/data/hashmap/#helper/resize<a,b>(new-data)), (buckets<a,b>), seed, @implicit/hash)), size, seed);
+    });
+  };
+specialize "**"  fun effect/map // inline size: 1
+  = forall<a,b,c,d,(e :: E)> fn<(e :: E)>(hm: (hash-map :: (V, V) -> V)<a,b>, f: ((a, b)) -> (e :: E) (c, d)){
+    val new-data[219,7,219,14] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, d)>>
+          = std/core/vector/map<(std/core/types/list :: V -> V)<(a, b)>,(std/core/types/list :: V -> V)<(c, d)>,(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>((fn(@this: (hash-map :: (V, V) -> V)<a,b>){
+              (match (@this) {
+                ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+                   -> @x;
+              });
+            }))(hm)), (fn<(e :: E)>(buckets: (std/core/types/list :: V -> V)<(a, b)>){
+              (std/core/list/map<(a, b),(c, d),(e :: E)>(buckets, f));
+            }));
+    std/data/hashmap/Hash-map<c,d>(new-data, (std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> std/core/types/int,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) std/core/types/int>((fn(@this@0: (hash-map :: (V, V) -> V)<a,b>){
+        (match (@this@0) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@x@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x@0;
+        });
+      }))(hm)), (std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,b>) -> std/core/types/int64,((hash-map :: (V, V) -> V)<a,b>) -> (e :: E) std/core/types/int64>((fn(@this@1: (hash-map :: (V, V) -> V)<a,b>){
+        (match (@this@1) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0@1: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@1@1: std/core/types/int) : std/core/types/int, (@x@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@3: ((hash-map :: (V, V) -> V)<a,b>))
+             -> @x@1;
+        });
+      }))(hm)));
+  };
+specialize "**"  fun effect/map-keys // inline size: 1
+  = forall<a,b,(e :: E),c> fn<(e :: E)>(hm: (hash-map :: (V, V) -> V)<a,c>, f: (a) -> (e :: E) b){
+    val new-data[201,7,201,14] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(b, c)>>
+          = std/core/vector/map<(std/core/types/list :: V -> V)<(a, c)>,(std/core/types/list :: V -> V)<(b, c)>,(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,c>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>,((hash-map :: (V, V) -> V)<a,c>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>>((fn(@this: (hash-map :: (V, V) -> V)<a,c>){
+              (match (@this) {
+                ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>, (@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,c> ) as @pat: ((hash-map :: (V, V) -> V)<a,c>))
+                   -> @x;
+              });
+            }))(hm)), (fn<(e :: E)>(buckets: (std/core/types/list :: V -> V)<(a, c)>){
+              (std/core/list/map<(a, c),(b, c),(e :: E)>(buckets, (fn<(e :: E)>(entry: (a, c)){
+                  (match (entry) {
+                    ((@skip std/core/types/Tuple2((key: a) : a, (value: c) : c) : (a, c) ) as @pat@2: (a, c))
+                       -> std/core/types/Tuple2<b,c>((f(key)), value);
+                  });
+                })));
+            }));
+    std/data/hashmap/Hash-map<b,c>(new-data, (std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,c>) -> std/core/types/int,((hash-map :: (V, V) -> V)<a,c>) -> (e :: E) std/core/types/int>((fn(@this@0: (hash-map :: (V, V) -> V)<a,c>){
+        (match (@this@0) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>, (@x@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,c> ) as @pat@3: ((hash-map :: (V, V) -> V)<a,c>))
+             -> @x@0;
+        });
+      }))(hm)), (std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<a,c>) -> std/core/types/int64,((hash-map :: (V, V) -> V)<a,c>) -> (e :: E) std/core/types/int64>((fn(@this@1: (hash-map :: (V, V) -> V)<a,c>){
+        (match (@this@1) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0@1: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>, (@pat@1@1: std/core/types/int) : std/core/types/int, (@x@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,c> ) as @pat@4: ((hash-map :: (V, V) -> V)<a,c>))
+             -> @x@1;
+        });
+      }))(hm)));
+  };
+specialize "**"  fun effect/map-values // inline size: 1
+  = forall<a,b,(e :: E),c> fn<(e :: E)>(hm: (hash-map :: (V, V) -> V)<c,a>, f: (a) -> (e :: E) b){
+    val new-data[183,7,183,14] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, b)>>
+          = std/core/vector/map<(std/core/types/list :: V -> V)<(c, a)>,(std/core/types/list :: V -> V)<(c, b)>,(e :: E)>((std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<c,a>) -> (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>,((hash-map :: (V, V) -> V)<c,a>) -> (e :: E) (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>>((fn(@this: (hash-map :: (V, V) -> V)<c,a>){
+              (match (@this) {
+                ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>, (@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<c,a> ) as @pat: ((hash-map :: (V, V) -> V)<c,a>))
+                   -> @x;
+              });
+            }))(hm)), (fn<(e :: E)>(buckets: (std/core/types/list :: V -> V)<(c, a)>){
+              (std/core/list/map<(c, a),(c, b),(e :: E)>(buckets, (fn<(e :: E)>(entry: (c, a)){
+                  (match (entry) {
+                    ((@skip std/core/types/Tuple2((key: c) : c, (value: a) : a) : (c, a) ) as @pat@2: (c, a))
+                       -> std/core/types/Tuple2<c,b>(key, (f(value)));
+                  });
+                })));
+            }));
+    std/data/hashmap/Hash-map<c,b>(new-data, (std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<c,a>) -> std/core/types/int,((hash-map :: (V, V) -> V)<c,a>) -> (e :: E) std/core/types/int>((fn(@this@0: (hash-map :: (V, V) -> V)<c,a>){
+        (match (@this@0) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>, (@x@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<c,a> ) as @pat@3: ((hash-map :: (V, V) -> V)<c,a>))
+             -> @x@0;
+        });
+      }))(hm)), (std/core/types/@open<(std/core/types/total :: E),(e :: E),((hash-map :: (V, V) -> V)<c,a>) -> std/core/types/int64,((hash-map :: (V, V) -> V)<c,a>) -> (e :: E) std/core/types/int64>((fn(@this@1: (hash-map :: (V, V) -> V)<c,a>){
+        (match (@this@1) {
+          ((@skip std/data/hashmap/Hash-map((@pat@0@1: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>, (@pat@1@1: std/core/types/int) : std/core/types/int, (@x@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<c,a> ) as @pat@4: ((hash-map :: (V, V) -> V)<c,a>))
+             -> @x@1;
+        });
+      }))(hm)));
+  };
+recursive specialize "___*"  fun helper/rehash // inline size: 11
+  = forall<a,b> fn(v: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, buckets: (std/core/types/list :: V -> V)<(a, b)>, seed: std/core/types/int64, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int){
+    (match (buckets) {
+      ((std/core/types/Nil() : (std/core/types/list :: V -> V)<(a, b)> ) as @pat: ((std/core/types/list :: V -> V)<(a, b)>))
+         -> v;
+      ((@skip std/core/types/Cons(((@skip std/core/types/Tuple2((key: a) : a, (value: b) : b) : (a, b) ) as @pat@1: (a, b)) : (a, b), (xs: (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/list :: V -> V)<(a, b)>) : (std/core/types/list :: V -> V)<(a, b)> ) as @pat@0: ((std/core/types/list :: V -> V)<(a, b)>))
+         -> val the-hash[113,11,113,18] : std/core/types/int
+              = @implicit/hash(key, seed);
+            val position[114,11,114,18] : std/core/types/int
+              = std/core/int/(%)(the-hash, (std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>(v)))));
+            val new-v[115,11,115,15] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>
+              = std/core-extras/unsafe-set<(std/core/types/list :: V -> V)<(a, b)>>(v, position, (std/core/types/Cons<(a, b)>((std/core/types/Tuple2<a,b>(key, value)), (std/core-extras/unsafe-idx<(std/core/types/list :: V -> V)<(a, b)>>(v, (std/core/int/ssize_t(position)))))));
+        std/data/hashmap/#helper/rehash<a,b>(new-v, xs, seed, @implicit/hash);
+    });
+  };
+specialize "*"  fun helper/resize // inline size: 1
+  = forall<a,b> fn(v: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>){
+    (match ((std/core-extras/is-vec-unique<(std/core/types/list :: V -> V)<(a, b)>>(v))) {
+      ((std/core/types/True() : std/core/types/bool ) as @pat: std/core/types/bool)
+         -> val _@0[83,5,83,19] : ()
+                  = std/core/for<(std/core/types/total :: E)>((std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>(v)))), (fn(i: std/core/types/int){
+                      val _[84,7,84,28] : ()
+                            = (std/core-extras/drop-at<(std/core/types/list :: V -> V)<(a, b)>>(v, (std/core/int/ssize_t(i))));
+                      (std/core-extras/unsafe-assign<(std/core/types/list :: V -> V)<(a, b)>>(v, (std/core/int/ssize_t(i)), (std/core/types/Nil<(a, b)>)));
+                    }));
+        v;
+      ((@skip std/core/types/False() : std/core/types/bool ) as @pat@0: std/core/types/bool)
+         -> val n@10009[1,0,1,0] : std/core/types/int
+                  = std/core/int/#ssize_t/int((std/core/vector/lengthz<(std/core/types/list :: V -> V)<(a, b)>>(v)));
+        std/core/vector/vector-alloc<(std/core/types/list :: V -> V)<(a, b)>,(std/core/types/total :: E)>((std/core/int/ssize_t(n@10009)), (std/core/types/Nil<(a, b)>));
+    });
+  };
+specialize "___*"  fun list/hash-map-seeded // inline size: 1
+  = forall<a,b> fn(xs: (std/core/types/list :: V -> V)<(a, b)>, seed: std/core/types/int64, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int, @implicit/(==): (a, a) -> std/core/types/bool){
+    val capacity@10044[1,0,1,0] : (std/core/types/@optional :: V -> V)<std/core/types/int>
+      = std/core/types/@Optional<std/core/types/int>((std/core/list/@lift-length@4947<(a, b)>(xs, 0)));
+    val n@10046[1,0,1,0] : std/core/types/int
+      = (match ((std/core/int/(>)((match (capacity@10044) {
+          ((std/core/types/@Optional((@uniq-capacity@620: std/core/types/int) : std/core/types/int) : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+             -> @uniq-capacity@620;
+          ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat@0: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+             -> 1;
+        }), 0))) {
+        ((std/core/types/True() : std/core/types/bool ) as @pat@1: std/core/types/bool)
+           -> (match (capacity@10044) {
+            ((std/core/types/@Optional((@uniq-capacity@620: std/core/types/int) : std/core/types/int) : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+               -> @uniq-capacity@620;
+            ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat@0: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+               -> 1;
+          });
+        ((@skip std/core/types/False() : std/core/types/bool ) as @pat@2: std/core/types/bool)
+           -> 1;
+      });
+    std/data/hashmap/from-list-helper<a,b>((std/data/hashmap/Hash-map<a,b>((std/core/vector/vector-alloc<(std/core/types/list :: V -> V)<(a, b)>,(std/core/types/total :: E)>((std/core/int/ssize_t(n@10046)), (std/core/types/Nil<(a, b)>))), 0, seed)), xs, @implicit/hash, @implicit/(==));
+  };
+specialize "__*"  fun thread/list/hash-map // inline size: 1
+  = forall<a,b> fn(xs: (std/core/types/list :: V -> V)<(a, b)>, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int, @implicit/(==): (a, a) -> std/core/types/bool){
+    val capacity@10039[1,0,1,0] : (std/core/types/@optional :: V -> V)<std/core/types/int>
+      = std/core/types/@Optional<std/core/types/int>((std/core/list/@lift-length@4947<(a, b)>(xs, 0)));
+    val n@10041[1,0,1,0] : std/core/types/int
+      = (match ((std/core/int/(>)((match (capacity@10039) {
+          ((std/core/types/@Optional((@uniq-capacity@553: std/core/types/int) : std/core/types/int) : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+             -> @uniq-capacity@553;
+          ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat@0: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+             -> 1;
+        }), 0))) {
+        ((std/core/types/True() : std/core/types/bool ) as @pat@1: std/core/types/bool)
+           -> (match (capacity@10039) {
+            ((std/core/types/@Optional((@uniq-capacity@553: std/core/types/int) : std/core/types/int) : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+               -> @uniq-capacity@553;
+            ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat@0: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+               -> 1;
+          });
+        ((@skip std/core/types/False() : std/core/types/bool ) as @pat@2: std/core/types/bool)
+           -> 1;
+      });
+    std/data/hashmap/from-list-helper<a,b>((std/data/hashmap/Hash-map<a,b>((std/core/vector/vector-alloc<(std/core/types/list :: V -> V)<(a, b)>,(std/core/types/total :: E)>((std/core/int/ssize_t(n@10041)), (std/core/types/Nil<(a, b)>))), 0, std/data/hash/#thread/seed)), xs, @implicit/hash, @implicit/(==));
+  };
+specialize "_*"  fun unique/map // inline size: 1
+  = forall<a,b,c,d> fn(hm: (hash-map :: (V, V) -> V)<a,b>, f: ((a, b)) -> (c, d)){
+    (match (hm) {
+      ((@skip std/data/hashmap/Hash-map((data: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (amount: std/core/types/int) : std/core/types/int, (@pat@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+         -> val new-data[227,11,227,18] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, d)>>
+                  = std/core-extras/#unique/map<(std/core/types/list :: V -> V)<(a, b)>,(std/core/types/list :: V -> V)<(c, d)>>(data, (fn(bucket: (std/core/types/list :: V -> V)<(a, b)>){
+                      (std/core/list/map<(a, b),(c, d),(std/core/types/total :: E)>(bucket, f));
+                    }));
+        std/data/hashmap/Hash-map<c,d>(new-data, amount, (match (hm) {
+            ((@skip std/data/hashmap/Hash-map((@pat@0@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@1@0: std/core/types/int) : std/core/types/int, (@x: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@1: ((hash-map :: (V, V) -> V)<a,b>))
+               -> @x;
+          }));
+    });
+  };
+specialize "_*"  fun unique/map-keys // inline size: 1
+  = forall<a,b,c> fn(hm: (hash-map :: (V, V) -> V)<a,c>, f: (a) -> b){
+    (match (hm) {
+      ((@skip std/data/hashmap/Hash-map((data: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>, (amount: std/core/types/int) : std/core/types/int, (@pat@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,c> ) as @pat: ((hash-map :: (V, V) -> V)<a,c>))
+         -> val new-data[211,11,211,18] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(b, c)>>
+                  = std/core-extras/#unique/map<(std/core/types/list :: V -> V)<(a, c)>,(std/core/types/list :: V -> V)<(b, c)>>(data, (fn(bucket: (std/core/types/list :: V -> V)<(a, c)>){
+                      (std/core/list/map<(a, c),(b, c),(std/core/types/total :: E)>(bucket, (fn(entry: (a, c)){
+                          (match (entry) {
+                            ((@skip std/core/types/Tuple2((key: a) : a, (value: c) : c) : (a, c) ) as @pat@1: (a, c))
+                               -> std/core/types/Tuple2<b,c>((f(key)), value);
+                          });
+                        })));
+                    }));
+        std/data/hashmap/Hash-map<b,c>(new-data, amount, (match (hm) {
+            ((@skip std/data/hashmap/Hash-map((@pat@0@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, c)>>, (@pat@1@0: std/core/types/int) : std/core/types/int, (@x: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,c> ) as @pat@2: ((hash-map :: (V, V) -> V)<a,c>))
+               -> @x;
+          }));
+    });
+  };
+specialize "_*"  fun unique/map-values // inline size: 1
+  = forall<a,b,c> fn(hm: (hash-map :: (V, V) -> V)<c,a>, f: (a) -> b){
+    (match (hm) {
+      ((@skip std/data/hashmap/Hash-map((data: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, a)>>, (amount: std/core/types/int) : std/core/types/int, (seed: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<c,a> ) as @pat: ((hash-map :: (V, V) -> V)<c,a>))
+         -> val new-data[193,11,193,18] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, b)>>
+                  = std/core-extras/#unique/map<(std/core/types/list :: V -> V)<(c, a)>,(std/core/types/list :: V -> V)<(c, b)>>(data, (fn(bucket: (std/core/types/list :: V -> V)<(c, a)>){
+                      (std/core/list/map<(c, a),(c, b),(std/core/types/total :: E)>(bucket, (fn(entry: (c, a)){
+                          (match (entry) {
+                            ((@skip std/core/types/Tuple2((key: c) : c, (value: a) : a) : (c, a) ) as @pat@0: (c, a))
+                               -> std/core/types/Tuple2<c,b>(key, (f(value)));
+                          });
+                        })));
+                    }));
+        std/data/hashmap/Hash-map<c,b>(new-data, amount, seed);
+    });
+  };
+inline borrow "^"  fun hash-map/data // inline size: 0
+  = forall<a,b> fn(@this: (hash-map :: (V, V) -> V)<a,b>){
+    (match (@this) {
+      ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun hash-map/amount // inline size: 0
+  = forall<a,b> fn(@this: (hash-map :: (V, V) -> V)<a,b>){
+    (match (@this) {
+      ((@skip std/data/hashmap/Hash-map((@pat@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@x: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun hash-map/seed // inline size: 0
+  = forall<a,b> fn(@this: (hash-map :: (V, V) -> V)<a,b>){
+    (match (@this) {
+      ((@skip std/data/hashmap/Hash-map((@pat@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@1: std/core/types/int) : std/core/types/int, (@x: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+         -> @x;
+    });
+  };
+ fun hash-map/@copy // inline size: 4
+  = forall<a,b> fn(@this: (hash-map :: (V, V) -> V)<a,b>, data: (std/core/types/@optional :: V -> V)<(std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>, amount: (std/core/types/@optional :: V -> V)<std/core/types/int>, seed: (std/core/types/@optional :: V -> V)<std/core/types/int64>){
+    std/data/hashmap/Hash-map<a,b>((match (data) {
+        ((std/core/types/@Optional((@uniq-data@425: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/@optional :: V -> V)<(std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>> ) as @pat: ((std/core/types/@optional :: V -> V)<(std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>))
+           -> @uniq-data@425;
+        ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<(std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>> ) as @pat@0: ((std/core/types/@optional :: V -> V)<(std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>>))
+           -> (match (@this) {
+            ((@skip std/data/hashmap/Hash-map((@x: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@0@0: std/core/types/int) : std/core/types/int, (@pat@1@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@1: ((hash-map :: (V, V) -> V)<a,b>))
+               -> @x;
+          });
+      }), (match (amount) {
+        ((std/core/types/@Optional((@uniq-amount@438: std/core/types/int) : std/core/types/int) : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat@1@1: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+           -> @uniq-amount@438;
+        ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/int> ) as @pat@2: ((std/core/types/@optional :: V -> V)<std/core/types/int>))
+           -> (match (@this) {
+            ((@skip std/data/hashmap/Hash-map((@pat@0@1: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@x@0: std/core/types/int) : std/core/types/int, (@pat@1@2: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@3: ((hash-map :: (V, V) -> V)<a,b>))
+               -> @x@0;
+          });
+      }), (match (seed) {
+        ((std/core/types/@Optional((@uniq-seed@451: std/core/types/int64) : std/core/types/int64) : (std/core/types/@optional :: V -> V)<std/core/types/int64> ) as @pat@3@0: ((std/core/types/@optional :: V -> V)<std/core/types/int64>))
+           -> @uniq-seed@451;
+        ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/int64> ) as @pat@4: ((std/core/types/@optional :: V -> V)<std/core/types/int64>))
+           -> (match (@this) {
+            ((@skip std/data/hashmap/Hash-map((@pat@0@2: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@1@3: std/core/types/int) : std/core/types/int, (@x@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@5: ((hash-map :: (V, V) -> V)<a,b>))
+               -> @x@1;
+          });
+      }));
+  };
+inline  fun length // inline size: 0
+  = forall<a,b> fn(hm: (hash-map :: (V, V) -> V)<a,b>){
+    (match (hm) {
+      ((@skip std/data/hashmap/Hash-map((@pat@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@x: std/core/types/int) : std/core/types/int, (@pat@1: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+         -> @x;
+    });
+  };
+ fun when-resize // inline size: 3
+  = fn(table-size: std/core/types/int, item-count: std/core/types/int){
+    match ((std/core/int/(<=)((std/core/int/(*)(2, table-size)), item-count))) {
+      ((std/core/types/True() : std/core/types/bool ) as @pat: std/core/types/bool)
+         -> std/core/types/True;
+      ((@skip std/core/types/False() : std/core/types/bool ) as @pat@0: std/core/types/bool)
+         -> std/core/types/False;
+    };
+  };
+ fun resizer // inline size: 1
+  = fn(table-size: std/core/types/int, item-count: std/core/types/int){
+    std/core/int/(*)(item-count, 2);
+  };
+ fun mb/(==) // inline size: 3
+  = fn(a: (std/core/types/maybe :: V -> V)<std/core/types/int>, b: (std/core/types/maybe :: V -> V)<std/core/types/int>){
+    match (a, b) {
+      ((std/core/types/Nothing() : (std/core/types/maybe :: V -> V)<std/core/types/int> ) as @pat@1: (std/core/types/maybe :: V -> V)<std/core/types/int>), ((std/core/types/Nothing() : (std/core/types/maybe :: V -> V)<std/core/types/int> ) as @pat@0: ((std/core/types/maybe :: V -> V)<std/core/types/int>))
+         -> std/core/types/True;
+      ((std/core/types/Just((y: std/core/types/int) : std/core/types/int) : (std/core/types/maybe :: V -> V)<std/core/types/int> ) as @pat@4: (std/core/types/maybe :: V -> V)<std/core/types/int>), ((std/core/types/Just((x: std/core/types/int) : std/core/types/int) : (std/core/types/maybe :: V -> V)<std/core/types/int> ) as @pat@3: ((std/core/types/maybe :: V -> V)<std/core/types/int>))
+         -> std/core/int/(==)(x, y);
+      (@pat@2: ((std/core/types/maybe :: V -> V)<std/core/types/int>)), (@pat: ((std/core/types/maybe :: V -> V)<std/core/types/int>))
+         -> std/core/types/False;
+    };
+  };
+ fun unique/map // inline size: 3
+  = forall<a,b,c,d> fn(hm: (hash-map :: (V, V) -> V)<a,b>, f: ((a, b)) -> (c, d)){
+    (match (hm) {
+      ((@skip std/data/hashmap/Hash-map((data: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (amount: std/core/types/int) : std/core/types/int, (@pat@0: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat: ((hash-map :: (V, V) -> V)<a,b>))
+         -> val new-data[227,11,227,18] : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(c, d)>>
+                  = std/core-extras/#unique/map<(std/core/types/list :: V -> V)<(a, b)>,(std/core/types/list :: V -> V)<(c, d)>>(data, (fn(bucket: (std/core/types/list :: V -> V)<(a, b)>){
+                      (std/core/list/map<(a, b),(c, d),(std/core/types/total :: E)>(bucket, f));
+                    }));
+        std/data/hashmap/Hash-map<c,d>(new-data, amount, (match (hm) {
+            ((@skip std/data/hashmap/Hash-map((@pat@0@0: (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>) : (std/core/types/vector :: V -> V)<(std/core/types/list :: V -> V)<(a, b)>>, (@pat@1@0: std/core/types/int) : std/core/types/int, (@x: std/core/types/int64) : std/core/types/int64) : (hash-map :: (V, V) -> V)<a,b> ) as @pat@1: ((hash-map :: (V, V) -> V)<a,b>))
+               -> @x;
+          }));
+    });
+  };

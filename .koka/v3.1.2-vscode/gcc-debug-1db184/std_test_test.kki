@@ -1,0 +1,415 @@
+/*----------------------------------------------------------------------------
+   Copyright 2024, Koka-Community Authors
+
+   Licensed under the MIT License ("The License"). You may not
+   use this file except in compliance with the License. A copy of the License
+   can be found in the LICENSE file at the root of this distribution.
+----------------------------------------------------------------------------*/
+module interface std/test/test
+ 
+//------------------------------
+//#kki: import declarations
+ 
+import std/core/types = std/core/types pub = "";
+import std/core/hnd = std/core/hnd pub = "";
+import std/core/exn = std/core/exn pub = "";
+import std/core/bool = std/core/bool pub = "";
+import std/core/order = std/core/order pub = "";
+import std/core/char = std/core/char pub = "";
+import std/core/int = std/core/int pub = "";
+import std/core/vector = std/core/vector pub = "";
+import std/core/string = std/core/string pub = "";
+import std/core/sslice = std/core/sslice pub = "";
+import std/core/list = std/core/list pub = "";
+import std/core/maybe = std/core/maybe pub = "";
+import std/core/either = std/core/either pub = "";
+import std/core/tuple = std/core/tuple pub = "";
+import std/core/show = std/core/show pub = "";
+import std/core/debug = std/core/debug pub = "";
+import std/core/delayed = std/core/delayed pub = "";
+import std/core/console = std/core/console pub = "";
+import std/core = std/core = "";
+ 
+//------------------------------
+//#kki: external imports
+ 
+ 
+//------------------------------
+//#kki: fixity declarations
+ 
+ 
+//------------------------------
+//#kki: local imported aliases
+ 
+// Index into an evidence vector
+local alias std/core/hnd/ev-index[138,1,138,28] = std/core/types/ssize_t = 1;
+// An alias for pure effects: a pure function always returns the same result
+// when called with the same arguments but may not terminate or raise an exception.
+local alias std/core/pure[52,1,52,26] :: E = <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> = 1;
+ 
+//------------------------------
+//#kki: type declarations
+ 
+type expectation[18,1,21,32] <a> :: V -> V {
+  con ExpectedValue[19,3,19,15](a: a){0,1,8} : forall<a> (a : a) -> (expectation :: V -> V)<a>;
+  con ExpectedError[20,3,20,15](str: std/core/types/string){0,1,8} : forall<a> (str : std/core/types/string) -> (expectation :: V -> V)<a>;
+  con ExpectedAssertion[21,3,21,19](str: std/core/types/string){0,1,8} : forall<a> (str : std/core/types/string) -> (expectation :: V -> V)<a>;
+};
+// An expected value for a test
+type expect-value[30,1,37,27] <a> :: V -> V {
+  // An expected value for a test
+  con Expect-value[30,8,30,19](run-value: (std/core/exn/error :: V -> V)<a>, expectation: (expectation :: V -> V)<a>, details: (std/core/types/maybe :: V -> V)<std/core/types/string>, continue-on-error: std/core/types/bool, location: std/core/types/string, eq: (a, a) -> ((std/core/pure :: E) == 1 <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)>) std/core/types/bool, show: (a) -> ((std/core/pure :: E) == 1 <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)>) std/core/types/string){1,9,8} : forall<a> (run-value : (std/core/exn/error :: V -> V)<a>, expectation : (expectation :: V -> V)<a>, details : (std/core/types/maybe :: V -> V)<std/core/types/string>, continue-on-error : std/core/types/bool, location : std/core/types/string, eq : (a, a) -> ((std/core/pure :: E) == 1 <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)>) std/core/types/bool, show : (a) -> ((std/core/pure :: E) == 1 <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)>) std/core/types/string) -> (expect-value :: V -> V)<a>;
+};
+// The test effect
+
+// Operations:
+// ```koka
+// ctl test-expect
+// ```
+pub recursive effect type test[10,1,10,15] <(e :: E),a> :: (E, V) -> V {
+  pub con @Hnd-test[10,1,10,15](@cfc: std/core/types/int, @ctl-test-expect: forall<b> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<b>,b,(test :: (E, V) -> V),(e :: E),a>){0,2,8} : forall<(e :: E),a> (std/core/types/int, forall<b> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<b>,b,(test :: (E, V) -> V),(e :: E),a>) -> (test :: (E, V) -> V)<(e :: E),a>;
+};
+
+// Operations:
+// ```koka
+// val scope-name
+// val indentation
+// fun report-fail
+// ```
+pub recursive effect type test-scope[13,1,13,21] <(e :: E),a> :: (E, V) -> V {
+  pub con @Hnd-test-scope[13,1,13,21](@cfc: std/core/types/int, @val-indentation: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, @val-scope-name: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, @fun-report-fail: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>){0,4,8} : forall<(e :: E),a> (std/core/types/int, (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) -> (test-scope :: (E, V) -> V)<(e :: E),a>;
+};
+ 
+//------------------------------
+//#kki: declarations
+ 
+// Automatically generated. Tests for the `ExpectedValue` constructor of the `:expectation` type.
+fip fun is-expectedValue[19,3,19,15] : forall<a> (^ expectation : (expectation :: V -> V)<a>) -> std/core/types/bool;
+// Automatically generated. Tests for the `ExpectedError` constructor of the `:expectation` type.
+fip fun is-expectedError[20,3,20,15] : forall<a> (^ expectation : (expectation :: V -> V)<a>) -> std/core/types/bool;
+// Automatically generated. Tests for the `ExpectedAssertion` constructor of the `:expectation` type.
+fip fun is-expectedAssertion[21,3,21,19] : forall<a> (^ expectation : (expectation :: V -> V)<a>) -> std/core/types/bool;
+// Automatically generated. Retrieves the `run-value` constructor field of the `:expect-value` type.
+ fun expect-value/run-value[31,3,31,11] : forall<a> (^ @this : (expect-value :: V -> V)<a>) -> (std/core/exn/error :: V -> V)<a>;
+// Automatically generated. Retrieves the `expectation` constructor field of the `:expect-value` type.
+ fun expect-value/expectation[32,3,32,13] : forall<a> (^ @this : (expect-value :: V -> V)<a>) -> (expectation :: V -> V)<a>;
+// Automatically generated. Retrieves the `details` constructor field of the `:expect-value` type.
+ fun expect-value/details[33,3,33,9] : forall<a> (^ @this : (expect-value :: V -> V)<a>) -> (std/core/types/maybe :: V -> V)<std/core/types/string>;
+// Automatically generated. Retrieves the `continue-on-error` constructor field of the `:expect-value` type.
+ fun expect-value/continue-on-error[34,3,34,19] : forall<a> (^ @this : (expect-value :: V -> V)<a>) -> std/core/types/bool;
+// Automatically generated. Retrieves the `location` constructor field of the `:expect-value` type.
+ fun expect-value/location[35,3,35,10] : forall<a> (^ @this : (expect-value :: V -> V)<a>) -> std/core/types/string;
+// Automatically generated. Retrieves the `eq` constructor field of the `:expect-value` type.
+ fun expect-value/eq[36,3,36,4] : forall<a> (^ @this : (expect-value :: V -> V)<a>) -> ((a, a) -> (std/core/pure :: E) std/core/types/bool);
+// Automatically generated. Retrieves the `show` constructor field of the `:expect-value` type.
+ fun expect-value/show[37,3,37,6] : forall<a> (^ @this : (expect-value :: V -> V)<a>) -> ((a) -> (std/core/pure :: E) std/core/types/string);
+// monadic lift
+ fun expect-value/@mlift-copy@10220[1,0,1,0] : forall<a> (@c-x10088 : (a, a) -> (std/core/pure :: E) std/core/types/bool, @this : (expect-value :: V -> V)<a>, continue-on-error : (std/core/types/@optional :: V -> V)<std/core/types/bool>, details : (std/core/types/@optional :: V -> V)<(std/core/types/maybe :: V -> V)<std/core/types/string>>, expectation : (std/core/types/@optional :: V -> V)<(expectation :: V -> V)<a>>, location : (std/core/types/@optional :: V -> V)<std/core/types/string>, run-value : (std/core/types/@optional :: V -> V)<(std/core/exn/error :: V -> V)<a>>, @c-x10090 : (a) -> (std/core/pure :: E) std/core/types/string) -> (expect-value :: V -> V)<a>;
+// monadic lift
+ fun expect-value/@mlift-copy@10221[1,0,1,0] : forall<a> (@this : (expect-value :: V -> V)<a>, continue-on-error : (std/core/types/@optional :: V -> V)<std/core/types/bool>, details : (std/core/types/@optional :: V -> V)<(std/core/types/maybe :: V -> V)<std/core/types/string>>, expectation : (std/core/types/@optional :: V -> V)<(expectation :: V -> V)<a>>, location : (std/core/types/@optional :: V -> V)<std/core/types/string>, run-value : (std/core/types/@optional :: V -> V)<(std/core/exn/error :: V -> V)<a>>, show@0 : (std/core/types/@optional :: V -> V)<(a) -> (std/core/pure :: E) std/core/types/string>, @c-x10088 : (a, a) -> (std/core/pure :: E) std/core/types/bool) -> (expect-value :: V -> V)<a>;
+ fun expect-value/@copy[30,8,30,19] : forall<a> (@this : (expect-value :: V -> V)<a>, run-value : (std/core/types/@optional :: V -> V)<(std/core/exn/error :: V -> V)<a>>, expectation : (std/core/types/@optional :: V -> V)<(expectation :: V -> V)<a>>, details : (std/core/types/@optional :: V -> V)<(std/core/types/maybe :: V -> V)<std/core/types/string>>, continue-on-error : (std/core/types/@optional :: V -> V)<std/core/types/bool>, location : (std/core/types/@optional :: V -> V)<std/core/types/string>, eq : (std/core/types/@optional :: V -> V)<(a, a) -> (std/core/pure :: E) std/core/types/bool>, show : (std/core/types/@optional :: V -> V)<(a) -> (std/core/pure :: E) std/core/types/string>) -> (expect-value :: V -> V)<a>;
+// Automatically generated. Retrieves the `@cfc` constructor field of the `:test` type.
+ fun test/@cfc[10,1,10,15] : forall<(e :: E),a> (^ test : (test :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
+// Automatically generated. Retrieves the `@ctl-test-expect` constructor field of the `:test` type.
+ fun test/@ctl-test-expect[11,7,11,40] : forall<(e :: E),a,b> (^ test : (test :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<b>,b,(test :: (E, V) -> V),(e :: E),a>;
+// Automatically generated. Retrieves the `@cfc` constructor field of the `:test-scope` type.
+ fun test-scope/@cfc[13,1,13,21] : forall<(e :: E),a> (^ @this : (test-scope :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
+// Automatically generated. Retrieves the `@val-indentation` constructor field of the `:test-scope` type.
+ fun test-scope/@val-indentation[15,7,15,25] : forall<(e :: E),a> (^ @this : (test-scope :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>;
+// Automatically generated. Retrieves the `@val-scope-name` constructor field of the `:test-scope` type.
+ fun test-scope/@val-scope-name[14,7,14,24] : forall<(e :: E),a> (^ @this : (test-scope :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>;
+// Automatically generated. Retrieves the `@fun-report-fail` constructor field of the `:test-scope` type.
+ fun test-scope/@fun-report-fail[16,7,16,23] : forall<(e :: E),a> (^ @this : (test-scope :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>;
+// runtime tag for the effect `:test`
+pub val @tag-test[10,1,10,15] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(test :: (E, V) -> V)>;
+// handler for the effect `:test`
+pub  fun @handle-test[10,12,10,15] : forall<a,(e :: E),b> (hnd : (test :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
+// select `test-expect` operation out of effect `:test`
+pub  fun @select-test-expect[11,7,11,40] : forall<a,(e :: E),b> (^ hnd : (test :: (E, V) -> V)<(e :: E),b>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<a>,a,(test :: (E, V) -> V),(e :: E),b>;
+// Call the `ctl test-expect` operation of the effect `:test`
+pub  fun test-expect[11,7,11,17] : forall<a> (v : (expect-value :: V -> V)<a>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>> a;
+// runtime tag for the effect `:test-scope`
+pub val @tag-test-scope[13,1,13,21] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(test-scope :: (E, V) -> V)>;
+// handler for the effect `:test-scope`
+pub  fun @handle-test-scope[13,12,13,21] : forall<a,(e :: E),b> (hnd : (test-scope :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
+// select `@val-scope-name` operation out of effect `:test-scope`
+pub  fun @select-val-scope-name[14,7,14,24] : forall<(e :: E),a> (^ hnd : (test-scope :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>;
+// Call the `val scope-name` operation of the effect `:test-scope`
+pub  fun @val-scope-name[14,7,14,16] : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> std/core/types/string;
+// Call the `val scope-name` operation of the effect `:test-scope`
+pub val scope-name[14,7,14,16] : (std/core/types/@valueop :: (E, V) -> V)<<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,std/core/types/string>;
+// select `@val-indentation` operation out of effect `:test-scope`
+pub  fun @select-val-indentation[15,7,15,25] : forall<(e :: E),a> (^ hnd : (test-scope :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>;
+// Call the `val indentation` operation of the effect `:test-scope`
+pub  fun @val-indentation[15,7,15,17] : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> std/core/types/string;
+// Call the `val indentation` operation of the effect `:test-scope`
+pub val indentation[15,7,15,17] : (std/core/types/@valueop :: (E, V) -> V)<<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,std/core/types/string>;
+// select `report-fail` operation out of effect `:test-scope`
+pub  fun @select-report-fail[16,7,16,23] : forall<(e :: E),a> (^ hnd : (test-scope :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>;
+// Call the `fun report-fail` operation of the effect `:test-scope`
+pub  fun report-fail[16,7,16,17] : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> ();
+ fun show[23,5,23,8] : forall<a> (a : (expectation :: V -> V)<a>, ?show : (a) -> (std/core/pure :: E) std/core/types/string) -> (std/core/pure :: E) std/core/types/string;
+// monadic lift
+ fun @mlift-expect-result@10222[1,0,1,0] : forall<a,(e :: E)> (continue-on-error : (std/core/types/@optional :: V -> V)<std/core/types/bool>, details : (std/core/types/@optional :: V -> V)<std/core/types/string>, expected : a, ?(==) : (a, a) -> (std/core/pure :: E) std/core/types/bool, ?kk-line : std/core/types/string, ?kk-module : std/core/types/string, ?show : (a) -> (std/core/pure :: E) std/core/types/string, res : (std/core/exn/error :: V -> V)<a>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a;
+// Expects a computation to return a value
+//
+// The expected type must have an `(==)` function as well as a `show` function defined for it
+pub  fun expect-result[42,9,42,21] : forall<a,(e :: E)> (expected : a, run : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a, details : (std/core/types/@optional :: V -> V)<std/core/types/string>, continue-on-error : (std/core/types/@optional :: V -> V)<std/core/types/bool>, ?(==) : (a, a) -> (std/core/pure :: E) std/core/types/bool, ?show : (a) -> (std/core/pure :: E) std/core/types/string, ?kk-line : std/core/types/string, ?kk-module : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a;
+// monadic lift
+ fun @mlift-assert-error@10223[1,0,1,0] : (wild_ : std/core/types/bool) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>> ();
+pub  fun assert-error[52,9,52,20] : (assertion : std/core/types/string, ?kk-line : std/core/types/string, ?kk-module : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>> ();
+// monadic lift
+ fun @mlift-expect-that@10224[1,0,1,0] : forall<a,(e :: E)> (predicate : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> std/core/types/bool, res@0 : a, @y-x10104 : std/core/hnd/ev-index) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> std/core/types/bool;
+// monadic lift
+ fun @mlift-expect-that@10225[1,0,1,0] : forall<a,(e :: E)> (assertion : std/core/types/string, details : (std/core/types/@optional :: V -> V)<std/core/types/string>, res@0 : a, ?(==) : (a, a) -> (std/core/pure :: E) std/core/types/bool, ?kk-line : std/core/types/string, ?kk-module : std/core/types/string, ?show : (a) -> (std/core/pure :: E) std/core/types/string, good : (std/core/exn/error :: V -> V)<std/core/types/bool>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a;
+// monadic lift
+ fun @mlift-expect-that@10226[1,0,1,0] : forall<a,(e :: E)> (assertion : std/core/types/string, details : (std/core/types/@optional :: V -> V)<std/core/types/string>, predicate : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> std/core/types/bool, ?(==) : (a, a) -> (std/core/pure :: E) std/core/types/bool, ?kk-line : std/core/types/string, ?kk-module : std/core/types/string, ?show : (a) -> (std/core/pure :: E) std/core/types/string, res : (std/core/exn/error :: V -> V)<a>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a;
+pub  fun expect-that[56,9,56,19] : forall<a,(e :: E)> (assertion : std/core/types/string, predicate : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> std/core/types/bool, run : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a, details : (std/core/types/@optional :: V -> V)<std/core/types/string>, ?(==) : (a, a) -> (std/core/pure :: E) std/core/types/bool, ?show : (a) -> (std/core/pure :: E) std/core/types/string, ?kk-line : std/core/types/string, ?kk-module : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a;
+// monadic lift
+ fun @mlift-expect@10227[1,0,1,0] : forall<a,(e :: E)> (wild_ : a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> ();
+// Same as expect-result but does not return the result of the computation, and defaults to not continue on error
+pub  fun expect[78,9,78,14] : forall<a,(e :: E)> (expected : a, run : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> a, details : (std/core/types/@optional :: V -> V)<std/core/types/string>, continue-on-error : (std/core/types/@optional :: V -> V)<std/core/types/bool>, ?(==) : (a, a) -> (std/core/pure :: E) std/core/types/bool, ?show : (a) -> (std/core/pure :: E) std/core/types/string, ?kk-line : std/core/types/string, ?kk-module : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-group@10228[1,0,1,0] : forall<(h :: H),(e :: E)> (infomsg : std/core/types/string, @y-x10115 : std/core/types/bool) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/console/console :: X)|(e :: E)> ();
+// A top level group of tests
+pub  fun group[83,9,83,13] : forall<(e :: E)> (name : std/core/types/string, f : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> (), is-test : (std/core/types/@optional :: V -> V)<std/core/types/bool>, ?kk-module : std/core/types/string, ?kk-line : std/core/types/string) -> <(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun istest/@mlift-scope@10229[1,0,1,0] : forall<(h :: H),(e :: E)> (wild_@0 : ()) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun istest/@mlift-scope@10230[1,0,1,0] : forall<(h :: H),(e :: E)> (infomsg : std/core/types/string, @y-x10128 : std/core/types/bool) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/console/console :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun istest/@mlift-scope@10231[1,0,1,0] : forall<(e :: E)> (f : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> (), @y-x10130 : std/core/hnd/ev-index) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun istest/@mlift-scope@10232[1,0,1,0] : forall<(h :: H),(e :: E)> (anyfail : (std/core/types/local-var :: (H, V) -> V)<(h :: H),std/core/types/bool>, f : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> (), infomsg : std/core/types/string, name : std/core/types/string, @y-x10124 : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/local :: H -> X)<(h :: H)>|(e :: E)> ();
+// monadic lift
+ fun istest/@mlift-scope@10233[1,0,1,0] : forall<(h :: H),(e :: E)> (f : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> (), is-test : std/core/types/bool, name : std/core/types/string, ?kk-line : std/core/types/string, ?kk-module : std/core/types/string, @y-x10122 : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/local :: H -> X)<(h :: H)>|(e :: E)> ();
+// A scoped grouping of tests with some name (could be a single test, or a subgroup of tests) 
+ fun istest/scope[99,5,99,16] : forall<(e :: E)> (name : std/core/types/string, is-test : std/core/types/bool, f : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> (), ?kk-module : std/core/types/string, ?kk-line : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// A subgroup of tests
+pub  fun subgroup[116,9,116,16] : forall<(e :: E)> (name : std/core/types/string, f : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> (), is-test : (std/core/types/@optional :: V -> V)<std/core/types/bool>, ?kk-module : std/core/types/string, ?kk-line : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun @mlift-test_@10234[1,0,1,0] : forall<a,(e :: E)> (b : (expectation :: V -> V)<a>, cont : std/core/types/bool, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-test_@10235[1,0,1,0] : forall<a,(e :: E)> (@y-x10138 : std/core/types/string, @y-x10139 : std/core/types/string, b : (expectation :: V -> V)<a>, cont : std/core/types/bool, e : std/core/exn/exception, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), @c-x10140 : (std/core/types/maybe :: V -> V)<std/core/types/string>) -> ();
+// monadic lift
+ fun @mlift-test_@10236[1,0,1,0] : forall<a,(e :: E)> (@y-x10138 : std/core/types/string, b : (expectation :: V -> V)<a>, cont : std/core/types/bool, e : std/core/exn/exception, err : (std/core/types/maybe :: V -> V)<std/core/types/string>, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), @y-x10139 : std/core/types/string) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun @mlift-test_@10237[1,0,1,0] : forall<a,(e :: E)> (b : (expectation :: V -> V)<a>, cont : std/core/types/bool, e : std/core/exn/exception, err : (std/core/types/maybe :: V -> V)<std/core/types/string>, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), showa : (a) -> (std/core/pure :: E) std/core/types/string, @y-x10138 : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun @mlift-test_@10238[1,0,1,0] : forall<a,(e :: E)> (@y-x10152 : std/core/types/string, @y-x10153 : std/core/types/string, @y-x10154 : std/core/types/string, b : (expectation :: V -> V)<a>, cont : std/core/types/bool, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), @c-x10155 : (std/core/types/maybe :: V -> V)<std/core/types/string>) -> ();
+// monadic lift
+ fun @mlift-test_@10239[1,0,1,0] : forall<a,(e :: E)> (@y-x10152 : std/core/types/string, @y-x10153 : std/core/types/string, b : (expectation :: V -> V)<a>, cont : std/core/types/bool, err : (std/core/types/maybe :: V -> V)<std/core/types/string>, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), @y-x10154 : std/core/types/string) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun @mlift-test_@10240[1,0,1,0] : forall<a,(e :: E)> (@y-x10152 : std/core/types/string, a' : a, b : (expectation :: V -> V)<a>, cont : std/core/types/bool, err : (std/core/types/maybe :: V -> V)<std/core/types/string>, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), showa : (a) -> (std/core/pure :: E) std/core/types/string, @y-x10153 : std/core/types/string) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun @mlift-test_@10241[1,0,1,0] : forall<a,(e :: E)> (a' : a, b : (expectation :: V -> V)<a>, cont : std/core/types/bool, err : (std/core/types/maybe :: V -> V)<std/core/types/string>, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), showa : (a) -> (std/core/pure :: E) std/core/types/string, @y-x10152 : std/core/types/string) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> ();
+// monadic lift
+ fun @mlift-test_@10242[1,0,1,0] : forall<a,(e :: E)> (a' : a, b : (expectation :: V -> V)<a>, cont : std/core/types/bool, err : (std/core/types/maybe :: V -> V)<std/core/types/string>, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), showa : (a) -> (std/core/pure :: E) std/core/types/string, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-test_@10243[1,0,1,0] : forall<a,(e :: E)> (a' : a, b : (expectation :: V -> V)<a>, cont : std/core/types/bool, err : (std/core/types/maybe :: V -> V)<std/core/types/string>, location : std/core/types/string, resume : (a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> (), showa : (a) -> (std/core/pure :: E) std/core/types/string, @c-x10147 : std/core/types/bool) -> ();
+// Runs a test function and prints the first failure including details or "Passed" if all expectations pass in the test
+ fun test_[124,5,124,9] : forall<(e :: E)> (f : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/pure :: E)|(e :: E)> (), ?kk-module : std/core/types/string, ?kk-line : std/core/types/string) -> <(std/core/console/console :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/pure :: E)|(e :: E)> ();
+// A test 
+pub  fun test[120,9,120,12] : forall<(e :: E)> (name : std/core/types/string, f : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/pure :: E)|(e :: E)> (), ?kk-module : std/core/types/string, ?kk-line : std/core/types/string) -> <(std/core/console/console :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/pure :: E)|(e :: E)> ();
+// monadic lift
+ fun @mlift-test-tests@10244[1,0,1,0] : forall<(e :: E)> (wild_@3 : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-test-tests@10245[1,0,1,0] : forall<(e :: E)> (wild_@2 : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-test-tests@10246[1,0,1,0] : forall<(e :: E)> (wild_@2@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-test-tests@10247[1,0,1,0] : forall<(e :: E)> (wild_@1 : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-test-tests@10248[1,0,1,0] : forall<(e :: E)> (wild_@0 : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-test-tests@10249[1,0,1,0] : forall<(e :: E)> (res : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>|(e :: E)> ();
+// monadic lift
+ fun @mlift-test-tests@10250[1,0,1,0] : forall<(e :: E)> (wild_@1@0 : ()) -> <(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)> ();
+// Some simple examples
+ fun test-tests[155,5,155,14] : forall<(e :: E)> () -> <(std/core/console/console :: X),(std/core/pure :: E)|(e :: E)> ();
+ 
+//------------------------------
+//#kki: external declarations
+ 
+ 
+//------------------------------
+//#kki: inline definitions
+ 
+//.inline-section
+inline borrow "^" fip fun is-expectedValue // inline size: 1
+  = forall<a> fn(expectation: (expectation :: V -> V)<a>){
+    (match (expectation) {
+      ((std/test/test/ExpectedValue((@pat@0: a) : a) : (expectation :: V -> V)<a> ) as @pat: ((expectation :: V -> V)<a>))
+         -> std/core/types/True;
+      (@pat@1: ((expectation :: V -> V)<a>))
+         -> std/core/types/False;
+    });
+  };
+inline borrow "^" fip fun is-expectedError // inline size: 1
+  = forall<a> fn(expectation: (expectation :: V -> V)<a>){
+    (match (expectation) {
+      ((std/test/test/ExpectedError((@pat@0: std/core/types/string) : std/core/types/string) : (expectation :: V -> V)<a> ) as @pat: ((expectation :: V -> V)<a>))
+         -> std/core/types/True;
+      (@pat@1: ((expectation :: V -> V)<a>))
+         -> std/core/types/False;
+    });
+  };
+inline borrow "^" fip fun is-expectedAssertion // inline size: 1
+  = forall<a> fn(expectation: (expectation :: V -> V)<a>){
+    (match (expectation) {
+      ((std/test/test/ExpectedAssertion((@pat@0: std/core/types/string) : std/core/types/string) : (expectation :: V -> V)<a> ) as @pat: ((expectation :: V -> V)<a>))
+         -> std/core/types/True;
+      (@pat@1: ((expectation :: V -> V)<a>))
+         -> std/core/types/False;
+    });
+  };
+inline borrow "^"  fun expect-value/run-value // inline size: 0
+  = forall<a> fn(@this: (expect-value :: V -> V)<a>){
+    (match (@this) {
+      ((@skip std/test/test/Expect-value((@x: (std/core/exn/error :: V -> V)<a>) : (std/core/exn/error :: V -> V)<a>, (@pat@0: (expectation :: V -> V)<a>) : (expectation :: V -> V)<a>, (@pat@1: (std/core/types/maybe :: V -> V)<std/core/types/string>) : (std/core/types/maybe :: V -> V)<std/core/types/string>, (@pat@2: std/core/types/bool) : std/core/types/bool, (@pat@3: std/core/types/string) : std/core/types/string, (@pat@4: (a, a) -> (std/core/pure :: E) std/core/types/bool) : (a, a) -> (std/core/pure :: E) std/core/types/bool, (@pat@5: (a) -> (std/core/pure :: E) std/core/types/string) : (a) -> (std/core/pure :: E) std/core/types/string) : (expect-value :: V -> V)<a> ) as @pat: ((expect-value :: V -> V)<a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun expect-value/expectation // inline size: 0
+  = forall<a> fn(@this: (expect-value :: V -> V)<a>){
+    (match (@this) {
+      ((@skip std/test/test/Expect-value((@pat@0: (std/core/exn/error :: V -> V)<a>) : (std/core/exn/error :: V -> V)<a>, (@x: (expectation :: V -> V)<a>) : (expectation :: V -> V)<a>, (@pat@1: (std/core/types/maybe :: V -> V)<std/core/types/string>) : (std/core/types/maybe :: V -> V)<std/core/types/string>, (@pat@2: std/core/types/bool) : std/core/types/bool, (@pat@3: std/core/types/string) : std/core/types/string, (@pat@4: (a, a) -> (std/core/pure :: E) std/core/types/bool) : (a, a) -> (std/core/pure :: E) std/core/types/bool, (@pat@5: (a) -> (std/core/pure :: E) std/core/types/string) : (a) -> (std/core/pure :: E) std/core/types/string) : (expect-value :: V -> V)<a> ) as @pat: ((expect-value :: V -> V)<a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun expect-value/details // inline size: 0
+  = forall<a> fn(@this: (expect-value :: V -> V)<a>){
+    (match (@this) {
+      ((@skip std/test/test/Expect-value((@pat@0: (std/core/exn/error :: V -> V)<a>) : (std/core/exn/error :: V -> V)<a>, (@pat@1: (expectation :: V -> V)<a>) : (expectation :: V -> V)<a>, (@x: (std/core/types/maybe :: V -> V)<std/core/types/string>) : (std/core/types/maybe :: V -> V)<std/core/types/string>, (@pat@2: std/core/types/bool) : std/core/types/bool, (@pat@3: std/core/types/string) : std/core/types/string, (@pat@4: (a, a) -> (std/core/pure :: E) std/core/types/bool) : (a, a) -> (std/core/pure :: E) std/core/types/bool, (@pat@5: (a) -> (std/core/pure :: E) std/core/types/string) : (a) -> (std/core/pure :: E) std/core/types/string) : (expect-value :: V -> V)<a> ) as @pat: ((expect-value :: V -> V)<a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun expect-value/continue-on-error // inline size: 0
+  = forall<a> fn(@this: (expect-value :: V -> V)<a>){
+    (match (@this) {
+      ((@skip std/test/test/Expect-value((@pat@0: (std/core/exn/error :: V -> V)<a>) : (std/core/exn/error :: V -> V)<a>, (@pat@1: (expectation :: V -> V)<a>) : (expectation :: V -> V)<a>, (@pat@2: (std/core/types/maybe :: V -> V)<std/core/types/string>) : (std/core/types/maybe :: V -> V)<std/core/types/string>, (@x: std/core/types/bool) : std/core/types/bool, (@pat@3: std/core/types/string) : std/core/types/string, (@pat@4: (a, a) -> (std/core/pure :: E) std/core/types/bool) : (a, a) -> (std/core/pure :: E) std/core/types/bool, (@pat@5: (a) -> (std/core/pure :: E) std/core/types/string) : (a) -> (std/core/pure :: E) std/core/types/string) : (expect-value :: V -> V)<a> ) as @pat: ((expect-value :: V -> V)<a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun expect-value/location // inline size: 0
+  = forall<a> fn(@this: (expect-value :: V -> V)<a>){
+    (match (@this) {
+      ((@skip std/test/test/Expect-value((@pat@0: (std/core/exn/error :: V -> V)<a>) : (std/core/exn/error :: V -> V)<a>, (@pat@1: (expectation :: V -> V)<a>) : (expectation :: V -> V)<a>, (@pat@2: (std/core/types/maybe :: V -> V)<std/core/types/string>) : (std/core/types/maybe :: V -> V)<std/core/types/string>, (@pat@3: std/core/types/bool) : std/core/types/bool, (@x: std/core/types/string) : std/core/types/string, (@pat@4: (a, a) -> (std/core/pure :: E) std/core/types/bool) : (a, a) -> (std/core/pure :: E) std/core/types/bool, (@pat@5: (a) -> (std/core/pure :: E) std/core/types/string) : (a) -> (std/core/pure :: E) std/core/types/string) : (expect-value :: V -> V)<a> ) as @pat: ((expect-value :: V -> V)<a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun expect-value/eq // inline size: 0
+  = forall<a> fn(@this: (expect-value :: V -> V)<a>){
+    (match (@this) {
+      ((@skip std/test/test/Expect-value((@pat@0: (std/core/exn/error :: V -> V)<a>) : (std/core/exn/error :: V -> V)<a>, (@pat@1: (expectation :: V -> V)<a>) : (expectation :: V -> V)<a>, (@pat@2: (std/core/types/maybe :: V -> V)<std/core/types/string>) : (std/core/types/maybe :: V -> V)<std/core/types/string>, (@pat@3: std/core/types/bool) : std/core/types/bool, (@pat@4: std/core/types/string) : std/core/types/string, (@x: (a, a) -> (std/core/pure :: E) std/core/types/bool) : (a, a) -> (std/core/pure :: E) std/core/types/bool, (@pat@5: (a) -> (std/core/pure :: E) std/core/types/string) : (a) -> (std/core/pure :: E) std/core/types/string) : (expect-value :: V -> V)<a> ) as @pat: ((expect-value :: V -> V)<a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun expect-value/show // inline size: 0
+  = forall<a> fn(@this: (expect-value :: V -> V)<a>){
+    (match (@this) {
+      ((@skip std/test/test/Expect-value((@pat@0: (std/core/exn/error :: V -> V)<a>) : (std/core/exn/error :: V -> V)<a>, (@pat@1: (expectation :: V -> V)<a>) : (expectation :: V -> V)<a>, (@pat@2: (std/core/types/maybe :: V -> V)<std/core/types/string>) : (std/core/types/maybe :: V -> V)<std/core/types/string>, (@pat@3: std/core/types/bool) : std/core/types/bool, (@pat@4: std/core/types/string) : std/core/types/string, (@pat@5: (a, a) -> (std/core/pure :: E) std/core/types/bool) : (a, a) -> (std/core/pure :: E) std/core/types/bool, (@x: (a) -> (std/core/pure :: E) std/core/types/string) : (a) -> (std/core/pure :: E) std/core/types/string) : (expect-value :: V -> V)<a> ) as @pat: ((expect-value :: V -> V)<a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun test/@cfc // inline size: 0
+  = forall<(e :: E),a> fn(test@0: (test :: (E, V) -> V)<(e :: E),a>){
+    (match (test@0) {
+      ((@skip std/test/test/@Hnd-test((@x: std/core/types/int) : std/core/types/int, (@pat@0: (forall<b> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<b>,b,(test :: (E, V) -> V),(e :: E),a>)) : (forall<b> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<b>,b,(test :: (E, V) -> V),(e :: E),a>)) : (test :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test :: (E, V) -> V)<(e :: E),a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun test/@ctl-test-expect // inline size: 0
+  = forall<(e :: E),a,b> fn(test@0: (test :: (E, V) -> V)<(e :: E),a>){
+    (match (test@0) {
+      ((@skip std/test/test/@Hnd-test((@pat@0: std/core/types/int) : std/core/types/int, (@x: (forall<c> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<c>,c,(test :: (E, V) -> V),(e :: E),a>)) : (forall<c> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<c>,c,(test :: (E, V) -> V),(e :: E),a>)) : (test :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test :: (E, V) -> V)<(e :: E),a>))
+         -> @x<b>;
+    });
+  };
+inline borrow "^"  fun test-scope/@cfc // inline size: 0
+  = forall<(e :: E),a> fn(@this: (test-scope :: (E, V) -> V)<(e :: E),a>){
+    (match (@this) {
+      ((@skip std/test/test/@Hnd-test-scope((@x: std/core/types/int) : std/core/types/int, (@pat@0: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@1: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@2: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (test-scope :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test-scope :: (E, V) -> V)<(e :: E),a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun test-scope/@val-indentation // inline size: 0
+  = forall<(e :: E),a> fn(@this: (test-scope :: (E, V) -> V)<(e :: E),a>){
+    (match (@this) {
+      ((@skip std/test/test/@Hnd-test-scope((@pat@0: std/core/types/int) : std/core/types/int, (@x: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@1: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@2: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (test-scope :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test-scope :: (E, V) -> V)<(e :: E),a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun test-scope/@val-scope-name // inline size: 0
+  = forall<(e :: E),a> fn(@this: (test-scope :: (E, V) -> V)<(e :: E),a>){
+    (match (@this) {
+      ((@skip std/test/test/@Hnd-test-scope((@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@x: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@2: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (test-scope :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test-scope :: (E, V) -> V)<(e :: E),a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun test-scope/@fun-report-fail // inline size: 0
+  = forall<(e :: E),a> fn(@this: (test-scope :: (E, V) -> V)<(e :: E),a>){
+    (match (@this) {
+      ((@skip std/test/test/@Hnd-test-scope((@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@2: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@x: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (test-scope :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test-scope :: (E, V) -> V)<(e :: E),a>))
+         -> @x;
+    });
+  };
+inline borrow "^"  fun @select-test-expect // inline size: 0
+  = forall<a,(e :: E),b> fn(hnd: (test :: (E, V) -> V)<(e :: E),b>){
+    (match (hnd) {
+      ((@skip std/test/test/@Hnd-test((@pat@0: std/core/types/int) : std/core/types/int, (@ctl-test-expect: (forall<c> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<c>,c,(test :: (E, V) -> V),(e :: E),b>)) : (forall<c> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<(expect-value :: V -> V)<c>,c,(test :: (E, V) -> V),(e :: E),b>)) : (test :: (E, V) -> V)<(e :: E),b> ) as @pat: ((test :: (E, V) -> V)<(e :: E),b>))
+         -> @ctl-test-expect<a>;
+    });
+  };
+inline  fun test-expect // inline size: 5
+  = forall<a> fn<<(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>>>(v: (expect-value :: V -> V)<a>){
+    std/core/hnd/@perform1<(expect-value :: V -> V)<a>,a,(test :: (E, V) -> V),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>>>((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>>,(i : std/core/hnd/ev-index) -> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(test :: (E, V) -> V)>,(i : std/core/hnd/ev-index) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(test :: (E, V) -> V)>>((std/core/hnd/@evv-at<(test :: (E, V) -> V)>))((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>>,(i : std/core/types/int) -> std/core/types/ssize_t,(i : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>> std/core/types/ssize_t>(std/core/types/@make-ssize_t)(0)))), (forall<(e :: E),b> std/test/test/@select-test-expect<a,(e :: E),b>), v);
+  };
+inline borrow "^"  fun @select-val-scope-name // inline size: 0
+  = forall<(e :: E),a> fn(hnd: (test-scope :: (E, V) -> V)<(e :: E),a>){
+    (match (hnd) {
+      ((@skip std/test/test/@Hnd-test-scope((@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@val-scope-name@0: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@2: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (test-scope :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test-scope :: (E, V) -> V)<(e :: E),a>))
+         -> @val-scope-name@0;
+    });
+  };
+inline  fun @val-scope-name // inline size: 5
+  = fn<<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>>(){
+    std/core/hnd/@perform0<std/core/types/string,<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(test-scope :: (E, V) -> V)>((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(i : std/core/hnd/ev-index) -> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(test-scope :: (E, V) -> V)>,(i : std/core/hnd/ev-index) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(test-scope :: (E, V) -> V)>>((std/core/hnd/@evv-at<(test-scope :: (E, V) -> V)>))((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(i : std/core/types/int) -> std/core/types/ssize_t,(i : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> std/core/types/ssize_t>(std/core/types/@make-ssize_t)(0)))), std/test/test/@select-val-scope-name);
+  };
+inline borrow "^"  fun @select-val-indentation // inline size: 0
+  = forall<(e :: E),a> fn(hnd: (test-scope :: (E, V) -> V)<(e :: E),a>){
+    (match (hnd) {
+      ((@skip std/test/test/@Hnd-test-scope((@pat@0: std/core/types/int) : std/core/types/int, (@val-indentation@0: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@1: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@2: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (test-scope :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test-scope :: (E, V) -> V)<(e :: E),a>))
+         -> @val-indentation@0;
+    });
+  };
+inline  fun @val-indentation // inline size: 5
+  = fn<<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>>(){
+    std/core/hnd/@perform0<std/core/types/string,<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(test-scope :: (E, V) -> V)>((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(i : std/core/hnd/ev-index) -> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(test-scope :: (E, V) -> V)>,(i : std/core/hnd/ev-index) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(test-scope :: (E, V) -> V)>>((std/core/hnd/@evv-at<(test-scope :: (E, V) -> V)>))((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(i : std/core/types/int) -> std/core/types/ssize_t,(i : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> std/core/types/ssize_t>(std/core/types/@make-ssize_t)(0)))), std/test/test/@select-val-indentation);
+  };
+inline borrow "^"  fun @select-report-fail // inline size: 0
+  = forall<(e :: E),a> fn(hnd: (test-scope :: (E, V) -> V)<(e :: E),a>){
+    (match (hnd) {
+      ((@skip std/test/test/@Hnd-test-scope((@pat@0: std/core/types/int) : std/core/types/int, (@pat@1: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@pat@2: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<std/core/types/string,(test-scope :: (E, V) -> V),(e :: E),a>, (@fun-report-fail: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(test-scope :: (E, V) -> V),(e :: E),a>) : (test-scope :: (E, V) -> V)<(e :: E),a> ) as @pat: ((test-scope :: (E, V) -> V)<(e :: E),a>))
+         -> @fun-report-fail;
+    });
+  };
+inline  fun report-fail // inline size: 5
+  = fn<<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>>(){
+    std/core/hnd/@perform0<(),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(test-scope :: (E, V) -> V)>((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(i : std/core/hnd/ev-index) -> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(test-scope :: (E, V) -> V)>,(i : std/core/hnd/ev-index) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(test-scope :: (E, V) -> V)>>((std/core/hnd/@evv-at<(test-scope :: (E, V) -> V)>))((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>>,(i : std/core/types/int) -> std/core/types/ssize_t,(i : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>> std/core/types/ssize_t>(std/core/types/@make-ssize_t)(0)))), std/test/test/@select-report-fail);
+  };
+ fun subgroup // inline size: 2
+  = forall<(e :: E)> fn<<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)>>(name: std/core/types/string, f: () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X)|(e :: E)> (), is-test: (std/core/types/@optional :: V -> V)<std/core/types/bool>, @implicit/kk-module: std/core/types/string, @implicit/kk-line: std/core/types/string){
+    std/test/test/#istest/scope<(e :: E)>(name, (match (is-test) {
+        ((std/core/types/@Optional((@uniq-is-test@3609: std/core/types/bool) : std/core/types/bool) : (std/core/types/@optional :: V -> V)<std/core/types/bool> ) as @pat: ((std/core/types/@optional :: V -> V)<std/core/types/bool>))
+           -> @uniq-is-test@3609;
+        ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/bool> ) as @pat@0: ((std/core/types/@optional :: V -> V)<std/core/types/bool>))
+           -> std/core/types/False;
+      }), f, @implicit/kk-module, @implicit/kk-line);
+  };
+ fun test // inline size: 2
+  = forall<(e :: E)> fn<<(std/core/console/console :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/pure :: E)|(e :: E)>>(name: std/core/types/string, f: () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(test :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/pure :: E)|(e :: E)> (), @implicit/kk-module: std/core/types/string, @implicit/kk-line: std/core/types/string){
+    std/test/test/#istest/scope<<(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)>>(name, std/core/types/True, (fn<<(std/core/types/handled :: ((E, V) -> V) -> X)<(test-scope :: (E, V) -> V)>,(std/core/console/console :: X),(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>|(e :: E)>>(){
+        (std/test/test/test_<(e :: E)>(f, @implicit/kk-module, @implicit/kk-line));
+      }), @implicit/kk-module, @implicit/kk-line);
+  };
