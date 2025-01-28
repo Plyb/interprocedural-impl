@@ -27,6 +27,7 @@
 #include "std_data_hash.h"
 #include "std_core_undiv.h"
 #include "std_core_unsafe.h"
+#include "std_data_sort.h"
 
 // type declarations
 
@@ -378,64 +379,98 @@ static inline kk_main__varName kk_main__varName_unbox(kk_box_t _x, kk_borrow_t _
 struct kk_main__exp_s {
   kk_block_t _block;
 };
-typedef kk_datatype_t kk_main__exp;
+typedef kk_datatype_ptr_t kk_main__exp;
+struct kk_main_NullE {
+  struct kk_main__exp_s _base;
+  kk_integer_t id;
+};
 struct kk_main_LitE {
   struct kk_main__exp_s _base;
   kk_main__literal lit;
+  kk_integer_t id;
+};
+struct kk_main_RootE {
+  struct kk_main__exp_s _base;
+  kk_integer_t id;
 };
 struct kk_main_DotE {
   struct kk_main__exp_s _base;
   kk_main__exp e;
   kk_main__fieldName f;
+  kk_integer_t id;
 };
 struct kk_main_OpE {
   struct kk_main__exp_s _base;
   kk_main__exp lhs;
   kk_main__exp rhs;
+  kk_integer_t id;
   kk_main__op op;
 };
 struct kk_main_VarE {
   struct kk_main__exp_s _base;
   kk_main__varName v;
+  kk_integer_t id;
 };
 struct kk_main_AsgnE {
   struct kk_main__exp_s _base;
   kk_main__varName v;
   kk_main__exp rhs;
+  kk_integer_t id;
 };
 struct kk_main_IfE {
   struct kk_main__exp_s _base;
   kk_main__exp cont;
   kk_main__exp thn;
   kk_main__exp els;
+  kk_integer_t id;
 };
 struct kk_main_ForE {
   struct kk_main__exp_s _base;
   kk_main__varName v;
   kk_main__exp from;
   kk_main__exp body;
+  kk_integer_t id;
 };
 struct kk_main_SeqE {
   struct kk_main__exp_s _base;
   kk_main__exp first;
   kk_main__exp second;
+  kk_integer_t id;
 };
 struct kk_main_PrintE {
   struct kk_main__exp_s _base;
   kk_main__exp e;
+  kk_integer_t id;
 };
-static inline kk_main__exp kk_main__new_NullE(kk_context_t* _ctx) {
-  return kk_datatype_from_tag((kk_tag_t)(1));
+static inline kk_main__exp kk_main__base_NullE(struct kk_main_NullE* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_RootE(kk_context_t* _ctx) {
-  return kk_datatype_from_tag((kk_tag_t)(3));
+static inline kk_main__exp kk_main__new_NullE(kk_reuse_t _at, int32_t _cpath, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_NullE* _con = kk_block_alloc_at_as(struct kk_main_NullE, _at, 1 /* scan count */, _cpath, (kk_tag_t)(1), _ctx);
+  _con->id = id;
+  return kk_main__base_NullE(_con, _ctx);
+}
+static inline struct kk_main_NullE* kk_main__as_NullE(kk_main__exp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_NullE*, x, (kk_tag_t)(1), _ctx);
+}
+static inline kk_main__exp kk_main__base_RootE(struct kk_main_RootE* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__exp kk_main__new_RootE(kk_reuse_t _at, int32_t _cpath, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_RootE* _con = kk_block_alloc_at_as(struct kk_main_RootE, _at, 1 /* scan count */, _cpath, (kk_tag_t)(3), _ctx);
+  _con->id = id;
+  return kk_main__base_RootE(_con, _ctx);
+}
+static inline struct kk_main_RootE* kk_main__as_RootE(kk_main__exp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_RootE*, x, (kk_tag_t)(3), _ctx);
 }
 static inline kk_main__exp kk_main__base_LitE(struct kk_main_LitE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_LitE(kk_reuse_t _at, int32_t _cpath, kk_main__literal lit, kk_context_t* _ctx) {
-  struct kk_main_LitE* _con = kk_block_alloc_at_as(struct kk_main_LitE, _at, 2 /* scan count */, _cpath, (kk_tag_t)(2), _ctx);
+static inline kk_main__exp kk_main__new_LitE(kk_reuse_t _at, int32_t _cpath, kk_main__literal lit, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_LitE* _con = kk_block_alloc_at_as(struct kk_main_LitE, _at, 3 /* scan count */, _cpath, (kk_tag_t)(2), _ctx);
   _con->lit = lit;
+  _con->id = id;
   return kk_main__base_LitE(_con, _ctx);
 }
 static inline struct kk_main_LitE* kk_main__as_LitE(kk_main__exp x, kk_context_t* _ctx) {
@@ -444,9 +479,10 @@ static inline struct kk_main_LitE* kk_main__as_LitE(kk_main__exp x, kk_context_t
 static inline kk_main__exp kk_main__base_VarE(struct kk_main_VarE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_VarE(kk_reuse_t _at, int32_t _cpath, kk_main__varName v, kk_context_t* _ctx) {
-  struct kk_main_VarE* _con = kk_block_alloc_at_as(struct kk_main_VarE, _at, 1 /* scan count */, _cpath, (kk_tag_t)(6), _ctx);
+static inline kk_main__exp kk_main__new_VarE(kk_reuse_t _at, int32_t _cpath, kk_main__varName v, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_VarE* _con = kk_block_alloc_at_as(struct kk_main_VarE, _at, 2 /* scan count */, _cpath, (kk_tag_t)(6), _ctx);
   _con->v = v;
+  _con->id = id;
   return kk_main__base_VarE(_con, _ctx);
 }
 static inline struct kk_main_VarE* kk_main__as_VarE(kk_main__exp x, kk_context_t* _ctx) {
@@ -455,9 +491,10 @@ static inline struct kk_main_VarE* kk_main__as_VarE(kk_main__exp x, kk_context_t
 static inline kk_main__exp kk_main__base_PrintE(struct kk_main_PrintE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_PrintE(kk_reuse_t _at, int32_t _cpath, kk_main__exp e, kk_context_t* _ctx) {
-  struct kk_main_PrintE* _con = kk_block_alloc_at_as(struct kk_main_PrintE, _at, 1 /* scan count */, _cpath, (kk_tag_t)(11), _ctx);
+static inline kk_main__exp kk_main__new_PrintE(kk_reuse_t _at, int32_t _cpath, kk_main__exp e, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_PrintE* _con = kk_block_alloc_at_as(struct kk_main_PrintE, _at, 2 /* scan count */, _cpath, (kk_tag_t)(11), _ctx);
   _con->e = e;
+  _con->id = id;
   return kk_main__base_PrintE(_con, _ctx);
 }
 static inline struct kk_main_PrintE* kk_main__as_PrintE(kk_main__exp x, kk_context_t* _ctx) {
@@ -466,10 +503,11 @@ static inline struct kk_main_PrintE* kk_main__as_PrintE(kk_main__exp x, kk_conte
 static inline kk_main__exp kk_main__base_DotE(struct kk_main_DotE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_DotE(kk_reuse_t _at, int32_t _cpath, kk_main__exp e, kk_main__fieldName f, kk_context_t* _ctx) {
-  struct kk_main_DotE* _con = kk_block_alloc_at_as(struct kk_main_DotE, _at, 3 /* scan count */, _cpath, (kk_tag_t)(4), _ctx);
+static inline kk_main__exp kk_main__new_DotE(kk_reuse_t _at, int32_t _cpath, kk_main__exp e, kk_main__fieldName f, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_DotE* _con = kk_block_alloc_at_as(struct kk_main_DotE, _at, 4 /* scan count */, _cpath, (kk_tag_t)(4), _ctx);
   _con->e = e;
   _con->f = f;
+  _con->id = id;
   return kk_main__base_DotE(_con, _ctx);
 }
 static inline struct kk_main_DotE* kk_main__as_DotE(kk_main__exp x, kk_context_t* _ctx) {
@@ -478,10 +516,11 @@ static inline struct kk_main_DotE* kk_main__as_DotE(kk_main__exp x, kk_context_t
 static inline kk_main__exp kk_main__base_AsgnE(struct kk_main_AsgnE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_AsgnE(kk_reuse_t _at, int32_t _cpath, kk_main__varName v, kk_main__exp rhs, kk_context_t* _ctx) {
-  struct kk_main_AsgnE* _con = kk_block_alloc_at_as(struct kk_main_AsgnE, _at, 2 /* scan count */, _cpath, (kk_tag_t)(7), _ctx);
+static inline kk_main__exp kk_main__new_AsgnE(kk_reuse_t _at, int32_t _cpath, kk_main__varName v, kk_main__exp rhs, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_AsgnE* _con = kk_block_alloc_at_as(struct kk_main_AsgnE, _at, 3 /* scan count */, _cpath, (kk_tag_t)(7), _ctx);
   _con->v = v;
   _con->rhs = rhs;
+  _con->id = id;
   return kk_main__base_AsgnE(_con, _ctx);
 }
 static inline struct kk_main_AsgnE* kk_main__as_AsgnE(kk_main__exp x, kk_context_t* _ctx) {
@@ -490,10 +529,11 @@ static inline struct kk_main_AsgnE* kk_main__as_AsgnE(kk_main__exp x, kk_context
 static inline kk_main__exp kk_main__base_SeqE(struct kk_main_SeqE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_SeqE(kk_reuse_t _at, int32_t _cpath, kk_main__exp first, kk_main__exp second, kk_context_t* _ctx) {
-  struct kk_main_SeqE* _con = kk_block_alloc_at_as(struct kk_main_SeqE, _at, 2 /* scan count */, _cpath, (kk_tag_t)(10), _ctx);
+static inline kk_main__exp kk_main__new_SeqE(kk_reuse_t _at, int32_t _cpath, kk_main__exp first, kk_main__exp second, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_SeqE* _con = kk_block_alloc_at_as(struct kk_main_SeqE, _at, 3 /* scan count */, _cpath, (kk_tag_t)(10), _ctx);
   _con->first = first;
   _con->second = second;
+  _con->id = id;
   return kk_main__base_SeqE(_con, _ctx);
 }
 static inline struct kk_main_SeqE* kk_main__as_SeqE(kk_main__exp x, kk_context_t* _ctx) {
@@ -502,10 +542,11 @@ static inline struct kk_main_SeqE* kk_main__as_SeqE(kk_main__exp x, kk_context_t
 static inline kk_main__exp kk_main__base_OpE(struct kk_main_OpE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_OpE(kk_reuse_t _at, int32_t _cpath, kk_main__op op, kk_main__exp lhs, kk_main__exp rhs, kk_context_t* _ctx) {
-  struct kk_main_OpE* _con = kk_block_alloc_at_as(struct kk_main_OpE, _at, 2 /* scan count */, _cpath, (kk_tag_t)(5), _ctx);
+static inline kk_main__exp kk_main__new_OpE(kk_reuse_t _at, int32_t _cpath, kk_main__op op, kk_main__exp lhs, kk_main__exp rhs, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_OpE* _con = kk_block_alloc_at_as(struct kk_main_OpE, _at, 3 /* scan count */, _cpath, (kk_tag_t)(5), _ctx);
   _con->lhs = lhs;
   _con->rhs = rhs;
+  _con->id = id;
   _con->op = op;
   return kk_main__base_OpE(_con, _ctx);
 }
@@ -515,11 +556,12 @@ static inline struct kk_main_OpE* kk_main__as_OpE(kk_main__exp x, kk_context_t* 
 static inline kk_main__exp kk_main__base_IfE(struct kk_main_IfE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_IfE(kk_reuse_t _at, int32_t _cpath, kk_main__exp cont, kk_main__exp thn, kk_main__exp els, kk_context_t* _ctx) {
-  struct kk_main_IfE* _con = kk_block_alloc_at_as(struct kk_main_IfE, _at, 3 /* scan count */, _cpath, (kk_tag_t)(8), _ctx);
+static inline kk_main__exp kk_main__new_IfE(kk_reuse_t _at, int32_t _cpath, kk_main__exp cont, kk_main__exp thn, kk_main__exp els, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_IfE* _con = kk_block_alloc_at_as(struct kk_main_IfE, _at, 4 /* scan count */, _cpath, (kk_tag_t)(8), _ctx);
   _con->cont = cont;
   _con->thn = thn;
   _con->els = els;
+  _con->id = id;
   return kk_main__base_IfE(_con, _ctx);
 }
 static inline struct kk_main_IfE* kk_main__as_IfE(kk_main__exp x, kk_context_t* _ctx) {
@@ -528,59 +570,674 @@ static inline struct kk_main_IfE* kk_main__as_IfE(kk_main__exp x, kk_context_t* 
 static inline kk_main__exp kk_main__base_ForE(struct kk_main_ForE* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__exp kk_main__new_ForE(kk_reuse_t _at, int32_t _cpath, kk_main__varName v, kk_main__exp from, kk_main__exp body, kk_context_t* _ctx) {
-  struct kk_main_ForE* _con = kk_block_alloc_at_as(struct kk_main_ForE, _at, 3 /* scan count */, _cpath, (kk_tag_t)(9), _ctx);
+static inline kk_main__exp kk_main__new_ForE(kk_reuse_t _at, int32_t _cpath, kk_main__varName v, kk_main__exp from, kk_main__exp body, kk_integer_t id, kk_context_t* _ctx) {
+  struct kk_main_ForE* _con = kk_block_alloc_at_as(struct kk_main_ForE, _at, 4 /* scan count */, _cpath, (kk_tag_t)(9), _ctx);
   _con->v = v;
   _con->from = from;
   _con->body = body;
+  _con->id = id;
   return kk_main__base_ForE(_con, _ctx);
 }
 static inline struct kk_main_ForE* kk_main__as_ForE(kk_main__exp x, kk_context_t* _ctx) {
   return kk_datatype_as_assert(struct kk_main_ForE*, x, (kk_tag_t)(9), _ctx);
 }
 static inline bool kk_main__is_NullE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_singleton_tag(x, (kk_tag_t)(1)));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(1), _ctx));
 }
 static inline bool kk_main__is_RootE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_singleton_tag(x, (kk_tag_t)(3)));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(3), _ctx));
 }
 static inline bool kk_main__is_LitE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(2), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(2), _ctx));
 }
 static inline bool kk_main__is_VarE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(6), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(6), _ctx));
 }
 static inline bool kk_main__is_PrintE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(11), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(11), _ctx));
 }
 static inline bool kk_main__is_DotE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(4), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(4), _ctx));
 }
 static inline bool kk_main__is_AsgnE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(7), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(7), _ctx));
 }
 static inline bool kk_main__is_SeqE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(10), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(10), _ctx));
 }
 static inline bool kk_main__is_OpE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(5), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(5), _ctx));
 }
 static inline bool kk_main__is_IfE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(8), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(8), _ctx));
 }
 static inline bool kk_main__is_ForE(kk_main__exp x, kk_context_t* _ctx) {
-  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(9), _ctx));
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(9), _ctx));
 }
 static inline kk_main__exp kk_main__exp_dup(kk_main__exp _x, kk_context_t* _ctx) {
-  return kk_datatype_dup(_x, _ctx);
+  return kk_datatype_ptr_dup(_x, _ctx);
 }
 static inline void kk_main__exp_drop(kk_main__exp _x, kk_context_t* _ctx) {
-  kk_datatype_drop(_x, _ctx);
+  kk_datatype_ptr_drop(_x, _ctx);
 }
 static inline kk_box_t kk_main__exp_box(kk_main__exp _x, kk_context_t* _ctx) {
-  return kk_datatype_box(_x);
+  return kk_datatype_ptr_box(_x);
 }
 static inline kk_main__exp kk_main__exp_unbox(kk_box_t _x, kk_borrow_t _borrow, kk_context_t* _ctx) {
+  return kk_datatype_ptr_unbox(_x);
+}
+
+// type main/absValueExp
+struct kk_main__absValueExp_s {
+  kk_block_t _block;
+};
+typedef kk_datatype_ptr_t kk_main__absValueExp;
+
+// type main/storeExp
+struct kk_main__storeExp_s {
+  kk_block_t _block;
+};
+typedef kk_datatype_t kk_main__storeExp;
+struct kk_main_AVEExp {
+  struct kk_main__absValueExp_s _base;
+  kk_main__exp exp;
+};
+struct kk_main_AVEValue {
+  struct kk_main__absValueExp_s _base;
+  kk_main__absValue absValue;
+};
+struct kk_main_AVEDot {
+  struct kk_main__absValueExp_s _base;
+  kk_main__absValueExp absValueExp;
+  kk_main__fieldName f;
+};
+struct kk_main_AVEOp {
+  struct kk_main__absValueExp_s _base;
+  kk_main__absValueExp e1;
+  kk_main__absValueExp e2;
+  kk_main__op op;
+};
+struct kk_main_AVEStore {
+  struct kk_main__absValueExp_s _base;
+  kk_main__storeExp storeExp;
+  kk_main__varName v;
+};
+struct kk_main_AVEJoin {
+  struct kk_main__absValueExp_s _base;
+  kk_main__absValueExp a;
+  kk_main__absValueExp b;
+};
+static inline kk_main__absValueExp kk_main__base_AVEExp(struct kk_main_AVEExp* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absValueExp kk_main__new_AVEExp(kk_reuse_t _at, int32_t _cpath, kk_main__exp exp, kk_context_t* _ctx) {
+  struct kk_main_AVEExp* _con = kk_block_alloc_at_as(struct kk_main_AVEExp, _at, 1 /* scan count */, _cpath, (kk_tag_t)(1), _ctx);
+  _con->exp = exp;
+  return kk_main__base_AVEExp(_con, _ctx);
+}
+static inline struct kk_main_AVEExp* kk_main__as_AVEExp(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AVEExp*, x, (kk_tag_t)(1), _ctx);
+}
+static inline kk_main__absValueExp kk_main__base_AVEValue(struct kk_main_AVEValue* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absValueExp kk_main__new_AVEValue(kk_reuse_t _at, int32_t _cpath, kk_main__absValue absValue, kk_context_t* _ctx) {
+  struct kk_main_AVEValue* _con = kk_block_alloc_at_as(struct kk_main_AVEValue, _at, 1 /* scan count */, _cpath, (kk_tag_t)(2), _ctx);
+  _con->absValue = absValue;
+  return kk_main__base_AVEValue(_con, _ctx);
+}
+static inline struct kk_main_AVEValue* kk_main__as_AVEValue(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AVEValue*, x, (kk_tag_t)(2), _ctx);
+}
+static inline kk_main__absValueExp kk_main__base_AVEDot(struct kk_main_AVEDot* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absValueExp kk_main__new_AVEDot(kk_reuse_t _at, int32_t _cpath, kk_main__absValueExp absValueExp, kk_main__fieldName f, kk_context_t* _ctx) {
+  struct kk_main_AVEDot* _con = kk_block_alloc_at_as(struct kk_main_AVEDot, _at, 3 /* scan count */, _cpath, (kk_tag_t)(3), _ctx);
+  _con->absValueExp = absValueExp;
+  _con->f = f;
+  return kk_main__base_AVEDot(_con, _ctx);
+}
+static inline struct kk_main_AVEDot* kk_main__as_AVEDot(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AVEDot*, x, (kk_tag_t)(3), _ctx);
+}
+static inline kk_main__absValueExp kk_main__base_AVEStore(struct kk_main_AVEStore* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absValueExp kk_main__new_AVEStore(kk_reuse_t _at, int32_t _cpath, kk_main__storeExp storeExp, kk_main__varName v, kk_context_t* _ctx) {
+  struct kk_main_AVEStore* _con = kk_block_alloc_at_as(struct kk_main_AVEStore, _at, 2 /* scan count */, _cpath, (kk_tag_t)(5), _ctx);
+  _con->storeExp = storeExp;
+  _con->v = v;
+  return kk_main__base_AVEStore(_con, _ctx);
+}
+static inline struct kk_main_AVEStore* kk_main__as_AVEStore(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AVEStore*, x, (kk_tag_t)(5), _ctx);
+}
+static inline kk_main__absValueExp kk_main__base_AVEJoin(struct kk_main_AVEJoin* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absValueExp kk_main__new_AVEJoin(kk_reuse_t _at, int32_t _cpath, kk_main__absValueExp a, kk_main__absValueExp b, kk_context_t* _ctx) {
+  struct kk_main_AVEJoin* _con = kk_block_alloc_at_as(struct kk_main_AVEJoin, _at, 2 /* scan count */, _cpath, (kk_tag_t)(6), _ctx);
+  _con->a = a;
+  _con->b = b;
+  return kk_main__base_AVEJoin(_con, _ctx);
+}
+static inline struct kk_main_AVEJoin* kk_main__as_AVEJoin(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AVEJoin*, x, (kk_tag_t)(6), _ctx);
+}
+static inline kk_main__absValueExp kk_main__base_AVEOp(struct kk_main_AVEOp* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absValueExp kk_main__new_AVEOp(kk_reuse_t _at, int32_t _cpath, kk_main__op op, kk_main__absValueExp e1, kk_main__absValueExp e2, kk_context_t* _ctx) {
+  struct kk_main_AVEOp* _con = kk_block_alloc_at_as(struct kk_main_AVEOp, _at, 2 /* scan count */, _cpath, (kk_tag_t)(4), _ctx);
+  _con->e1 = e1;
+  _con->e2 = e2;
+  _con->op = op;
+  return kk_main__base_AVEOp(_con, _ctx);
+}
+static inline struct kk_main_AVEOp* kk_main__as_AVEOp(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AVEOp*, x, (kk_tag_t)(4), _ctx);
+}
+static inline bool kk_main__is_AVEExp(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(1), _ctx));
+}
+static inline bool kk_main__is_AVEValue(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(2), _ctx));
+}
+static inline bool kk_main__is_AVEDot(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(3), _ctx));
+}
+static inline bool kk_main__is_AVEStore(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(5), _ctx));
+}
+static inline bool kk_main__is_AVEJoin(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(6), _ctx));
+}
+static inline bool kk_main__is_AVEOp(kk_main__absValueExp x, kk_context_t* _ctx) {
+  return (kk_datatype_ptr_has_tag(x, (kk_tag_t)(4), _ctx));
+}
+static inline kk_main__absValueExp kk_main__absValueExp_dup(kk_main__absValueExp _x, kk_context_t* _ctx) {
+  return kk_datatype_ptr_dup(_x, _ctx);
+}
+static inline void kk_main__absValueExp_drop(kk_main__absValueExp _x, kk_context_t* _ctx) {
+  kk_datatype_ptr_drop(_x, _ctx);
+}
+static inline kk_box_t kk_main__absValueExp_box(kk_main__absValueExp _x, kk_context_t* _ctx) {
+  return kk_datatype_ptr_box(_x);
+}
+static inline kk_main__absValueExp kk_main__absValueExp_unbox(kk_box_t _x, kk_borrow_t _borrow, kk_context_t* _ctx) {
+  return kk_datatype_ptr_unbox(_x);
+}
+struct kk_main_SEOS {
+  struct kk_main__storeExp_s _base;
+  kk_main__exp exp;
+};
+struct kk_main_SEIS {
+  struct kk_main__storeExp_s _base;
+  kk_main__exp exp;
+};
+struct kk_main_SEInsert {
+  struct kk_main__storeExp_s _base;
+  kk_main__storeExp storeExp;
+  kk_main__varName v;
+  kk_main__absValueExp absValueExp;
+};
+struct kk_main_SEUnion {
+  struct kk_main__storeExp_s _base;
+  kk_main__storeExp a;
+  kk_main__storeExp b;
+};
+struct kk_main_SERemove {
+  struct kk_main__storeExp_s _base;
+  kk_main__storeExp storeExp;
+  kk_main__varName v;
+};
+struct kk_main_SEValue {
+  struct kk_main__storeExp_s _base;
+  kk_std_data_hashmap__hash_map store;
+};
+static inline kk_main__storeExp kk_main__new_SEEmpty(kk_context_t* _ctx) {
+  return kk_datatype_from_tag((kk_tag_t)(1));
+}
+static inline kk_main__storeExp kk_main__base_SEOS(struct kk_main_SEOS* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__storeExp kk_main__new_SEOS(kk_reuse_t _at, int32_t _cpath, kk_main__exp exp, kk_context_t* _ctx) {
+  struct kk_main_SEOS* _con = kk_block_alloc_at_as(struct kk_main_SEOS, _at, 1 /* scan count */, _cpath, (kk_tag_t)(2), _ctx);
+  _con->exp = exp;
+  return kk_main__base_SEOS(_con, _ctx);
+}
+static inline struct kk_main_SEOS* kk_main__as_SEOS(kk_main__storeExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_SEOS*, x, (kk_tag_t)(2), _ctx);
+}
+static inline kk_main__storeExp kk_main__base_SEIS(struct kk_main_SEIS* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__storeExp kk_main__new_SEIS(kk_reuse_t _at, int32_t _cpath, kk_main__exp exp, kk_context_t* _ctx) {
+  struct kk_main_SEIS* _con = kk_block_alloc_at_as(struct kk_main_SEIS, _at, 1 /* scan count */, _cpath, (kk_tag_t)(3), _ctx);
+  _con->exp = exp;
+  return kk_main__base_SEIS(_con, _ctx);
+}
+static inline struct kk_main_SEIS* kk_main__as_SEIS(kk_main__storeExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_SEIS*, x, (kk_tag_t)(3), _ctx);
+}
+static inline kk_main__storeExp kk_main__base_SEValue(struct kk_main_SEValue* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__storeExp kk_main__new_SEValue(kk_reuse_t _at, int32_t _cpath, kk_std_data_hashmap__hash_map store, kk_context_t* _ctx) {
+  struct kk_main_SEValue* _con = kk_block_alloc_at_as(struct kk_main_SEValue, _at, 1 /* scan count */, _cpath, (kk_tag_t)(7), _ctx);
+  _con->store = store;
+  return kk_main__base_SEValue(_con, _ctx);
+}
+static inline struct kk_main_SEValue* kk_main__as_SEValue(kk_main__storeExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_SEValue*, x, (kk_tag_t)(7), _ctx);
+}
+static inline kk_main__storeExp kk_main__base_SEUnion(struct kk_main_SEUnion* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__storeExp kk_main__new_SEUnion(kk_reuse_t _at, int32_t _cpath, kk_main__storeExp a, kk_main__storeExp b, kk_context_t* _ctx) {
+  struct kk_main_SEUnion* _con = kk_block_alloc_at_as(struct kk_main_SEUnion, _at, 2 /* scan count */, _cpath, (kk_tag_t)(5), _ctx);
+  _con->a = a;
+  _con->b = b;
+  return kk_main__base_SEUnion(_con, _ctx);
+}
+static inline struct kk_main_SEUnion* kk_main__as_SEUnion(kk_main__storeExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_SEUnion*, x, (kk_tag_t)(5), _ctx);
+}
+static inline kk_main__storeExp kk_main__base_SERemove(struct kk_main_SERemove* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__storeExp kk_main__new_SERemove(kk_reuse_t _at, int32_t _cpath, kk_main__storeExp storeExp, kk_main__varName v, kk_context_t* _ctx) {
+  struct kk_main_SERemove* _con = kk_block_alloc_at_as(struct kk_main_SERemove, _at, 2 /* scan count */, _cpath, (kk_tag_t)(6), _ctx);
+  _con->storeExp = storeExp;
+  _con->v = v;
+  return kk_main__base_SERemove(_con, _ctx);
+}
+static inline struct kk_main_SERemove* kk_main__as_SERemove(kk_main__storeExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_SERemove*, x, (kk_tag_t)(6), _ctx);
+}
+static inline kk_main__storeExp kk_main__base_SEInsert(struct kk_main_SEInsert* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__storeExp kk_main__new_SEInsert(kk_reuse_t _at, int32_t _cpath, kk_main__storeExp storeExp, kk_main__varName v, kk_main__absValueExp absValueExp, kk_context_t* _ctx) {
+  struct kk_main_SEInsert* _con = kk_block_alloc_at_as(struct kk_main_SEInsert, _at, 3 /* scan count */, _cpath, (kk_tag_t)(4), _ctx);
+  _con->storeExp = storeExp;
+  _con->v = v;
+  _con->absValueExp = absValueExp;
+  return kk_main__base_SEInsert(_con, _ctx);
+}
+static inline struct kk_main_SEInsert* kk_main__as_SEInsert(kk_main__storeExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_SEInsert*, x, (kk_tag_t)(4), _ctx);
+}
+static inline bool kk_main__is_SEEmpty(kk_main__storeExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_singleton_tag(x, (kk_tag_t)(1)));
+}
+static inline bool kk_main__is_SEOS(kk_main__storeExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(2), _ctx));
+}
+static inline bool kk_main__is_SEIS(kk_main__storeExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(3), _ctx));
+}
+static inline bool kk_main__is_SEValue(kk_main__storeExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(7), _ctx));
+}
+static inline bool kk_main__is_SEUnion(kk_main__storeExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(5), _ctx));
+}
+static inline bool kk_main__is_SERemove(kk_main__storeExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(6), _ctx));
+}
+static inline bool kk_main__is_SEInsert(kk_main__storeExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(4), _ctx));
+}
+static inline kk_main__storeExp kk_main__storeExp_dup(kk_main__storeExp _x, kk_context_t* _ctx) {
+  return kk_datatype_dup(_x, _ctx);
+}
+static inline void kk_main__storeExp_drop(kk_main__storeExp _x, kk_context_t* _ctx) {
+  kk_datatype_drop(_x, _ctx);
+}
+static inline kk_box_t kk_main__storeExp_box(kk_main__storeExp _x, kk_context_t* _ctx) {
+  return kk_datatype_box(_x);
+}
+static inline kk_main__storeExp kk_main__storeExp_unbox(kk_box_t _x, kk_borrow_t _borrow, kk_context_t* _ctx) {
+  return kk_datatype_unbox(_x);
+}
+
+// type main/absOpExp
+struct kk_main__absOpExp_s {
+  kk_block_t _block;
+};
+typedef kk_datatype_t kk_main__absOpExp;
+struct kk_main_AOEC {
+  struct kk_main__absOpExp_s _base;
+  kk_main__exp exp;
+};
+struct kk_main_AOEAnd {
+  struct kk_main__absOpExp_s _base;
+  kk_main__absOpExp a;
+  kk_main__absOpExp b;
+};
+struct kk_main_AOEAV {
+  struct kk_main__absOpExp_s _base;
+  kk_main__absValueExp absValueExp;
+};
+struct kk_main_AOENot {
+  struct kk_main__absOpExp_s _base;
+  kk_main__absOpExp absOpExp;
+};
+static inline kk_main__absOpExp kk_main__new_AOETrue(kk_context_t* _ctx) {
+  return kk_datatype_from_tag((kk_tag_t)(1));
+}
+static inline kk_main__absOpExp kk_main__base_AOEC(struct kk_main_AOEC* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absOpExp kk_main__new_AOEC(kk_reuse_t _at, int32_t _cpath, kk_main__exp exp, kk_context_t* _ctx) {
+  struct kk_main_AOEC* _con = kk_block_alloc_at_as(struct kk_main_AOEC, _at, 1 /* scan count */, _cpath, (kk_tag_t)(2), _ctx);
+  _con->exp = exp;
+  return kk_main__base_AOEC(_con, _ctx);
+}
+static inline struct kk_main_AOEC* kk_main__as_AOEC(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AOEC*, x, (kk_tag_t)(2), _ctx);
+}
+static inline kk_main__absOpExp kk_main__base_AOEAV(struct kk_main_AOEAV* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absOpExp kk_main__new_AOEAV(kk_reuse_t _at, int32_t _cpath, kk_main__absValueExp absValueExp, kk_context_t* _ctx) {
+  struct kk_main_AOEAV* _con = kk_block_alloc_at_as(struct kk_main_AOEAV, _at, 1 /* scan count */, _cpath, (kk_tag_t)(4), _ctx);
+  _con->absValueExp = absValueExp;
+  return kk_main__base_AOEAV(_con, _ctx);
+}
+static inline struct kk_main_AOEAV* kk_main__as_AOEAV(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AOEAV*, x, (kk_tag_t)(4), _ctx);
+}
+static inline kk_main__absOpExp kk_main__base_AOENot(struct kk_main_AOENot* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absOpExp kk_main__new_AOENot(kk_reuse_t _at, int32_t _cpath, kk_main__absOpExp absOpExp, kk_context_t* _ctx) {
+  struct kk_main_AOENot* _con = kk_block_alloc_at_as(struct kk_main_AOENot, _at, 1 /* scan count */, _cpath, (kk_tag_t)(5), _ctx);
+  _con->absOpExp = absOpExp;
+  return kk_main__base_AOENot(_con, _ctx);
+}
+static inline struct kk_main_AOENot* kk_main__as_AOENot(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AOENot*, x, (kk_tag_t)(5), _ctx);
+}
+static inline kk_main__absOpExp kk_main__base_AOEAnd(struct kk_main_AOEAnd* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__absOpExp kk_main__new_AOEAnd(kk_reuse_t _at, int32_t _cpath, kk_main__absOpExp a, kk_main__absOpExp b, kk_context_t* _ctx) {
+  struct kk_main_AOEAnd* _con = kk_block_alloc_at_as(struct kk_main_AOEAnd, _at, 2 /* scan count */, _cpath, (kk_tag_t)(3), _ctx);
+  _con->a = a;
+  _con->b = b;
+  return kk_main__base_AOEAnd(_con, _ctx);
+}
+static inline struct kk_main_AOEAnd* kk_main__as_AOEAnd(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_AOEAnd*, x, (kk_tag_t)(3), _ctx);
+}
+static inline bool kk_main__is_AOETrue(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_singleton_tag(x, (kk_tag_t)(1)));
+}
+static inline bool kk_main__is_AOEC(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(2), _ctx));
+}
+static inline bool kk_main__is_AOEAV(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(4), _ctx));
+}
+static inline bool kk_main__is_AOENot(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(5), _ctx));
+}
+static inline bool kk_main__is_AOEAnd(kk_main__absOpExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(3), _ctx));
+}
+static inline kk_main__absOpExp kk_main__absOpExp_dup(kk_main__absOpExp _x, kk_context_t* _ctx) {
+  return kk_datatype_dup(_x, _ctx);
+}
+static inline void kk_main__absOpExp_drop(kk_main__absOpExp _x, kk_context_t* _ctx) {
+  kk_datatype_drop(_x, _ctx);
+}
+static inline kk_box_t kk_main__absOpExp_box(kk_main__absOpExp _x, kk_context_t* _ctx) {
+  return kk_datatype_box(_x);
+}
+static inline kk_main__absOpExp kk_main__absOpExp_unbox(kk_box_t _x, kk_borrow_t _borrow, kk_context_t* _ctx) {
+  return kk_datatype_unbox(_x);
+}
+
+// type main/iteratorContextExp
+struct kk_main__iteratorContextExp_s {
+  kk_block_t _block;
+};
+typedef kk_datatype_t kk_main__iteratorContextExp;
+struct kk_main_ICEIT {
+  struct kk_main__iteratorContextExp_s _base;
+  kk_main__exp exp;
+};
+struct kk_main_ICEPlusIf {
+  struct kk_main__iteratorContextExp_s _base;
+  kk_main__iteratorContextExp itExp;
+  kk_main__absValueExp avExp;
+};
+static inline kk_main__iteratorContextExp kk_main__new_ICEEmpty(kk_context_t* _ctx) {
+  return kk_datatype_from_tag((kk_tag_t)(1));
+}
+static inline kk_main__iteratorContextExp kk_main__base_ICEIT(struct kk_main_ICEIT* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__iteratorContextExp kk_main__new_ICEIT(kk_reuse_t _at, int32_t _cpath, kk_main__exp exp, kk_context_t* _ctx) {
+  struct kk_main_ICEIT* _con = kk_block_alloc_at_as(struct kk_main_ICEIT, _at, 1 /* scan count */, _cpath, (kk_tag_t)(2), _ctx);
+  _con->exp = exp;
+  return kk_main__base_ICEIT(_con, _ctx);
+}
+static inline struct kk_main_ICEIT* kk_main__as_ICEIT(kk_main__iteratorContextExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_ICEIT*, x, (kk_tag_t)(2), _ctx);
+}
+static inline kk_main__iteratorContextExp kk_main__base_ICEPlusIf(struct kk_main_ICEPlusIf* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__iteratorContextExp kk_main__new_ICEPlusIf(kk_reuse_t _at, int32_t _cpath, kk_main__iteratorContextExp itExp, kk_main__absValueExp avExp, kk_context_t* _ctx) {
+  struct kk_main_ICEPlusIf* _con = kk_block_alloc_at_as(struct kk_main_ICEPlusIf, _at, 2 /* scan count */, _cpath, (kk_tag_t)(3), _ctx);
+  _con->itExp = itExp;
+  _con->avExp = avExp;
+  return kk_main__base_ICEPlusIf(_con, _ctx);
+}
+static inline struct kk_main_ICEPlusIf* kk_main__as_ICEPlusIf(kk_main__iteratorContextExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_ICEPlusIf*, x, (kk_tag_t)(3), _ctx);
+}
+static inline bool kk_main__is_ICEEmpty(kk_main__iteratorContextExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_singleton_tag(x, (kk_tag_t)(1)));
+}
+static inline bool kk_main__is_ICEIT(kk_main__iteratorContextExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(2), _ctx));
+}
+static inline bool kk_main__is_ICEPlusIf(kk_main__iteratorContextExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(3), _ctx));
+}
+static inline kk_main__iteratorContextExp kk_main__iteratorContextExp_dup(kk_main__iteratorContextExp _x, kk_context_t* _ctx) {
+  return kk_datatype_dup(_x, _ctx);
+}
+static inline void kk_main__iteratorContextExp_drop(kk_main__iteratorContextExp _x, kk_context_t* _ctx) {
+  kk_datatype_drop(_x, _ctx);
+}
+static inline kk_box_t kk_main__iteratorContextExp_box(kk_main__iteratorContextExp _x, kk_context_t* _ctx) {
+  return kk_datatype_box(_x);
+}
+static inline kk_main__iteratorContextExp kk_main__iteratorContextExp_unbox(kk_box_t _x, kk_borrow_t _borrow, kk_context_t* _ctx) {
+  return kk_datatype_unbox(_x);
+}
+
+// type main/pathExp
+struct kk_main__pathExp_s {
+  kk_block_t _block;
+};
+typedef kk_datatype_t kk_main__pathExp;
+struct kk_main_PEAV {
+  struct kk_main__pathExp_s _base;
+  kk_main__absValueExp absValue;
+};
+struct kk_main_PEValue {
+  struct kk_main__pathExp_s _base;
+  kk_main__pathExp paths;
+  kk_main__absOpExp queryCondition;
+  bool dependence;
+};
+struct kk_main_PETS {
+  struct kk_main__pathExp_s _base;
+  kk_main__exp exp;
+};
+struct kk_main_PEP {
+  struct kk_main__pathExp_s _base;
+  kk_main__exp exp;
+};
+struct kk_main_PEIT {
+  struct kk_main__pathExp_s _base;
+  kk_main__exp exp;
+};
+struct kk_main_PEUnion {
+  struct kk_main__pathExp_s _base;
+  kk_main__pathExp a;
+  kk_main__pathExp b;
+};
+struct kk_main_PECond {
+  struct kk_main__pathExp_s _base;
+  kk_main__exp cond;
+  kk_main__pathExp thn;
+  kk_main__pathExp els;
+};
+struct kk_main_PELast {
+  struct kk_main__pathExp_s _base;
+  kk_main__iteratorContextExp paths;
+};
+static inline kk_main__pathExp kk_main__new_PEEmpty(kk_context_t* _ctx) {
+  return kk_datatype_from_tag((kk_tag_t)(1));
+}
+static inline kk_main__pathExp kk_main__base_PEAV(struct kk_main_PEAV* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__pathExp kk_main__new_PEAV(kk_reuse_t _at, int32_t _cpath, kk_main__absValueExp absValue, kk_context_t* _ctx) {
+  struct kk_main_PEAV* _con = kk_block_alloc_at_as(struct kk_main_PEAV, _at, 1 /* scan count */, _cpath, (kk_tag_t)(2), _ctx);
+  _con->absValue = absValue;
+  return kk_main__base_PEAV(_con, _ctx);
+}
+static inline struct kk_main_PEAV* kk_main__as_PEAV(kk_main__pathExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_PEAV*, x, (kk_tag_t)(2), _ctx);
+}
+static inline kk_main__pathExp kk_main__base_PETS(struct kk_main_PETS* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__pathExp kk_main__new_PETS(kk_reuse_t _at, int32_t _cpath, kk_main__exp exp, kk_context_t* _ctx) {
+  struct kk_main_PETS* _con = kk_block_alloc_at_as(struct kk_main_PETS, _at, 1 /* scan count */, _cpath, (kk_tag_t)(4), _ctx);
+  _con->exp = exp;
+  return kk_main__base_PETS(_con, _ctx);
+}
+static inline struct kk_main_PETS* kk_main__as_PETS(kk_main__pathExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_PETS*, x, (kk_tag_t)(4), _ctx);
+}
+static inline kk_main__pathExp kk_main__base_PEP(struct kk_main_PEP* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__pathExp kk_main__new_PEP(kk_reuse_t _at, int32_t _cpath, kk_main__exp exp, kk_context_t* _ctx) {
+  struct kk_main_PEP* _con = kk_block_alloc_at_as(struct kk_main_PEP, _at, 1 /* scan count */, _cpath, (kk_tag_t)(5), _ctx);
+  _con->exp = exp;
+  return kk_main__base_PEP(_con, _ctx);
+}
+static inline struct kk_main_PEP* kk_main__as_PEP(kk_main__pathExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_PEP*, x, (kk_tag_t)(5), _ctx);
+}
+static inline kk_main__pathExp kk_main__base_PEIT(struct kk_main_PEIT* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__pathExp kk_main__new_PEIT(kk_reuse_t _at, int32_t _cpath, kk_main__exp exp, kk_context_t* _ctx) {
+  struct kk_main_PEIT* _con = kk_block_alloc_at_as(struct kk_main_PEIT, _at, 1 /* scan count */, _cpath, (kk_tag_t)(6), _ctx);
+  _con->exp = exp;
+  return kk_main__base_PEIT(_con, _ctx);
+}
+static inline struct kk_main_PEIT* kk_main__as_PEIT(kk_main__pathExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_PEIT*, x, (kk_tag_t)(6), _ctx);
+}
+static inline kk_main__pathExp kk_main__base_PELast(struct kk_main_PELast* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__pathExp kk_main__new_PELast(kk_reuse_t _at, int32_t _cpath, kk_main__iteratorContextExp paths, kk_context_t* _ctx) {
+  struct kk_main_PELast* _con = kk_block_alloc_at_as(struct kk_main_PELast, _at, 1 /* scan count */, _cpath, (kk_tag_t)(9), _ctx);
+  _con->paths = paths;
+  return kk_main__base_PELast(_con, _ctx);
+}
+static inline struct kk_main_PELast* kk_main__as_PELast(kk_main__pathExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_PELast*, x, (kk_tag_t)(9), _ctx);
+}
+static inline kk_main__pathExp kk_main__base_PEUnion(struct kk_main_PEUnion* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__pathExp kk_main__new_PEUnion(kk_reuse_t _at, int32_t _cpath, kk_main__pathExp a, kk_main__pathExp b, kk_context_t* _ctx) {
+  struct kk_main_PEUnion* _con = kk_block_alloc_at_as(struct kk_main_PEUnion, _at, 2 /* scan count */, _cpath, (kk_tag_t)(7), _ctx);
+  _con->a = a;
+  _con->b = b;
+  return kk_main__base_PEUnion(_con, _ctx);
+}
+static inline struct kk_main_PEUnion* kk_main__as_PEUnion(kk_main__pathExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_PEUnion*, x, (kk_tag_t)(7), _ctx);
+}
+static inline kk_main__pathExp kk_main__base_PEValue(struct kk_main_PEValue* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__pathExp kk_main__new_PEValue(kk_reuse_t _at, int32_t _cpath, kk_main__pathExp paths, kk_main__absOpExp queryCondition, bool dependence, kk_context_t* _ctx) {
+  struct kk_main_PEValue* _con = kk_block_alloc_at_as(struct kk_main_PEValue, _at, 2 /* scan count */, _cpath, (kk_tag_t)(3), _ctx);
+  _con->paths = paths;
+  _con->queryCondition = queryCondition;
+  _con->dependence = dependence;
+  return kk_main__base_PEValue(_con, _ctx);
+}
+static inline struct kk_main_PEValue* kk_main__as_PEValue(kk_main__pathExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_PEValue*, x, (kk_tag_t)(3), _ctx);
+}
+static inline kk_main__pathExp kk_main__base_PECond(struct kk_main_PECond* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__pathExp kk_main__new_PECond(kk_reuse_t _at, int32_t _cpath, kk_main__exp cond, kk_main__pathExp thn, kk_main__pathExp els, kk_context_t* _ctx) {
+  struct kk_main_PECond* _con = kk_block_alloc_at_as(struct kk_main_PECond, _at, 3 /* scan count */, _cpath, (kk_tag_t)(8), _ctx);
+  _con->cond = cond;
+  _con->thn = thn;
+  _con->els = els;
+  return kk_main__base_PECond(_con, _ctx);
+}
+static inline struct kk_main_PECond* kk_main__as_PECond(kk_main__pathExp x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main_PECond*, x, (kk_tag_t)(8), _ctx);
+}
+static inline bool kk_main__is_PEEmpty(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_singleton_tag(x, (kk_tag_t)(1)));
+}
+static inline bool kk_main__is_PEAV(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(2), _ctx));
+}
+static inline bool kk_main__is_PETS(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(4), _ctx));
+}
+static inline bool kk_main__is_PEP(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(5), _ctx));
+}
+static inline bool kk_main__is_PEIT(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(6), _ctx));
+}
+static inline bool kk_main__is_PELast(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(9), _ctx));
+}
+static inline bool kk_main__is_PEUnion(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(7), _ctx));
+}
+static inline bool kk_main__is_PEValue(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(3), _ctx));
+}
+static inline bool kk_main__is_PECond(kk_main__pathExp x, kk_context_t* _ctx) {
+  return (kk_datatype_has_ptr_tag(x, (kk_tag_t)(8), _ctx));
+}
+static inline kk_main__pathExp kk_main__pathExp_dup(kk_main__pathExp _x, kk_context_t* _ctx) {
+  return kk_datatype_dup(_x, _ctx);
+}
+static inline void kk_main__pathExp_drop(kk_main__pathExp _x, kk_context_t* _ctx) {
+  kk_datatype_drop(_x, _ctx);
+}
+static inline kk_box_t kk_main__pathExp_box(kk_main__pathExp _x, kk_context_t* _ctx) {
+  return kk_datatype_box(_x);
+}
+static inline kk_main__pathExp kk_main__pathExp_unbox(kk_box_t _x, kk_borrow_t _borrow, kk_context_t* _ctx) {
   return kk_datatype_unbox(_x);
 }
 
@@ -594,11 +1251,8 @@ struct kk_main__Hnd_attrGrammar {
   kk_integer_t _cfc;
   kk_std_core_hnd__clause1 _fun_getAbstractValue;
   kk_std_core_hnd__clause1 _fun_getDataDependence;
-  kk_std_core_hnd__clause1 _fun_getInputStore;
   kk_std_core_hnd__clause1 _fun_getIteratorContext;
-  kk_std_core_hnd__clause1 _fun_getOutputStore;
   kk_std_core_hnd__clause1 _fun_getPaths;
-  kk_std_core_hnd__clause1 _fun_getQueryCondition;
   kk_std_core_hnd__clause1 _fun_getTraversalSummary;
   kk_std_core_hnd__clause2 _fun_setAbstractValue;
   kk_std_core_hnd__clause2 _fun_setDataDependence;
@@ -612,16 +1266,13 @@ struct kk_main__Hnd_attrGrammar {
 static inline kk_main__attrGrammar kk_main__base_Hnd_attrGrammar(struct kk_main__Hnd_attrGrammar* _x, kk_context_t* _ctx) {
   return kk_datatype_from_base(&_x->_base, _ctx);
 }
-static inline kk_main__attrGrammar kk_main__new_Hnd_attrGrammar(kk_reuse_t _at, int32_t _cpath, kk_integer_t _cfc, kk_std_core_hnd__clause1 _fun_getAbstractValue, kk_std_core_hnd__clause1 _fun_getDataDependence, kk_std_core_hnd__clause1 _fun_getInputStore, kk_std_core_hnd__clause1 _fun_getIteratorContext, kk_std_core_hnd__clause1 _fun_getOutputStore, kk_std_core_hnd__clause1 _fun_getPaths, kk_std_core_hnd__clause1 _fun_getQueryCondition, kk_std_core_hnd__clause1 _fun_getTraversalSummary, kk_std_core_hnd__clause2 _fun_setAbstractValue, kk_std_core_hnd__clause2 _fun_setDataDependence, kk_std_core_hnd__clause2 _fun_setInputStore, kk_std_core_hnd__clause2 _fun_setIteratorContext, kk_std_core_hnd__clause2 _fun_setOutputStore, kk_std_core_hnd__clause2 _fun_setPaths, kk_std_core_hnd__clause2 _fun_setQueryCondition, kk_std_core_hnd__clause2 _fun_setTraversalSummary, kk_context_t* _ctx) {
-  struct kk_main__Hnd_attrGrammar* _con = kk_block_alloc_at_as(struct kk_main__Hnd_attrGrammar, _at, 17 /* scan count */, _cpath, (kk_tag_t)(1), _ctx);
+static inline kk_main__attrGrammar kk_main__new_Hnd_attrGrammar(kk_reuse_t _at, int32_t _cpath, kk_integer_t _cfc, kk_std_core_hnd__clause1 _fun_getAbstractValue, kk_std_core_hnd__clause1 _fun_getDataDependence, kk_std_core_hnd__clause1 _fun_getIteratorContext, kk_std_core_hnd__clause1 _fun_getPaths, kk_std_core_hnd__clause1 _fun_getTraversalSummary, kk_std_core_hnd__clause2 _fun_setAbstractValue, kk_std_core_hnd__clause2 _fun_setDataDependence, kk_std_core_hnd__clause2 _fun_setInputStore, kk_std_core_hnd__clause2 _fun_setIteratorContext, kk_std_core_hnd__clause2 _fun_setOutputStore, kk_std_core_hnd__clause2 _fun_setPaths, kk_std_core_hnd__clause2 _fun_setQueryCondition, kk_std_core_hnd__clause2 _fun_setTraversalSummary, kk_context_t* _ctx) {
+  struct kk_main__Hnd_attrGrammar* _con = kk_block_alloc_at_as(struct kk_main__Hnd_attrGrammar, _at, 14 /* scan count */, _cpath, (kk_tag_t)(1), _ctx);
   _con->_cfc = _cfc;
   _con->_fun_getAbstractValue = _fun_getAbstractValue;
   _con->_fun_getDataDependence = _fun_getDataDependence;
-  _con->_fun_getInputStore = _fun_getInputStore;
   _con->_fun_getIteratorContext = _fun_getIteratorContext;
-  _con->_fun_getOutputStore = _fun_getOutputStore;
   _con->_fun_getPaths = _fun_getPaths;
-  _con->_fun_getQueryCondition = _fun_getQueryCondition;
   _con->_fun_getTraversalSummary = _fun_getTraversalSummary;
   _con->_fun_setAbstractValue = _fun_setAbstractValue;
   _con->_fun_setDataDependence = _fun_setDataDependence;
@@ -727,6 +1378,44 @@ static inline kk_box_t kk_main__nondet_box(kk_main__nondet _x, kk_context_t* _ct
   return kk_datatype_ptr_box(_x);
 }
 static inline kk_main__nondet kk_main__nondet_unbox(kk_box_t _x, kk_borrow_t _borrow, kk_context_t* _ctx) {
+  return kk_datatype_ptr_unbox(_x);
+}
+
+// type main/subst
+struct kk_main__subst_s {
+  kk_block_t _block;
+};
+typedef kk_datatype_ptr_t kk_main__subst;
+struct kk_main__Hnd_subst {
+  struct kk_main__subst_s _base;
+  kk_integer_t _cfc;
+  kk_std_core_hnd__clause2 _fun_substAV;
+};
+static inline kk_main__subst kk_main__base_Hnd_subst(struct kk_main__Hnd_subst* _x, kk_context_t* _ctx) {
+  return kk_datatype_from_base(&_x->_base, _ctx);
+}
+static inline kk_main__subst kk_main__new_Hnd_subst(kk_reuse_t _at, int32_t _cpath, kk_integer_t _cfc, kk_std_core_hnd__clause2 _fun_substAV, kk_context_t* _ctx) {
+  struct kk_main__Hnd_subst* _con = kk_block_alloc_at_as(struct kk_main__Hnd_subst, _at, 2 /* scan count */, _cpath, (kk_tag_t)(1), _ctx);
+  _con->_cfc = _cfc;
+  _con->_fun_substAV = _fun_substAV;
+  return kk_main__base_Hnd_subst(_con, _ctx);
+}
+static inline struct kk_main__Hnd_subst* kk_main__as_Hnd_subst(kk_main__subst x, kk_context_t* _ctx) {
+  return kk_datatype_as_assert(struct kk_main__Hnd_subst*, x, (kk_tag_t)(1), _ctx);
+}
+static inline bool kk_main__is_Hnd_subst(kk_main__subst x, kk_context_t* _ctx) {
+  return (true);
+}
+static inline kk_main__subst kk_main__subst_dup(kk_main__subst _x, kk_context_t* _ctx) {
+  return kk_datatype_ptr_dup(_x, _ctx);
+}
+static inline void kk_main__subst_drop(kk_main__subst _x, kk_context_t* _ctx) {
+  kk_datatype_ptr_drop(_x, _ctx);
+}
+static inline kk_box_t kk_main__subst_box(kk_main__subst _x, kk_context_t* _ctx) {
+  return kk_datatype_ptr_box(_x);
+}
+static inline kk_main__subst kk_main__subst_unbox(kk_box_t _x, kk_borrow_t _borrow, kk_context_t* _ctx) {
   return kk_datatype_ptr_unbox(_x);
 }
 
@@ -838,7 +1527,7 @@ static inline bool kk_main_is_aotrue(kk_main__absOp absOp, kk_context_t* _ctx) {
     return true;
   }
   {
-    struct kk_main_AOOp* _con_x5962 = kk_main__as_AOOp(absOp, _ctx);
+    struct kk_main_AOOp* _con_x4197 = kk_main__as_AOOp(absOp, _ctx);
     return false;
   }
 }
@@ -847,7 +1536,7 @@ static inline bool kk_main_is_aotrue(kk_main__absOp absOp, kk_context_t* _ctx) {
 
 static inline bool kk_main_is_aoop(kk_main__absOp absOp, kk_context_t* _ctx) { /* (absOp : absOp) -> bool */ 
   if (kk_main__is_AOOp(absOp, _ctx)) {
-    struct kk_main_AOOp* _con_x5963 = kk_main__as_AOOp(absOp, _ctx);
+    struct kk_main_AOOp* _con_x4198 = kk_main__as_AOOp(absOp, _ctx);
     return true;
   }
   {
@@ -870,7 +1559,7 @@ static inline bool kk_main_is_avbot(kk_main__absValue absValue, kk_context_t* _c
 
 static inline bool kk_main_is_avlit(kk_main__absValue absValue, kk_context_t* _ctx) { /* (absValue : absValue) -> bool */ 
   if (kk_main__is_AVLit(absValue, _ctx)) {
-    struct kk_main_AVLit* _con_x5964 = kk_main__as_AVLit(absValue, _ctx);
+    struct kk_main_AVLit* _con_x4199 = kk_main__as_AVLit(absValue, _ctx);
     return true;
   }
   {
@@ -882,7 +1571,7 @@ static inline bool kk_main_is_avlit(kk_main__absValue absValue, kk_context_t* _c
 
 static inline bool kk_main_is_avop(kk_main__absValue absValue, kk_context_t* _ctx) { /* (absValue : absValue) -> bool */ 
   if (kk_main__is_AVOp(absValue, _ctx)) {
-    struct kk_main_AVOp* _con_x5965 = kk_main__as_AVOp(absValue, _ctx);
+    struct kk_main_AVOp* _con_x4200 = kk_main__as_AVOp(absValue, _ctx);
     return true;
   }
   {
@@ -894,7 +1583,7 @@ static inline bool kk_main_is_avop(kk_main__absValue absValue, kk_context_t* _ct
 
 static inline bool kk_main_is_avpath(kk_main__absValue absValue, kk_context_t* _ctx) { /* (absValue : absValue) -> bool */ 
   if (kk_main__is_AVPath(absValue, _ctx)) {
-    struct kk_main_AVPath* _con_x5966 = kk_main__as_AVPath(absValue, _ctx);
+    struct kk_main_AVPath* _con_x4201 = kk_main__as_AVPath(absValue, _ctx);
     return true;
   }
   {
@@ -906,8 +1595,8 @@ static inline bool kk_main_is_avpath(kk_main__absValue absValue, kk_context_t* _
 
 static inline kk_std_core_types__list kk_main_path_fs_names(kk_main__path path, kk_context_t* _ctx) { /* (path : path) -> list<fieldName> */ 
   {
-    struct kk_main_Path* _con_x5967 = kk_main__as_Path(path, _ctx);
-    kk_std_core_types__list _x = _con_x5967->names;
+    struct kk_main_Path* _con_x4202 = kk_main__as_Path(path, _ctx);
+    kk_std_core_types__list _x = _con_x4202->names;
     return kk_std_core_types__list_dup(_x, _ctx);
   }
 }
@@ -916,8 +1605,8 @@ static inline kk_std_core_types__list kk_main_path_fs_names(kk_main__path path, 
 
 static inline kk_main__absOp kk_main_path_fs_absOp(kk_main__path path, kk_context_t* _ctx) { /* (path : path) -> absOp */ 
   {
-    struct kk_main_Path* _con_x5968 = kk_main__as_Path(path, _ctx);
-    kk_main__absOp _x = _con_x5968->absOp;
+    struct kk_main_Path* _con_x4203 = kk_main__as_Path(path, _ctx);
+    kk_main__absOp _x = _con_x4203->absOp;
     return kk_main__absOp_dup(_x, _ctx);
   }
 }
@@ -926,8 +1615,8 @@ static inline kk_main__absOp kk_main_path_fs_absOp(kk_main__path path, kk_contex
 
 static inline bool kk_main_path_fs_dependence(kk_main__path path, kk_context_t* _ctx) { /* (path : path) -> bool */ 
   {
-    struct kk_main_Path* _con_x5969 = kk_main__as_Path(path, _ctx);
-    bool _x = _con_x5969->dependence;
+    struct kk_main_Path* _con_x4204 = kk_main__as_Path(path, _ctx);
+    bool _x = _con_x4204->dependence;
     return _x;
   }
 }
@@ -945,10 +1634,74 @@ static inline kk_string_t kk_main_varName_fs_name(kk_main__varName varName, kk_c
 
 kk_main__varName kk_main_varName_fs__copy(kk_main__varName _this, kk_std_core_types__optional name, kk_context_t* _ctx); /* (varName, name : ? string) -> varName */ 
  
+// Automatically generated. Retrieves the `id` constructor field of the `:exp` type.
+
+static inline kk_integer_t kk_main_exp_fs_id(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> int */ 
+  if (kk_main__is_NullE(exp, _ctx)) {
+    struct kk_main_NullE* _con_x4212 = kk_main__as_NullE(exp, _ctx);
+    kk_integer_t _x = _con_x4212->id;
+    return kk_integer_dup(_x, _ctx);
+  }
+  if (kk_main__is_LitE(exp, _ctx)) {
+    struct kk_main_LitE* _con_x4213 = kk_main__as_LitE(exp, _ctx);
+    kk_integer_t _x_0 = _con_x4213->id;
+    return kk_integer_dup(_x_0, _ctx);
+  }
+  if (kk_main__is_RootE(exp, _ctx)) {
+    struct kk_main_RootE* _con_x4214 = kk_main__as_RootE(exp, _ctx);
+    kk_integer_t _x_1 = _con_x4214->id;
+    return kk_integer_dup(_x_1, _ctx);
+  }
+  if (kk_main__is_DotE(exp, _ctx)) {
+    struct kk_main_DotE* _con_x4215 = kk_main__as_DotE(exp, _ctx);
+    kk_integer_t _x_2 = _con_x4215->id;
+    return kk_integer_dup(_x_2, _ctx);
+  }
+  if (kk_main__is_OpE(exp, _ctx)) {
+    struct kk_main_OpE* _con_x4216 = kk_main__as_OpE(exp, _ctx);
+    kk_integer_t _x_3 = _con_x4216->id;
+    return kk_integer_dup(_x_3, _ctx);
+  }
+  if (kk_main__is_VarE(exp, _ctx)) {
+    struct kk_main_VarE* _con_x4217 = kk_main__as_VarE(exp, _ctx);
+    kk_main__varName _pat_11 = _con_x4217->v;
+    kk_integer_t _x_4 = _con_x4217->id;
+    return kk_integer_dup(_x_4, _ctx);
+  }
+  if (kk_main__is_AsgnE(exp, _ctx)) {
+    struct kk_main_AsgnE* _con_x4218 = kk_main__as_AsgnE(exp, _ctx);
+    kk_main__varName _pat_14 = _con_x4218->v;
+    kk_integer_t _x_5 = _con_x4218->id;
+    return kk_integer_dup(_x_5, _ctx);
+  }
+  if (kk_main__is_IfE(exp, _ctx)) {
+    struct kk_main_IfE* _con_x4219 = kk_main__as_IfE(exp, _ctx);
+    kk_integer_t _x_6 = _con_x4219->id;
+    return kk_integer_dup(_x_6, _ctx);
+  }
+  if (kk_main__is_ForE(exp, _ctx)) {
+    struct kk_main_ForE* _con_x4220 = kk_main__as_ForE(exp, _ctx);
+    kk_main__varName _pat_22 = _con_x4220->v;
+    kk_integer_t _x_7 = _con_x4220->id;
+    return kk_integer_dup(_x_7, _ctx);
+  }
+  if (kk_main__is_SeqE(exp, _ctx)) {
+    struct kk_main_SeqE* _con_x4221 = kk_main__as_SeqE(exp, _ctx);
+    kk_integer_t _x_8 = _con_x4221->id;
+    return kk_integer_dup(_x_8, _ctx);
+  }
+  {
+    struct kk_main_PrintE* _con_x4222 = kk_main__as_PrintE(exp, _ctx);
+    kk_integer_t _x_9 = _con_x4222->id;
+    return kk_integer_dup(_x_9, _ctx);
+  }
+}
+ 
 // Automatically generated. Tests for the `NullE` constructor of the `:exp` type.
 
 static inline bool kk_main_is_nullE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_NullE(exp, _ctx)) {
+    struct kk_main_NullE* _con_x4223 = kk_main__as_NullE(exp, _ctx);
     return true;
   }
   {
@@ -960,7 +1713,7 @@ static inline bool kk_main_is_nullE(kk_main__exp exp, kk_context_t* _ctx) { /* (
 
 static inline bool kk_main_is_litE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_LitE(exp, _ctx)) {
-    struct kk_main_LitE* _con_x5977 = kk_main__as_LitE(exp, _ctx);
+    struct kk_main_LitE* _con_x4224 = kk_main__as_LitE(exp, _ctx);
     return true;
   }
   {
@@ -972,6 +1725,7 @@ static inline bool kk_main_is_litE(kk_main__exp exp, kk_context_t* _ctx) { /* (e
 
 static inline bool kk_main_is_rootE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_RootE(exp, _ctx)) {
+    struct kk_main_RootE* _con_x4225 = kk_main__as_RootE(exp, _ctx);
     return true;
   }
   {
@@ -983,7 +1737,7 @@ static inline bool kk_main_is_rootE(kk_main__exp exp, kk_context_t* _ctx) { /* (
 
 static inline bool kk_main_is_dotE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_DotE(exp, _ctx)) {
-    struct kk_main_DotE* _con_x5978 = kk_main__as_DotE(exp, _ctx);
+    struct kk_main_DotE* _con_x4226 = kk_main__as_DotE(exp, _ctx);
     return true;
   }
   {
@@ -995,7 +1749,7 @@ static inline bool kk_main_is_dotE(kk_main__exp exp, kk_context_t* _ctx) { /* (e
 
 static inline bool kk_main_is_opE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_OpE(exp, _ctx)) {
-    struct kk_main_OpE* _con_x5979 = kk_main__as_OpE(exp, _ctx);
+    struct kk_main_OpE* _con_x4227 = kk_main__as_OpE(exp, _ctx);
     return true;
   }
   {
@@ -1007,8 +1761,8 @@ static inline bool kk_main_is_opE(kk_main__exp exp, kk_context_t* _ctx) { /* (ex
 
 static inline bool kk_main_is_varE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_VarE(exp, _ctx)) {
-    struct kk_main_VarE* _con_x5980 = kk_main__as_VarE(exp, _ctx);
-    kk_main__varName _pat_0 = _con_x5980->v;
+    struct kk_main_VarE* _con_x4228 = kk_main__as_VarE(exp, _ctx);
+    kk_main__varName _pat_0 = _con_x4228->v;
     return true;
   }
   {
@@ -1020,8 +1774,8 @@ static inline bool kk_main_is_varE(kk_main__exp exp, kk_context_t* _ctx) { /* (e
 
 static inline bool kk_main_is_asgnE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_AsgnE(exp, _ctx)) {
-    struct kk_main_AsgnE* _con_x5981 = kk_main__as_AsgnE(exp, _ctx);
-    kk_main__varName _pat_0 = _con_x5981->v;
+    struct kk_main_AsgnE* _con_x4229 = kk_main__as_AsgnE(exp, _ctx);
+    kk_main__varName _pat_0 = _con_x4229->v;
     return true;
   }
   {
@@ -1033,7 +1787,7 @@ static inline bool kk_main_is_asgnE(kk_main__exp exp, kk_context_t* _ctx) { /* (
 
 static inline bool kk_main_is_ifE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_IfE(exp, _ctx)) {
-    struct kk_main_IfE* _con_x5982 = kk_main__as_IfE(exp, _ctx);
+    struct kk_main_IfE* _con_x4230 = kk_main__as_IfE(exp, _ctx);
     return true;
   }
   {
@@ -1045,8 +1799,8 @@ static inline bool kk_main_is_ifE(kk_main__exp exp, kk_context_t* _ctx) { /* (ex
 
 static inline bool kk_main_is_forE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_ForE(exp, _ctx)) {
-    struct kk_main_ForE* _con_x5983 = kk_main__as_ForE(exp, _ctx);
-    kk_main__varName _pat_0 = _con_x5983->v;
+    struct kk_main_ForE* _con_x4231 = kk_main__as_ForE(exp, _ctx);
+    kk_main__varName _pat_0 = _con_x4231->v;
     return true;
   }
   {
@@ -1058,7 +1812,7 @@ static inline bool kk_main_is_forE(kk_main__exp exp, kk_context_t* _ctx) { /* (e
 
 static inline bool kk_main_is_seqE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_SeqE(exp, _ctx)) {
-    struct kk_main_SeqE* _con_x5984 = kk_main__as_SeqE(exp, _ctx);
+    struct kk_main_SeqE* _con_x4232 = kk_main__as_SeqE(exp, _ctx);
     return true;
   }
   {
@@ -1070,7 +1824,366 @@ static inline bool kk_main_is_seqE(kk_main__exp exp, kk_context_t* _ctx) { /* (e
 
 static inline bool kk_main_is_printE(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> bool */ 
   if (kk_main__is_PrintE(exp, _ctx)) {
-    struct kk_main_PrintE* _con_x5985 = kk_main__as_PrintE(exp, _ctx);
+    struct kk_main_PrintE* _con_x4233 = kk_main__as_PrintE(exp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AVEExp` constructor of the `:absValueExp` type.
+
+static inline bool kk_main_is_aveexp(kk_main__absValueExp absValueExp, kk_context_t* _ctx) { /* (absValueExp : absValueExp) -> bool */ 
+  if (kk_main__is_AVEExp(absValueExp, _ctx)) {
+    struct kk_main_AVEExp* _con_x4234 = kk_main__as_AVEExp(absValueExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AVEValue` constructor of the `:absValueExp` type.
+
+static inline bool kk_main_is_avevalue(kk_main__absValueExp absValueExp, kk_context_t* _ctx) { /* (absValueExp : absValueExp) -> bool */ 
+  if (kk_main__is_AVEValue(absValueExp, _ctx)) {
+    struct kk_main_AVEValue* _con_x4235 = kk_main__as_AVEValue(absValueExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AVEDot` constructor of the `:absValueExp` type.
+
+static inline bool kk_main_is_avedot(kk_main__absValueExp absValueExp, kk_context_t* _ctx) { /* (absValueExp : absValueExp) -> bool */ 
+  if (kk_main__is_AVEDot(absValueExp, _ctx)) {
+    struct kk_main_AVEDot* _con_x4236 = kk_main__as_AVEDot(absValueExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AVEOp` constructor of the `:absValueExp` type.
+
+static inline bool kk_main_is_aveop(kk_main__absValueExp absValueExp, kk_context_t* _ctx) { /* (absValueExp : absValueExp) -> bool */ 
+  if (kk_main__is_AVEOp(absValueExp, _ctx)) {
+    struct kk_main_AVEOp* _con_x4237 = kk_main__as_AVEOp(absValueExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AVEStore` constructor of the `:absValueExp` type.
+
+static inline bool kk_main_is_avestore(kk_main__absValueExp absValueExp, kk_context_t* _ctx) { /* (absValueExp : absValueExp) -> bool */ 
+  if (kk_main__is_AVEStore(absValueExp, _ctx)) {
+    struct kk_main_AVEStore* _con_x4238 = kk_main__as_AVEStore(absValueExp, _ctx);
+    kk_main__varName _pat_1 = _con_x4238->v;
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AVEJoin` constructor of the `:absValueExp` type.
+
+static inline bool kk_main_is_avejoin(kk_main__absValueExp absValueExp, kk_context_t* _ctx) { /* (absValueExp : absValueExp) -> bool */ 
+  if (kk_main__is_AVEJoin(absValueExp, _ctx)) {
+    struct kk_main_AVEJoin* _con_x4239 = kk_main__as_AVEJoin(absValueExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `SEEmpty` constructor of the `:storeExp` type.
+
+static inline bool kk_main_is_seempty(kk_main__storeExp storeExp, kk_context_t* _ctx) { /* (storeExp : storeExp) -> bool */ 
+  if (kk_main__is_SEEmpty(storeExp, _ctx)) {
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `SEOS` constructor of the `:storeExp` type.
+
+static inline bool kk_main_is_seos(kk_main__storeExp storeExp, kk_context_t* _ctx) { /* (storeExp : storeExp) -> bool */ 
+  if (kk_main__is_SEOS(storeExp, _ctx)) {
+    struct kk_main_SEOS* _con_x4240 = kk_main__as_SEOS(storeExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `SEIS` constructor of the `:storeExp` type.
+
+static inline bool kk_main_is_seis(kk_main__storeExp storeExp, kk_context_t* _ctx) { /* (storeExp : storeExp) -> bool */ 
+  if (kk_main__is_SEIS(storeExp, _ctx)) {
+    struct kk_main_SEIS* _con_x4241 = kk_main__as_SEIS(storeExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `SEInsert` constructor of the `:storeExp` type.
+
+static inline bool kk_main_is_seinsert(kk_main__storeExp storeExp, kk_context_t* _ctx) { /* (storeExp : storeExp) -> bool */ 
+  if (kk_main__is_SEInsert(storeExp, _ctx)) {
+    struct kk_main_SEInsert* _con_x4242 = kk_main__as_SEInsert(storeExp, _ctx);
+    kk_main__varName _pat_1 = _con_x4242->v;
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `SEUnion` constructor of the `:storeExp` type.
+
+static inline bool kk_main_is_seunion(kk_main__storeExp storeExp, kk_context_t* _ctx) { /* (storeExp : storeExp) -> bool */ 
+  if (kk_main__is_SEUnion(storeExp, _ctx)) {
+    struct kk_main_SEUnion* _con_x4243 = kk_main__as_SEUnion(storeExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `SERemove` constructor of the `:storeExp` type.
+
+static inline bool kk_main_is_seremove(kk_main__storeExp storeExp, kk_context_t* _ctx) { /* (storeExp : storeExp) -> bool */ 
+  if (kk_main__is_SERemove(storeExp, _ctx)) {
+    struct kk_main_SERemove* _con_x4244 = kk_main__as_SERemove(storeExp, _ctx);
+    kk_main__varName _pat_1 = _con_x4244->v;
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `SEValue` constructor of the `:storeExp` type.
+
+static inline bool kk_main_is_sevalue(kk_main__storeExp storeExp, kk_context_t* _ctx) { /* (storeExp : storeExp) -> bool */ 
+  if (kk_main__is_SEValue(storeExp, _ctx)) {
+    struct kk_main_SEValue* _con_x4245 = kk_main__as_SEValue(storeExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AOETrue` constructor of the `:absOpExp` type.
+
+static inline bool kk_main_is_aoetrue(kk_main__absOpExp absOpExp, kk_context_t* _ctx) { /* (absOpExp : absOpExp) -> bool */ 
+  if (kk_main__is_AOETrue(absOpExp, _ctx)) {
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AOEC` constructor of the `:absOpExp` type.
+
+static inline bool kk_main_is_aoec(kk_main__absOpExp absOpExp, kk_context_t* _ctx) { /* (absOpExp : absOpExp) -> bool */ 
+  if (kk_main__is_AOEC(absOpExp, _ctx)) {
+    struct kk_main_AOEC* _con_x4246 = kk_main__as_AOEC(absOpExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AOEAnd` constructor of the `:absOpExp` type.
+
+static inline bool kk_main_is_aoeand(kk_main__absOpExp absOpExp, kk_context_t* _ctx) { /* (absOpExp : absOpExp) -> bool */ 
+  if (kk_main__is_AOEAnd(absOpExp, _ctx)) {
+    struct kk_main_AOEAnd* _con_x4247 = kk_main__as_AOEAnd(absOpExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AOEAV` constructor of the `:absOpExp` type.
+
+static inline bool kk_main_is_aoeav(kk_main__absOpExp absOpExp, kk_context_t* _ctx) { /* (absOpExp : absOpExp) -> bool */ 
+  if (kk_main__is_AOEAV(absOpExp, _ctx)) {
+    struct kk_main_AOEAV* _con_x4248 = kk_main__as_AOEAV(absOpExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `AOENot` constructor of the `:absOpExp` type.
+
+static inline bool kk_main_is_aoenot(kk_main__absOpExp absOpExp, kk_context_t* _ctx) { /* (absOpExp : absOpExp) -> bool */ 
+  if (kk_main__is_AOENot(absOpExp, _ctx)) {
+    struct kk_main_AOENot* _con_x4249 = kk_main__as_AOENot(absOpExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `ICEEmpty` constructor of the `:iteratorContextExp` type.
+
+static inline bool kk_main_is_iceempty(kk_main__iteratorContextExp iteratorContextExp, kk_context_t* _ctx) { /* (iteratorContextExp : iteratorContextExp) -> bool */ 
+  if (kk_main__is_ICEEmpty(iteratorContextExp, _ctx)) {
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `ICEIT` constructor of the `:iteratorContextExp` type.
+
+static inline bool kk_main_is_iceit(kk_main__iteratorContextExp iteratorContextExp, kk_context_t* _ctx) { /* (iteratorContextExp : iteratorContextExp) -> bool */ 
+  if (kk_main__is_ICEIT(iteratorContextExp, _ctx)) {
+    struct kk_main_ICEIT* _con_x4250 = kk_main__as_ICEIT(iteratorContextExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `ICEPlusIf` constructor of the `:iteratorContextExp` type.
+
+static inline bool kk_main_is_iceplusIf(kk_main__iteratorContextExp iteratorContextExp, kk_context_t* _ctx) { /* (iteratorContextExp : iteratorContextExp) -> bool */ 
+  if (kk_main__is_ICEPlusIf(iteratorContextExp, _ctx)) {
+    struct kk_main_ICEPlusIf* _con_x4251 = kk_main__as_ICEPlusIf(iteratorContextExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PEEmpty` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_peempty(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PEEmpty(pathExp, _ctx)) {
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PEAV` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_peav(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PEAV(pathExp, _ctx)) {
+    struct kk_main_PEAV* _con_x4252 = kk_main__as_PEAV(pathExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PEValue` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_pevalue(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PEValue(pathExp, _ctx)) {
+    struct kk_main_PEValue* _con_x4253 = kk_main__as_PEValue(pathExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PETS` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_pets(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PETS(pathExp, _ctx)) {
+    struct kk_main_PETS* _con_x4254 = kk_main__as_PETS(pathExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PEP` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_pep(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PEP(pathExp, _ctx)) {
+    struct kk_main_PEP* _con_x4255 = kk_main__as_PEP(pathExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PEIT` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_peit(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PEIT(pathExp, _ctx)) {
+    struct kk_main_PEIT* _con_x4256 = kk_main__as_PEIT(pathExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PEUnion` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_peunion(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PEUnion(pathExp, _ctx)) {
+    struct kk_main_PEUnion* _con_x4257 = kk_main__as_PEUnion(pathExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PECond` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_pecond(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PECond(pathExp, _ctx)) {
+    struct kk_main_PECond* _con_x4258 = kk_main__as_PECond(pathExp, _ctx);
+    return true;
+  }
+  {
+    return false;
+  }
+}
+ 
+// Automatically generated. Tests for the `PELast` constructor of the `:pathExp` type.
+
+static inline bool kk_main_is_pelast(kk_main__pathExp pathExp, kk_context_t* _ctx) { /* (pathExp : pathExp) -> bool */ 
+  if (kk_main__is_PELast(pathExp, _ctx)) {
+    struct kk_main_PELast* _con_x4259 = kk_main__as_PELast(pathExp, _ctx);
     return true;
   }
   {
@@ -1082,18 +2195,18 @@ static inline bool kk_main_is_printE(kk_main__exp exp, kk_context_t* _ctx) { /* 
 
 static inline kk_integer_t kk_main_attrGrammar_fs__cfc(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> int */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5986 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_integer_t _x = _con_x5986->_cfc;
+    struct kk_main__Hnd_attrGrammar* _con_x4260 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_integer_t _x = _con_x4260->_cfc;
     return kk_integer_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-getAbstractValue` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getAbstractValue(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,absValue,attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getAbstractValue(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,absValueExp,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5987 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause1 _x = _con_x5987->_fun_getAbstractValue;
+    struct kk_main__Hnd_attrGrammar* _con_x4261 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause1 _x = _con_x4261->_fun_getAbstractValue;
     return kk_std_core_hnd__clause1_dup(_x, _ctx);
   }
 }
@@ -1102,78 +2215,48 @@ static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getAbstractVa
 
 static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getDataDependence(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,bool,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5988 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause1 _x = _con_x5988->_fun_getDataDependence;
-    return kk_std_core_hnd__clause1_dup(_x, _ctx);
-  }
-}
- 
-// Automatically generated. Retrieves the `@fun-getInputStore` constructor field of the `:attrGrammar` type.
-
-static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getInputStore(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,store,attrGrammar,e,a> */ 
-  {
-    struct kk_main__Hnd_attrGrammar* _con_x5989 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause1 _x = _con_x5989->_fun_getInputStore;
+    struct kk_main__Hnd_attrGrammar* _con_x4262 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause1 _x = _con_x4262->_fun_getDataDependence;
     return kk_std_core_hnd__clause1_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-getIteratorContext` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getIteratorContext(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,list<path>,attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getIteratorContext(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,iteratorContextExp,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5990 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause1 _x = _con_x5990->_fun_getIteratorContext;
-    return kk_std_core_hnd__clause1_dup(_x, _ctx);
-  }
-}
- 
-// Automatically generated. Retrieves the `@fun-getOutputStore` constructor field of the `:attrGrammar` type.
-
-static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getOutputStore(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,store,attrGrammar,e,a> */ 
-  {
-    struct kk_main__Hnd_attrGrammar* _con_x5991 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause1 _x = _con_x5991->_fun_getOutputStore;
+    struct kk_main__Hnd_attrGrammar* _con_x4263 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause1 _x = _con_x4263->_fun_getIteratorContext;
     return kk_std_core_hnd__clause1_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-getPaths` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getPaths(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,std/data/hashset/hash-set<path>,attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getPaths(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,pathExp,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5992 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause1 _x = _con_x5992->_fun_getPaths;
-    return kk_std_core_hnd__clause1_dup(_x, _ctx);
-  }
-}
- 
-// Automatically generated. Retrieves the `@fun-getQueryCondition` constructor field of the `:attrGrammar` type.
-
-static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getQueryCondition(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,absOp,attrGrammar,e,a> */ 
-  {
-    struct kk_main__Hnd_attrGrammar* _con_x5993 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause1 _x = _con_x5993->_fun_getQueryCondition;
+    struct kk_main__Hnd_attrGrammar* _con_x4264 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause1 _x = _con_x4264->_fun_getPaths;
     return kk_std_core_hnd__clause1_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-getTraversalSummary` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getTraversalSummary(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,std/data/hashset/hash-set<path>,attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause1 kk_main_attrGrammar_fs__fun_getTraversalSummary(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause1<exp,pathExp,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5994 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause1 _x = _con_x5994->_fun_getTraversalSummary;
+    struct kk_main__Hnd_attrGrammar* _con_x4265 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause1 _x = _con_x4265->_fun_getTraversalSummary;
     return kk_std_core_hnd__clause1_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-setAbstractValue` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setAbstractValue(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,absValue,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setAbstractValue(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,absValueExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5995 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x5995->_fun_setAbstractValue;
+    struct kk_main__Hnd_attrGrammar* _con_x4266 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4266->_fun_setAbstractValue;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
@@ -1182,68 +2265,68 @@ static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setAbstractVa
 
 static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setDataDependence(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,bool,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5996 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x5996->_fun_setDataDependence;
+    struct kk_main__Hnd_attrGrammar* _con_x4267 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4267->_fun_setDataDependence;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-setInputStore` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setInputStore(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,store,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setInputStore(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,storeExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5997 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x5997->_fun_setInputStore;
+    struct kk_main__Hnd_attrGrammar* _con_x4268 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4268->_fun_setInputStore;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-setIteratorContext` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setIteratorContext(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,list<path>,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setIteratorContext(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,iteratorContextExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5998 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x5998->_fun_setIteratorContext;
+    struct kk_main__Hnd_attrGrammar* _con_x4269 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4269->_fun_setIteratorContext;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-setOutputStore` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setOutputStore(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,store,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setOutputStore(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,storeExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x5999 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x5999->_fun_setOutputStore;
+    struct kk_main__Hnd_attrGrammar* _con_x4270 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4270->_fun_setOutputStore;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-setPaths` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setPaths(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,std/data/hashset/hash-set<path>,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setPaths(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,pathExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6000 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x6000->_fun_setPaths;
+    struct kk_main__Hnd_attrGrammar* _con_x4271 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4271->_fun_setPaths;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-setQueryCondition` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setQueryCondition(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,absOp,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setQueryCondition(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,absOpExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6001 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x6001->_fun_setQueryCondition;
+    struct kk_main__Hnd_attrGrammar* _con_x4272 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4272->_fun_setQueryCondition;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
  
 // Automatically generated. Retrieves the `@fun-setTraversalSummary` constructor field of the `:attrGrammar` type.
 
-static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setTraversalSummary(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,std/data/hashset/hash-set<path>,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setTraversalSummary(kk_main__attrGrammar attrGrammar, kk_context_t* _ctx) { /* forall<e,a> (attrGrammar : attrGrammar<e,a>) -> hnd/clause2<exp,pathExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6002 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x6002->_fun_setTraversalSummary;
+    struct kk_main__Hnd_attrGrammar* _con_x4273 = kk_main__as_Hnd_attrGrammar(attrGrammar, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4273->_fun_setTraversalSummary;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
@@ -1252,8 +2335,8 @@ static inline kk_std_core_hnd__clause2 kk_main_attrGrammar_fs__fun_setTraversalS
 
 static inline kk_integer_t kk_main_fixpoint_fs__cfc(kk_main__fixpoint fixpoint, kk_context_t* _ctx) { /* forall<e,a> (fixpoint : fixpoint<e,a>) -> int */ 
   {
-    struct kk_main__Hnd_fixpoint* _con_x6003 = kk_main__as_Hnd_fixpoint(fixpoint, _ctx);
-    kk_integer_t _x = _con_x6003->_cfc;
+    struct kk_main__Hnd_fixpoint* _con_x4274 = kk_main__as_Hnd_fixpoint(fixpoint, _ctx);
+    kk_integer_t _x = _con_x4274->_cfc;
     return kk_integer_dup(_x, _ctx);
   }
 }
@@ -1262,8 +2345,8 @@ static inline kk_integer_t kk_main_fixpoint_fs__cfc(kk_main__fixpoint fixpoint, 
 
 static inline kk_std_core_hnd__clause0 kk_main_fixpoint_fs__fun_modified(kk_main__fixpoint fixpoint, kk_context_t* _ctx) { /* forall<e,a> (fixpoint : fixpoint<e,a>) -> hnd/clause0<(),fixpoint,e,a> */ 
   {
-    struct kk_main__Hnd_fixpoint* _con_x6004 = kk_main__as_Hnd_fixpoint(fixpoint, _ctx);
-    kk_std_core_hnd__clause0 _x = _con_x6004->_fun_modified;
+    struct kk_main__Hnd_fixpoint* _con_x4275 = kk_main__as_Hnd_fixpoint(fixpoint, _ctx);
+    kk_std_core_hnd__clause0 _x = _con_x4275->_fun_modified;
     return kk_std_core_hnd__clause0_dup(_x, _ctx);
   }
 }
@@ -1272,8 +2355,8 @@ static inline kk_std_core_hnd__clause0 kk_main_fixpoint_fs__fun_modified(kk_main
 
 static inline kk_integer_t kk_main_nondet_fs__cfc(kk_main__nondet nondet, kk_context_t* _ctx) { /* forall<e,a> (nondet : nondet<e,a>) -> int */ 
   {
-    struct kk_main__Hnd_nondet* _con_x6005 = kk_main__as_Hnd_nondet(nondet, _ctx);
-    kk_integer_t _x = _con_x6005->_cfc;
+    struct kk_main__Hnd_nondet* _con_x4276 = kk_main__as_Hnd_nondet(nondet, _ctx);
+    kk_integer_t _x = _con_x4276->_cfc;
     return kk_integer_dup(_x, _ctx);
   }
 }
@@ -1282,8 +2365,8 @@ static inline kk_integer_t kk_main_nondet_fs__cfc(kk_main__nondet nondet, kk_con
 
 static inline kk_std_core_hnd__clause2 kk_main_nondet_fs__ctl_choose(kk_main__nondet nondet, kk_context_t* _ctx) { /* forall<e,a,b> (nondet : nondet<e,a>) -> hnd/clause2<b,b,b,nondet,e,a> */ 
   {
-    struct kk_main__Hnd_nondet* _con_x6006 = kk_main__as_Hnd_nondet(nondet, _ctx);
-    kk_std_core_hnd__clause2 _x = _con_x6006->_ctl_choose;
+    struct kk_main__Hnd_nondet* _con_x4277 = kk_main__as_Hnd_nondet(nondet, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4277->_ctl_choose;
     return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
@@ -1292,9 +2375,29 @@ static inline kk_std_core_hnd__clause2 kk_main_nondet_fs__ctl_choose(kk_main__no
 
 static inline kk_std_core_hnd__clause0 kk_main_nondet_fs__brk_fail(kk_main__nondet nondet, kk_context_t* _ctx) { /* forall<e,a,b> (nondet : nondet<e,a>) -> hnd/clause0<b,nondet,e,a> */ 
   {
-    struct kk_main__Hnd_nondet* _con_x6007 = kk_main__as_Hnd_nondet(nondet, _ctx);
-    kk_std_core_hnd__clause0 _x = _con_x6007->_brk_fail;
+    struct kk_main__Hnd_nondet* _con_x4278 = kk_main__as_Hnd_nondet(nondet, _ctx);
+    kk_std_core_hnd__clause0 _x = _con_x4278->_brk_fail;
     return kk_std_core_hnd__clause0_dup(_x, _ctx);
+  }
+}
+ 
+// Automatically generated. Retrieves the `@cfc` constructor field of the `:subst` type.
+
+static inline kk_integer_t kk_main_subst_fs__cfc(kk_main__subst subst, kk_context_t* _ctx) { /* forall<e,a> (subst : subst<e,a>) -> int */ 
+  {
+    struct kk_main__Hnd_subst* _con_x4279 = kk_main__as_Hnd_subst(subst, _ctx);
+    kk_integer_t _x = _con_x4279->_cfc;
+    return kk_integer_dup(_x, _ctx);
+  }
+}
+ 
+// Automatically generated. Retrieves the `@fun-substAV` constructor field of the `:subst` type.
+
+static inline kk_std_core_hnd__clause2 kk_main_subst_fs__fun_substAV(kk_main__subst subst, kk_context_t* _ctx) { /* forall<e,a> (subst : subst<e,a>) -> hnd/clause2<exp,exp,absValueExp,subst,e,a> */ 
+  {
+    struct kk_main__Hnd_subst* _con_x4280 = kk_main__as_Hnd_subst(subst, _ctx);
+    kk_std_core_hnd__clause2 _x = _con_x4280->_fun_substAV;
+    return kk_std_core_hnd__clause2_dup(_x, _ctx);
   }
 }
 
@@ -1303,65 +2406,59 @@ kk_std_core_types__list kk_main_hashset_fs_list(kk_std_data_hashset__hash_set se
 static inline kk_string_t kk_main_fieldName_fs_show(kk_main__fieldName fieldName, kk_context_t* _ctx) { /* (fieldName : fieldName) -> string */ 
   if (kk_main__is_FNNamed(fieldName, _ctx)) {
     kk_string_t name = fieldName._cons.FNNamed.name;
-    kk_string_t _x_x6016;
-    kk_define_string_literal(, _s_x6017, 8, "FNNamed(", _ctx)
-    _x_x6016 = kk_string_dup(_s_x6017, _ctx); /*string*/
-    kk_string_t _x_x6018;
-    kk_string_t _x_x6019;
-    kk_define_string_literal(, _s_x6020, 1, ")", _ctx)
-    _x_x6019 = kk_string_dup(_s_x6020, _ctx); /*string*/
-    _x_x6018 = kk_std_core_types__lp__plus__plus__rp_(name, _x_x6019, _ctx); /*string*/
-    return kk_std_core_types__lp__plus__plus__rp_(_x_x6016, _x_x6018, _ctx);
+    return name;
   }
   {
-    kk_define_string_literal(, _s_x6021, 3, "FNL", _ctx)
-    return kk_string_dup(_s_x6021, _ctx);
+    kk_define_string_literal(, _s_x4289, 3, "FNL", _ctx)
+    return kk_string_dup(_s_x4289, _ctx);
   }
 }
 
 static inline kk_string_t kk_main_varName_fs_show(kk_main__varName varName, kk_context_t* _ctx) { /* (varName : varName) -> string */ 
-  kk_string_t _x_x6022;
-  kk_define_string_literal(, _s_x6023, 8, "VarName(", _ctx)
-  _x_x6022 = kk_string_dup(_s_x6023, _ctx); /*string*/
-  kk_string_t _x_x6024;
-  kk_string_t _x_x6025;
+  kk_string_t _x_x4290;
+  kk_define_string_literal(, _s_x4291, 8, "VarName(", _ctx)
+  _x_x4290 = kk_string_dup(_s_x4291, _ctx); /*string*/
+  kk_string_t _x_x4292;
+  kk_string_t _x_x4293;
   {
     kk_string_t _x = varName.name;
-    _x_x6025 = _x; /*string*/
+    _x_x4293 = _x; /*string*/
   }
-  kk_string_t _x_x6026;
-  kk_define_string_literal(, _s_x6027, 1, ")", _ctx)
-  _x_x6026 = kk_string_dup(_s_x6027, _ctx); /*string*/
-  _x_x6024 = kk_std_core_types__lp__plus__plus__rp_(_x_x6025, _x_x6026, _ctx); /*string*/
-  return kk_std_core_types__lp__plus__plus__rp_(_x_x6022, _x_x6024, _ctx);
+  kk_string_t _x_x4294;
+  kk_define_string_literal(, _s_x4295, 1, ")", _ctx)
+  _x_x4294 = kk_string_dup(_s_x4295, _ctx); /*string*/
+  _x_x4292 = kk_std_core_types__lp__plus__plus__rp_(_x_x4293, _x_x4294, _ctx); /*string*/
+  return kk_std_core_types__lp__plus__plus__rp_(_x_x4290, _x_x4292, _ctx);
 }
 
 static inline kk_string_t kk_main_op_fs_show(kk_main__op op, kk_context_t* _ctx) { /* (op : op) -> string */ 
   if (kk_main__is_AndOp(op, _ctx)) {
-    kk_define_string_literal(, _s_x6028, 5, "AndOp", _ctx)
-    return kk_string_dup(_s_x6028, _ctx);
+    kk_define_string_literal(, _s_x4296, 5, "AndOp", _ctx)
+    return kk_string_dup(_s_x4296, _ctx);
   }
   if (kk_main__is_NotOp(op, _ctx)) {
-    kk_define_string_literal(, _s_x6029, 5, "NotOp", _ctx)
-    return kk_string_dup(_s_x6029, _ctx);
+    kk_define_string_literal(, _s_x4297, 5, "NotOp", _ctx)
+    return kk_string_dup(_s_x4297, _ctx);
   }
   if (kk_main__is_EqOp(op, _ctx)) {
-    kk_define_string_literal(, _s_x6030, 4, "EqOp", _ctx)
-    return kk_string_dup(_s_x6030, _ctx);
+    kk_define_string_literal(, _s_x4298, 4, "EqOp", _ctx)
+    return kk_string_dup(_s_x4298, _ctx);
   }
   if (kk_main__is_GtOp(op, _ctx)) {
-    kk_define_string_literal(, _s_x6031, 4, "GtOp", _ctx)
-    return kk_string_dup(_s_x6031, _ctx);
+    kk_define_string_literal(, _s_x4299, 4, "GtOp", _ctx)
+    return kk_string_dup(_s_x4299, _ctx);
   }
   {
-    kk_define_string_literal(, _s_x6032, 6, "PlusOp", _ctx)
-    return kk_string_dup(_s_x6032, _ctx);
+    kk_define_string_literal(, _s_x4300, 6, "PlusOp", _ctx)
+    return kk_string_dup(_s_x4300, _ctx);
   }
 }
 
+kk_integer_t kk_main_exp_any_fs_id(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> int */ 
+
 static inline kk_string_t kk_main_hashset_fs_show(kk_std_data_hashset__hash_set set, kk_function_t _implicit_fs_show, kk_context_t* _ctx) { /* forall<a> (set : std/data/hashset/hash-set<a>, ?show : (a) -> string) -> string */ 
-  kk_std_core_types__list _x_x6033 = kk_main_hashset_fs_list(set, _ctx); /*list<1732>*/
-  return kk_std_core_list_show(_x_x6033, _implicit_fs_show, _ctx);
+  kk_std_core_types__list _x_x4312 = kk_main_hashset_fs_list(set, _ctx); /*list<2152>*/
+  return kk_std_core_list_show(_x_x4312, _implicit_fs_show, _ctx);
 }
 
 static inline kk_string_t kk_main_literal_fs_show(kk_main__literal lit, kk_context_t* _ctx) { /* (lit : literal) -> string */ 
@@ -1391,37 +2488,49 @@ static inline kk_string_t kk_main_absValue_fs_show(kk_main__absValue absValue, k
 
 kk_string_t kk_main_hashmap_fs_show(kk_std_data_hashmap__hash_map map, kk_function_t _implicit_fs_key_fs_show, kk_function_t _implicit_fs_value_fs_show, kk_context_t* _ctx); /* forall<a,b> (map : std/data/hashmap/hash-map<a,b>, ?key/show : (a) -> string, ?value/show : (b) -> string) -> string */ 
 
-static inline kk_string_t kk_main_path_fs_show(kk_main__path path, kk_context_t* _ctx) { /* (path : path) -> string */ 
-  return kk_main_path_fs_showDiv(path, _ctx);
-}
-
 
 // lift anonymous function
-struct kk_main_store_fs_show_fun6143__t {
+struct kk_main_store_fs_show_fun4411__t {
   struct kk_function_s _base;
 };
-extern kk_string_t kk_main_store_fs_show_fun6143(kk_function_t _fself, kk_box_t _b_x60, kk_context_t* _ctx);
-static inline kk_function_t kk_main_store_fs_new_show_fun6143(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main_store_fs_show_fun6143, _ctx)
+extern kk_string_t kk_main_store_fs_show_fun4411(kk_function_t _fself, kk_box_t _b_x60, kk_context_t* _ctx);
+static inline kk_function_t kk_main_store_fs_new_show_fun4411(kk_context_t* _ctx) {
+  kk_define_static_function(_fself, kk_main_store_fs_show_fun4411, _ctx)
   return kk_function_dup(_fself,kk_context());
 }
 
 
 
 // lift anonymous function
-struct kk_main_store_fs_show_fun6145__t {
+struct kk_main_store_fs_show_fun4413__t {
   struct kk_function_s _base;
 };
-extern kk_string_t kk_main_store_fs_show_fun6145(kk_function_t _fself, kk_box_t _b_x61, kk_context_t* _ctx);
-static inline kk_function_t kk_main_store_fs_new_show_fun6145(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main_store_fs_show_fun6145, _ctx)
+extern kk_string_t kk_main_store_fs_show_fun4413(kk_function_t _fself, kk_box_t _b_x61, kk_context_t* _ctx);
+static inline kk_function_t kk_main_store_fs_new_show_fun4413(kk_context_t* _ctx) {
+  kk_define_static_function(_fself, kk_main_store_fs_show_fun4413, _ctx)
   return kk_function_dup(_fself,kk_context());
 }
 
 
 static inline kk_string_t kk_main_store_fs_show(kk_std_data_hashmap__hash_map store, kk_context_t* _ctx) { /* (store : store) -> string */ 
-  return kk_main_hashmap_fs_show(store, kk_main_store_fs_new_show_fun6143(_ctx), kk_main_store_fs_new_show_fun6145(_ctx), _ctx);
+  return kk_main_hashmap_fs_show(store, kk_main_store_fs_new_show_fun4411(_ctx), kk_main_store_fs_new_show_fun4413(_ctx), _ctx);
 }
+
+kk_string_t kk_main_absValueExp_fs_show(kk_main__absValueExp absValueExp, kk_context_t* _ctx); /* (absValueExp : absValueExp) -> div string */ 
+
+kk_string_t kk_main_storeExp_fs_show(kk_main__storeExp storeExp, kk_context_t* _ctx); /* (storeExp : storeExp) -> div string */ 
+
+kk_string_t kk_main_absOpExp_fs_show(kk_main__absOpExp absOpExp, kk_context_t* _ctx); /* (absOpExp : absOpExp) -> div string */ 
+
+kk_string_t kk_main_exp_fs_show(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> string */ 
+
+kk_string_t kk_main_iteratorContextExp_fs_show(kk_main__iteratorContextExp ice, kk_context_t* _ctx); /* (ice : iteratorContextExp) -> div string */ 
+
+static inline kk_string_t kk_main_path_fs_show(kk_main__path path, kk_context_t* _ctx) { /* (path : path) -> string */ 
+  return kk_main_path_fs_showDiv(path, _ctx);
+}
+
+kk_string_t kk_main_pathExp_fs_show(kk_main__pathExp pathExp, kk_context_t* _ctx); /* (pathExp : pathExp) -> div string */ 
 
 static inline bool kk_main_op_fs__lp__eq__eq__rp_(kk_main__op a, kk_main__op b, kk_context_t* _ctx) { /* (a : op, b : op) -> bool */ 
   if (kk_main__is_AndOp(a, _ctx) && kk_main__is_AndOp(b, _ctx)) {
@@ -1445,9 +2554,9 @@ static inline bool kk_main_op_fs__lp__eq__eq__rp_(kk_main__op a, kk_main__op b, 
 }
 
 static inline bool kk_main_hashset_fs__lp__eq__eq__rp_(kk_std_data_hashset__hash_set a, kk_std_data_hashset__hash_set b, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_context_t* _ctx) { /* forall<a> (a : std/data/hashset/hash-set<a>, b : std/data/hashset/hash-set<a>, ?(==) : (a, a) -> bool) -> bool */ 
-  kk_std_core_types__list _x_x6147 = kk_main_hashset_fs_list(a, _ctx); /*list<1732>*/
-  kk_std_core_types__list _x_x6148 = kk_main_hashset_fs_list(b, _ctx); /*list<1732>*/
-  return kk_std_core_list__lp__eq__eq__rp_(_x_x6147, _x_x6148, _implicit_fs__lp__eq__eq__rp_, _ctx);
+  kk_std_core_types__list _x_x4786 = kk_main_hashset_fs_list(a, _ctx); /*list<2152>*/
+  kk_std_core_types__list _x_x4787 = kk_main_hashset_fs_list(b, _ctx); /*list<2152>*/
+  return kk_std_core_list__lp__eq__eq__rp_(_x_x4786, _x_x4787, _implicit_fs__lp__eq__eq__rp_, _ctx);
 }
 
 bool kk_main_literal_fs__lp__eq__eq__rp_(kk_main__literal a, kk_main__literal b, kk_context_t* _ctx); /* (a : literal, b : literal) -> bool */ 
@@ -1483,17 +2592,17 @@ static inline bool kk_main_absValue_fs__lp__eq__eq__rp_(kk_main__absValue a, kk_
 }
 
 static inline bool kk_main_varName_fs__lp__eq__eq__rp_(kk_main__varName a, kk_main__varName b, kk_context_t* _ctx) { /* (a : varName, b : varName) -> bool */ 
-  kk_string_t _x_x6183;
+  kk_string_t _x_x4822;
   {
     kk_string_t _x = a.name;
-    _x_x6183 = _x; /*string*/
+    _x_x4822 = _x; /*string*/
   }
-  kk_string_t _x_x6184;
+  kk_string_t _x_x4823;
   {
     kk_string_t _x_0 = b.name;
-    _x_x6184 = _x_0; /*string*/
+    _x_x4823 = _x_0; /*string*/
   }
-  return kk_string_is_eq(_x_x6183,_x_x6184,kk_context());
+  return kk_string_is_eq(_x_x4822,_x_x4823,kk_context());
 }
 
 bool kk_main_exp_fs_eqDiv(kk_main__exp a, kk_main__exp b, kk_context_t* _ctx); /* (a : exp, b : exp) -> div bool */ 
@@ -1502,18 +2611,58 @@ static inline bool kk_main_exp_fs__lp__eq__eq__rp_(kk_main__exp a, kk_main__exp 
   return kk_main_exp_fs_eqDiv(a, b, _ctx);
 }
 
+bool kk_main_absValueExp_fs__lp__at_mlift_x_10931_eq__eq__rp_(kk_main__fieldName af, kk_main__fieldName bf, bool _y_x10264, kk_context_t* _ctx); /* (af : fieldName, bf : fieldName, bool) -> pure bool */ 
+
+bool kk_main_absValueExp_fs__lp__at_mlift_x_10932_eq__eq__rp_(kk_main__absValueExp ae2, kk_main__absValueExp be2, bool _y_x10266, kk_context_t* _ctx); /* (ae2 : absValueExp, be2 : absValueExp, bool) -> pure bool */ 
+
+bool kk_main_absValueExp_fs__lp__at_mlift_x_10933_eq__eq__rp_(kk_main__varName av_0, kk_main__varName bv_0, bool _y_x10270, kk_context_t* _ctx); /* (av@0 : varName, bv@0 : varName, bool) -> pure bool */ 
+
+bool kk_main_absValueExp_fs__lp__at_mlift_x_10934_eq__eq__rp_(kk_main__absValueExp ba, kk_main__absValueExp bb, bool _y_x10272, kk_context_t* _ctx); /* (ba : absValueExp, bb : absValueExp, bool) -> pure bool */ 
+
+bool kk_main_storeExp_fs__lp__at_mlift_x_10935_eq__eq__rp_(kk_main__absValueExp aav, kk_main__varName av_1, kk_main__absValueExp bav, kk_main__varName bv_1, bool _y_x10276, kk_context_t* _ctx); /* (aav : absValueExp, av@1 : varName, bav : absValueExp, bv@1 : varName, bool) -> pure bool */ 
+
+bool kk_main_storeExp_fs__lp__at_mlift_x_10936_eq__eq__rp_(kk_main__storeExp ab_0, kk_main__storeExp bb_0, bool _y_x10280, kk_context_t* _ctx); /* (ab@0 : storeExp, bb@0 : storeExp, bool) -> pure bool */ 
+
+bool kk_main_storeExp_fs__lp__at_mlift_x_10937_eq__eq__rp_(kk_main__varName av_0_0, kk_main__varName bv_0_0, bool _y_x10283, kk_context_t* _ctx); /* (av@0@0 : varName, bv@0@0 : varName, bool) -> pure bool */ 
+
+bool kk_main_absValueExp_fs__lp__eq__eq__rp_(kk_main__absValueExp a, kk_main__absValueExp b, kk_context_t* _ctx); /* (a : absValueExp, b : absValueExp) -> pure bool */ 
+
+bool kk_main_storeExp_fs__lp__eq__eq__rp_(kk_main__storeExp a_0_0_0_0, kk_main__storeExp b_0_0_0_0, kk_context_t* _ctx); /* (a : storeExp, b : storeExp) -> pure bool */ 
+
+bool kk_main_absOpExp_fs__lp__at_mlift_x_10938_eq__eq__rp_(kk_main__absOpExp ab, kk_main__absOpExp bb, bool _y_x10286, kk_context_t* _ctx); /* (ab : absOpExp, bb : absOpExp, bool) -> pure bool */ 
+
+bool kk_main_absOpExp_fs__lp__eq__eq__rp_(kk_main__absOpExp a, kk_main__absOpExp b, kk_context_t* _ctx); /* (a : absOpExp, b : absOpExp) -> pure bool */ 
+
 bool kk_main_hashmap_fs__lp__eq__eq__rp_(kk_std_data_hashmap__hash_map a, kk_std_data_hashmap__hash_map b, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_function_t _implicit_fs_value_fs__lp__eq__eq__rp_, kk_context_t* _ctx); /* forall<a,b> (a : std/data/hashmap/hash-map<a,b>, b : std/data/hashmap/hash-map<a,b>, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int, ?value/(==) : (b, b) -> bool) -> bool */ 
+
+bool kk_main_iteratorContextExp_fs__lp__at_mlift_x_10939_eq__eq__rp_(kk_main__absValueExp aav, kk_main__absValueExp bav, bool _y_x10293, kk_context_t* _ctx); /* (aav : absValueExp, bav : absValueExp, bool) -> pure bool */ 
+
+bool kk_main_iteratorContextExp_fs__lp__eq__eq__rp_(kk_main__iteratorContextExp a, kk_main__iteratorContextExp b, kk_context_t* _ctx); /* (a : iteratorContextExp, b : iteratorContextExp) -> pure bool */ 
 
 static inline bool kk_main_path_fs__lp__eq__eq__rp_(kk_main__path a, kk_main__path b, kk_context_t* _ctx) { /* (a : path, b : path) -> bool */ 
   return kk_main_path_fs_eqDiv(a, b, _ctx);
 }
 
+bool kk_main_pathExp_fs__lp__at_mlift_x_10940_eq__eq__rp_(bool ad, bool bd, bool _y_x10300, kk_context_t* _ctx); /* (ad : bool, bd : bool, bool) -> pure bool */ 
+
+bool kk_main_pathExp_fs__lp__at_mlift_x_10941_eq__eq__rp_(kk_main__absOpExp ac, bool ad_0, kk_main__absOpExp bc, bool bd_0, bool _y_x10299, kk_context_t* _ctx); /* (ac : absOpExp, ad : bool, bc : absOpExp, bd : bool, bool) -> pure bool */ 
+
+bool kk_main_pathExp_fs__lp__at_mlift_x_10942_eq__eq__rp_(kk_main__pathExp ab, kk_main__pathExp bb, bool _y_x10303, kk_context_t* _ctx); /* (ab : pathExp, bb : pathExp, bool) -> pure bool */ 
+
+bool kk_main_pathExp_fs__lp__at_mlift_x_10943_eq__eq__rp_(kk_main__pathExp aels, kk_main__pathExp bels, bool _y_x10306, kk_context_t* _ctx); /* (aels : pathExp, bels : pathExp, bool) -> pure bool */ 
+
+bool kk_main_pathExp_fs__lp__eq__eq__rp_(kk_main__pathExp a, kk_main__pathExp b, kk_context_t* _ctx); /* (a : pathExp, b : pathExp) -> pure bool */ 
+
+kk_std_core_types__maybe kk_main_storeExp_fs_get(kk_main__storeExp store, kk_main__varName v, kk_context_t* _ctx); /* (store : storeExp, v : varName) -> maybe<absValueExp> */ 
+
 static inline kk_std_data_hashset__hash_set kk_main_hashset_fs_union(kk_std_data_hashset__hash_set a, kk_std_data_hashset__hash_set b, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx) { /* forall<a> (a : std/data/hashset/hash-set<a>, b : std/data/hashset/hash-set<a>, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> std/data/hashset/hash-set<a> */ 
-  kk_std_core_types__list xs_10069 = kk_main_hashset_fs_list(a, _ctx); /*list<4563>*/;
-  kk_std_core_types__list ys_10070 = kk_main_hashset_fs_list(b, _ctx); /*list<4563>*/;
-  kk_std_core_types__list _x_x6218 = kk_std_core_list_append(xs_10069, ys_10070, _ctx); /*list<6564>*/
-  return kk_std_data_hashset_thread_fs_list_fs_hash_set(_x_x6218, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, _ctx);
+  kk_std_core_types__list xs_10107 = kk_main_hashset_fs_list(a, _ctx); /*list<11209>*/;
+  kk_std_core_types__list ys_10108 = kk_main_hashset_fs_list(b, _ctx); /*list<11209>*/;
+  kk_std_core_types__list _x_x5093 = kk_std_core_list_append(xs_10107, ys_10108, _ctx); /*list<13210>*/
+  return kk_std_data_hashset_thread_fs_list_fs_hash_set(_x_x5093, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, _ctx);
 }
+
+kk_string_t kk_main_hashmap_fs_prettyPrint(kk_std_data_hashmap__hash_map map, kk_function_t _implicit_fs_value_fs_show, kk_context_t* _ctx); /* forall<a> (map : std/data/hashmap/hash-map<int,a>, ?value/show : (a) -> string) -> div string */ 
 
 static inline kk_integer_t kk_main_op_fs_hash(kk_main__op op, int64_t x, kk_context_t* _ctx) { /* (op : op, x : int64) -> int */ 
   if (kk_main__is_AndOp(op, _ctx)) {
@@ -1569,12 +2718,12 @@ static inline kk_integer_t kk_main_absValue_fs_hash(kk_main__absValue absValue, 
 }
 
 static inline kk_integer_t kk_main_varName_fs_hash(kk_main__varName varName, int64_t x, kk_context_t* _ctx) { /* (varName : varName, x : int64) -> int */ 
-  kk_string_t _x_x6240;
+  kk_string_t _x_x5149;
   {
     kk_string_t _x = varName.name;
-    _x_x6240 = _x; /*string*/
+    _x_x5149 = _x; /*string*/
   }
-  return kk_string_hash(_x_x6240,x,kk_context());
+  return kk_string_hash(_x_x5149,x,kk_context());
 }
 
 kk_integer_t kk_main_exp_fs_hash(kk_main__exp exp, int64_t x, kk_context_t* _ctx); /* (exp : exp, x : int64) -> int */ 
@@ -1589,57 +2738,51 @@ kk_box_t kk_main__handle_attrGrammar(kk_main__attrGrammar hnd, kk_function_t ret
  
 // select `getAbstractValue` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause1 kk_main__select_getAbstractValue(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,absValue,attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause1 kk_main__select_getAbstractValue(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,absValueExp,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6258 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause1 _fun_getAbstractValue = _con_x6258->_fun_getAbstractValue;
+    struct kk_main__Hnd_attrGrammar* _con_x5169 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause1 _fun_getAbstractValue = _con_x5169->_fun_getAbstractValue;
     return kk_std_core_hnd__clause1_dup(_fun_getAbstractValue, _ctx);
   }
 }
  
 // Call the `fun getAbstractValue` operation of the effect `:attrGrammar`
 
-static inline kk_main__absValue kk_main_getAbstractValue(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar absValue */ 
-  kk_std_core_hnd__ev ev_11211 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6259;
+static inline kk_main__absValueExp kk_main_getAbstractValue(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar absValueExp */ 
+  kk_std_core_hnd__ev ev_11092 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5170;
   {
-    struct kk_std_core_hnd_Ev* _con_x6260 = kk_std_core_hnd__as_Ev(ev_11211, _ctx);
-    kk_box_t _box_x171 = _con_x6260->hnd;
-    int32_t m = _con_x6260->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x171, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5171 = kk_std_core_hnd__as_Ev(ev_11092, _ctx);
+    kk_box_t _box_x484 = _con_x5171->hnd;
+    int32_t m = _con_x5171->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x484, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6261 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6261->_cfc;
-      kk_std_core_hnd__clause1 _fun_getAbstractValue = _con_x6261->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6261->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6261->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6261->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6261->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6261->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6261->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6261->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_8 = _con_x6261->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6261->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6261->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6261->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6261->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6261->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6261->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6261->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5172 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5172->_cfc;
+      kk_std_core_hnd__clause1 _fun_getAbstractValue = _con_x5172->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5172->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5172->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5172->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5172->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_5 = _con_x5172->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5172->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5172->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5172->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5172->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5172->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5172->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5172->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -1651,67 +2794,61 @@ static inline kk_main__absValue kk_main_getAbstractValue(kk_main__exp exp, kk_co
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x175 = _fun_getAbstractValue.clause;
-        _x_x6259 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x175, (_fun_unbox_x175, m, ev_11211, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
+        kk_function_t _fun_unbox_x488 = _fun_getAbstractValue.clause;
+        _x_x5170 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x488, (_fun_unbox_x488, m, ev_11092, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
       }
     }
   }
-  return kk_main__absValue_unbox(_x_x6259, KK_OWNED, _ctx);
+  return kk_main__absValueExp_unbox(_x_x5170, KK_OWNED, _ctx);
 }
  
 // select `setAbstractValue` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause2 kk_main__select_setAbstractValue(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,absValue,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main__select_setAbstractValue(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,absValueExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6262 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause2 _fun_setAbstractValue = _con_x6262->_fun_setAbstractValue;
+    struct kk_main__Hnd_attrGrammar* _con_x5173 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_setAbstractValue = _con_x5173->_fun_setAbstractValue;
     return kk_std_core_hnd__clause2_dup(_fun_setAbstractValue, _ctx);
   }
 }
  
 // Call the `fun setAbstractValue` operation of the effect `:attrGrammar`
 
-static inline kk_unit_t kk_main_setAbstractValue(kk_main__exp exp, kk_main__absValue absValue, kk_context_t* _ctx) { /* (exp : exp, absValue : absValue) -> attrGrammar () */ 
-  kk_std_core_hnd__ev evx_11214 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6263;
+static inline kk_unit_t kk_main_setAbstractValue(kk_main__exp exp, kk_main__absValueExp absValue, kk_context_t* _ctx) { /* (exp : exp, absValue : absValueExp) -> attrGrammar () */ 
+  kk_std_core_hnd__ev evx_11095 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5174;
   {
-    struct kk_std_core_hnd_Ev* _con_x6264 = kk_std_core_hnd__as_Ev(evx_11214, _ctx);
-    kk_box_t _box_x179 = _con_x6264->hnd;
-    int32_t m = _con_x6264->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x179, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5175 = kk_std_core_hnd__as_Ev(evx_11095, _ctx);
+    kk_box_t _box_x492 = _con_x5175->hnd;
+    int32_t m = _con_x5175->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x492, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6265 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6265->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6265->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6265->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6265->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6265->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6265->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6265->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6265->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_8 = _con_x6265->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _fun_setAbstractValue = _con_x6265->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6265->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6265->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6265->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6265->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6265->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6265->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6265->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5176 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5176->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5176->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5176->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5176->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5176->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_5 = _con_x5176->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _fun_setAbstractValue = _con_x5176->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5176->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5176->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5176->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5176->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5176->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5176->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5176->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -1723,67 +2860,61 @@ static inline kk_unit_t kk_main_setAbstractValue(kk_main__exp exp, kk_main__absV
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x184 = _fun_setAbstractValue.clause;
-        _x_x6263 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x184, (_fun_unbox_x184, m, evx_11214, kk_main__exp_box(exp, _ctx), kk_main__absValue_box(absValue, _ctx), _ctx), _ctx); /*1016*/
+        kk_function_t _fun_unbox_x497 = _fun_setAbstractValue.clause;
+        _x_x5174 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x497, (_fun_unbox_x497, m, evx_11095, kk_main__exp_box(exp, _ctx), kk_main__absValueExp_box(absValue, _ctx), _ctx), _ctx); /*1016*/
       }
     }
   }
-  kk_unit_unbox(_x_x6263); return kk_Unit;
+  kk_unit_unbox(_x_x5174); return kk_Unit;
 }
  
 // select `getPaths` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause1 kk_main__select_getPaths(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,std/data/hashset/hash-set<path>,attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause1 kk_main__select_getPaths(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,pathExp,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6266 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause1 _fun_getPaths = _con_x6266->_fun_getPaths;
+    struct kk_main__Hnd_attrGrammar* _con_x5177 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause1 _fun_getPaths = _con_x5177->_fun_getPaths;
     return kk_std_core_hnd__clause1_dup(_fun_getPaths, _ctx);
   }
 }
  
 // Call the `fun getPaths` operation of the effect `:attrGrammar`
 
-static inline kk_std_data_hashset__hash_set kk_main_getPaths(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar std/data/hashset/hash-set<path> */ 
-  kk_std_core_hnd__ev ev_11218 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6267;
+static inline kk_main__pathExp kk_main_getPaths(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar pathExp */ 
+  kk_std_core_hnd__ev ev_11099 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5178;
   {
-    struct kk_std_core_hnd_Ev* _con_x6268 = kk_std_core_hnd__as_Ev(ev_11218, _ctx);
-    kk_box_t _box_x189 = _con_x6268->hnd;
-    int32_t m = _con_x6268->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x189, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5179 = kk_std_core_hnd__as_Ev(ev_11099, _ctx);
+    kk_box_t _box_x502 = _con_x5179->hnd;
+    int32_t m = _con_x5179->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x502, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6269 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6269->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6269->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6269->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6269->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6269->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6269->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _fun_getPaths = _con_x6269->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6269->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6269->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_8 = _con_x6269->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6269->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6269->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6269->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6269->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6269->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6269->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6269->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5180 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5180->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5180->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5180->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5180->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _fun_getPaths = _con_x5180->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5180->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_5 = _con_x5180->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5180->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5180->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5180->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5180->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5180->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5180->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5180->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -1795,67 +2926,61 @@ static inline kk_std_data_hashset__hash_set kk_main_getPaths(kk_main__exp exp, k
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x193 = _fun_getPaths.clause;
-        _x_x6267 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x193, (_fun_unbox_x193, m, ev_11218, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
+        kk_function_t _fun_unbox_x506 = _fun_getPaths.clause;
+        _x_x5178 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x506, (_fun_unbox_x506, m, ev_11099, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
       }
     }
   }
-  return kk_std_data_hashset__hash_set_unbox(_x_x6267, KK_OWNED, _ctx);
+  return kk_main__pathExp_unbox(_x_x5178, KK_OWNED, _ctx);
 }
  
 // select `setPaths` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause2 kk_main__select_setPaths(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,std/data/hashset/hash-set<path>,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main__select_setPaths(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,pathExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6270 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause2 _fun_setPaths = _con_x6270->_fun_setPaths;
+    struct kk_main__Hnd_attrGrammar* _con_x5181 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_setPaths = _con_x5181->_fun_setPaths;
     return kk_std_core_hnd__clause2_dup(_fun_setPaths, _ctx);
   }
 }
  
 // Call the `fun setPaths` operation of the effect `:attrGrammar`
 
-static inline kk_unit_t kk_main_setPaths(kk_main__exp exp, kk_std_data_hashset__hash_set paths, kk_context_t* _ctx) { /* (exp : exp, paths : std/data/hashset/hash-set<path>) -> attrGrammar () */ 
-  kk_std_core_hnd__ev evx_11221 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6271;
+static inline kk_unit_t kk_main_setPaths(kk_main__exp exp, kk_main__pathExp paths, kk_context_t* _ctx) { /* (exp : exp, paths : pathExp) -> attrGrammar () */ 
+  kk_std_core_hnd__ev evx_11102 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5182;
   {
-    struct kk_std_core_hnd_Ev* _con_x6272 = kk_std_core_hnd__as_Ev(evx_11221, _ctx);
-    kk_box_t _box_x197 = _con_x6272->hnd;
-    int32_t m = _con_x6272->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x197, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5183 = kk_std_core_hnd__as_Ev(evx_11102, _ctx);
+    kk_box_t _box_x510 = _con_x5183->hnd;
+    int32_t m = _con_x5183->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x510, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6273 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6273->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6273->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6273->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6273->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6273->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6273->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6273->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6273->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_8 = _con_x6273->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6273->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6273->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6273->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6273->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6273->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _fun_setPaths = _con_x6273->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6273->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6273->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5184 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5184->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5184->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5184->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5184->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5184->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_5 = _con_x5184->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5184->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5184->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5184->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5184->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5184->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _fun_setPaths = _con_x5184->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5184->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5184->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -1867,139 +2992,62 @@ static inline kk_unit_t kk_main_setPaths(kk_main__exp exp, kk_std_data_hashset__
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x202 = _fun_setPaths.clause;
-        _x_x6271 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x202, (_fun_unbox_x202, m, evx_11221, kk_main__exp_box(exp, _ctx), kk_std_data_hashset__hash_set_box(paths, _ctx), _ctx), _ctx); /*1016*/
+        kk_function_t _fun_unbox_x515 = _fun_setPaths.clause;
+        _x_x5182 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x515, (_fun_unbox_x515, m, evx_11102, kk_main__exp_box(exp, _ctx), kk_main__pathExp_box(paths, _ctx), _ctx), _ctx); /*1016*/
       }
     }
   }
-  kk_unit_unbox(_x_x6271); return kk_Unit;
-}
- 
-// select `getOutputStore` operation out of effect `:attrGrammar`
-
-static inline kk_std_core_hnd__clause1 kk_main__select_getOutputStore(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,store,attrGrammar,e,a> */ 
-  {
-    struct kk_main__Hnd_attrGrammar* _con_x6274 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause1 _fun_getOutputStore = _con_x6274->_fun_getOutputStore;
-    return kk_std_core_hnd__clause1_dup(_fun_getOutputStore, _ctx);
-  }
-}
- 
-// Call the `fun getOutputStore` operation of the effect `:attrGrammar`
-
-static inline kk_std_data_hashmap__hash_map kk_main_getOutputStore(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar store */ 
-  kk_std_core_hnd__ev ev_11225 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6275;
-  {
-    struct kk_std_core_hnd_Ev* _con_x6276 = kk_std_core_hnd__as_Ev(ev_11225, _ctx);
-    kk_box_t _box_x207 = _con_x6276->hnd;
-    int32_t m = _con_x6276->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x207, KK_BORROWED, _ctx);
-    kk_main__attrGrammar_dup(h, _ctx);
-    {
-      struct kk_main__Hnd_attrGrammar* _con_x6277 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6277->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6277->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6277->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6277->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6277->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _fun_getOutputStore = _con_x6277->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6277->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6277->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6277->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_8 = _con_x6277->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6277->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6277->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6277->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6277->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6277->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6277->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6277->_fun_setTraversalSummary;
-      if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
-        kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
-        kk_integer_drop(_pat_0_0, _ctx);
-        kk_datatype_ptr_free(h, _ctx);
-      }
-      else {
-        kk_std_core_hnd__clause1_dup(_fun_getOutputStore, _ctx);
-        kk_datatype_ptr_decref(h, _ctx);
-      }
-      {
-        kk_function_t _fun_unbox_x211 = _fun_getOutputStore.clause;
-        _x_x6275 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x211, (_fun_unbox_x211, m, ev_11225, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
-      }
-    }
-  }
-  return kk_std_data_hashmap__hash_map_unbox(_x_x6275, KK_OWNED, _ctx);
+  kk_unit_unbox(_x_x5182); return kk_Unit;
 }
  
 // select `setOutputStore` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause2 kk_main__select_setOutputStore(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,store,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main__select_setOutputStore(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,storeExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6278 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause2 _fun_setOutputStore = _con_x6278->_fun_setOutputStore;
+    struct kk_main__Hnd_attrGrammar* _con_x5185 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_setOutputStore = _con_x5185->_fun_setOutputStore;
     return kk_std_core_hnd__clause2_dup(_fun_setOutputStore, _ctx);
   }
 }
  
+// fun getOutputStore(exp: exp): storeExp
 // Call the `fun setOutputStore` operation of the effect `:attrGrammar`
 
-static inline kk_unit_t kk_main_setOutputStore(kk_main__exp exp, kk_std_data_hashmap__hash_map store, kk_context_t* _ctx) { /* (exp : exp, store : store) -> attrGrammar () */ 
-  kk_std_core_hnd__ev evx_11228 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6279;
+static inline kk_unit_t kk_main_setOutputStore(kk_main__exp exp, kk_main__storeExp store, kk_context_t* _ctx) { /* (exp : exp, store : storeExp) -> attrGrammar () */ 
+  kk_std_core_hnd__ev evx_11106 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5186;
   {
-    struct kk_std_core_hnd_Ev* _con_x6280 = kk_std_core_hnd__as_Ev(evx_11228, _ctx);
-    kk_box_t _box_x215 = _con_x6280->hnd;
-    int32_t m = _con_x6280->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x215, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5187 = kk_std_core_hnd__as_Ev(evx_11106, _ctx);
+    kk_box_t _box_x520 = _con_x5187->hnd;
+    int32_t m = _con_x5187->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x520, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6281 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6281->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6281->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6281->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6281->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6281->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6281->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6281->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6281->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_8 = _con_x6281->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6281->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6281->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6281->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6281->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _fun_setOutputStore = _con_x6281->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6281->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6281->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6281->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5188 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5188->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5188->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5188->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5188->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5188->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_5 = _con_x5188->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5188->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5188->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5188->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5188->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _fun_setOutputStore = _con_x5188->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5188->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5188->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5188->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2011,139 +3059,62 @@ static inline kk_unit_t kk_main_setOutputStore(kk_main__exp exp, kk_std_data_has
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x220 = _fun_setOutputStore.clause;
-        _x_x6279 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x220, (_fun_unbox_x220, m, evx_11228, kk_main__exp_box(exp, _ctx), kk_std_data_hashmap__hash_map_box(store, _ctx), _ctx), _ctx); /*1016*/
+        kk_function_t _fun_unbox_x525 = _fun_setOutputStore.clause;
+        _x_x5186 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x525, (_fun_unbox_x525, m, evx_11106, kk_main__exp_box(exp, _ctx), kk_main__storeExp_box(store, _ctx), _ctx), _ctx); /*1016*/
       }
     }
   }
-  kk_unit_unbox(_x_x6279); return kk_Unit;
-}
- 
-// select `getInputStore` operation out of effect `:attrGrammar`
-
-static inline kk_std_core_hnd__clause1 kk_main__select_getInputStore(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,store,attrGrammar,e,a> */ 
-  {
-    struct kk_main__Hnd_attrGrammar* _con_x6282 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause1 _fun_getInputStore = _con_x6282->_fun_getInputStore;
-    return kk_std_core_hnd__clause1_dup(_fun_getInputStore, _ctx);
-  }
-}
- 
-// Call the `fun getInputStore` operation of the effect `:attrGrammar`
-
-static inline kk_std_data_hashmap__hash_map kk_main_getInputStore(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar store */ 
-  kk_std_core_hnd__ev ev_11232 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6283;
-  {
-    struct kk_std_core_hnd_Ev* _con_x6284 = kk_std_core_hnd__as_Ev(ev_11232, _ctx);
-    kk_box_t _box_x225 = _con_x6284->hnd;
-    int32_t m = _con_x6284->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x225, KK_BORROWED, _ctx);
-    kk_main__attrGrammar_dup(h, _ctx);
-    {
-      struct kk_main__Hnd_attrGrammar* _con_x6285 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6285->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6285->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6285->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _fun_getInputStore = _con_x6285->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6285->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6285->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6285->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6285->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6285->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_8 = _con_x6285->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6285->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6285->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6285->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6285->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6285->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6285->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6285->_fun_setTraversalSummary;
-      if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
-        kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
-        kk_integer_drop(_pat_0_0, _ctx);
-        kk_datatype_ptr_free(h, _ctx);
-      }
-      else {
-        kk_std_core_hnd__clause1_dup(_fun_getInputStore, _ctx);
-        kk_datatype_ptr_decref(h, _ctx);
-      }
-      {
-        kk_function_t _fun_unbox_x229 = _fun_getInputStore.clause;
-        _x_x6283 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x229, (_fun_unbox_x229, m, ev_11232, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
-      }
-    }
-  }
-  return kk_std_data_hashmap__hash_map_unbox(_x_x6283, KK_OWNED, _ctx);
+  kk_unit_unbox(_x_x5186); return kk_Unit;
 }
  
 // select `setInputStore` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause2 kk_main__select_setInputStore(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,store,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main__select_setInputStore(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,storeExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6286 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause2 _fun_setInputStore = _con_x6286->_fun_setInputStore;
+    struct kk_main__Hnd_attrGrammar* _con_x5189 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_setInputStore = _con_x5189->_fun_setInputStore;
     return kk_std_core_hnd__clause2_dup(_fun_setInputStore, _ctx);
   }
 }
  
+// fun getInputStore(exp: exp): storeExp
 // Call the `fun setInputStore` operation of the effect `:attrGrammar`
 
-static inline kk_unit_t kk_main_setInputStore(kk_main__exp exp, kk_std_data_hashmap__hash_map store, kk_context_t* _ctx) { /* (exp : exp, store : store) -> attrGrammar () */ 
-  kk_std_core_hnd__ev evx_11235 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6287;
+static inline kk_unit_t kk_main_setInputStore(kk_main__exp exp, kk_main__storeExp store, kk_context_t* _ctx) { /* (exp : exp, store : storeExp) -> attrGrammar () */ 
+  kk_std_core_hnd__ev evx_11110 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5190;
   {
-    struct kk_std_core_hnd_Ev* _con_x6288 = kk_std_core_hnd__as_Ev(evx_11235, _ctx);
-    kk_box_t _box_x233 = _con_x6288->hnd;
-    int32_t m = _con_x6288->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x233, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5191 = kk_std_core_hnd__as_Ev(evx_11110, _ctx);
+    kk_box_t _box_x530 = _con_x5191->hnd;
+    int32_t m = _con_x5191->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x530, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6289 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6289->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6289->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6289->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6289->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6289->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6289->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6289->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6289->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_8 = _con_x6289->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6289->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6289->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _fun_setInputStore = _con_x6289->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6289->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6289->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6289->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6289->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6289->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5192 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5192->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5192->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5192->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5192->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5192->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_5 = _con_x5192->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5192->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5192->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _fun_setInputStore = _con_x5192->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5192->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5192->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5192->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5192->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5192->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2155,139 +3126,62 @@ static inline kk_unit_t kk_main_setInputStore(kk_main__exp exp, kk_std_data_hash
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x238 = _fun_setInputStore.clause;
-        _x_x6287 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x238, (_fun_unbox_x238, m, evx_11235, kk_main__exp_box(exp, _ctx), kk_std_data_hashmap__hash_map_box(store, _ctx), _ctx), _ctx); /*1016*/
+        kk_function_t _fun_unbox_x535 = _fun_setInputStore.clause;
+        _x_x5190 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x535, (_fun_unbox_x535, m, evx_11110, kk_main__exp_box(exp, _ctx), kk_main__storeExp_box(store, _ctx), _ctx), _ctx); /*1016*/
       }
     }
   }
-  kk_unit_unbox(_x_x6287); return kk_Unit;
-}
- 
-// select `getQueryCondition` operation out of effect `:attrGrammar`
-
-static inline kk_std_core_hnd__clause1 kk_main__select_getQueryCondition(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,absOp,attrGrammar,e,a> */ 
-  {
-    struct kk_main__Hnd_attrGrammar* _con_x6290 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause1 _fun_getQueryCondition = _con_x6290->_fun_getQueryCondition;
-    return kk_std_core_hnd__clause1_dup(_fun_getQueryCondition, _ctx);
-  }
-}
- 
-// Call the `fun getQueryCondition` operation of the effect `:attrGrammar`
-
-static inline kk_main__absOp kk_main_getQueryCondition(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar absOp */ 
-  kk_std_core_hnd__ev ev_11239 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6291;
-  {
-    struct kk_std_core_hnd_Ev* _con_x6292 = kk_std_core_hnd__as_Ev(ev_11239, _ctx);
-    kk_box_t _box_x243 = _con_x6292->hnd;
-    int32_t m = _con_x6292->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x243, KK_BORROWED, _ctx);
-    kk_main__attrGrammar_dup(h, _ctx);
-    {
-      struct kk_main__Hnd_attrGrammar* _con_x6293 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6293->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6293->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6293->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6293->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6293->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6293->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6293->_fun_getPaths;
-      kk_std_core_hnd__clause1 _fun_getQueryCondition = _con_x6293->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6293->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_8 = _con_x6293->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6293->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6293->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6293->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6293->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6293->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6293->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6293->_fun_setTraversalSummary;
-      if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
-        kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
-        kk_integer_drop(_pat_0_0, _ctx);
-        kk_datatype_ptr_free(h, _ctx);
-      }
-      else {
-        kk_std_core_hnd__clause1_dup(_fun_getQueryCondition, _ctx);
-        kk_datatype_ptr_decref(h, _ctx);
-      }
-      {
-        kk_function_t _fun_unbox_x247 = _fun_getQueryCondition.clause;
-        _x_x6291 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x247, (_fun_unbox_x247, m, ev_11239, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
-      }
-    }
-  }
-  return kk_main__absOp_unbox(_x_x6291, KK_OWNED, _ctx);
+  kk_unit_unbox(_x_x5190); return kk_Unit;
 }
  
 // select `setQueryCondition` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause2 kk_main__select_setQueryCondition(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,absOp,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main__select_setQueryCondition(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,absOpExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6294 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause2 _fun_setQueryCondition = _con_x6294->_fun_setQueryCondition;
+    struct kk_main__Hnd_attrGrammar* _con_x5193 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_setQueryCondition = _con_x5193->_fun_setQueryCondition;
     return kk_std_core_hnd__clause2_dup(_fun_setQueryCondition, _ctx);
   }
 }
  
+// fun getQueryCondition(exp: exp): absOpExp
 // Call the `fun setQueryCondition` operation of the effect `:attrGrammar`
 
-static inline kk_unit_t kk_main_setQueryCondition(kk_main__exp exp, kk_main__absOp absOp, kk_context_t* _ctx) { /* (exp : exp, absOp : absOp) -> attrGrammar () */ 
-  kk_std_core_hnd__ev evx_11242 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6295;
+static inline kk_unit_t kk_main_setQueryCondition(kk_main__exp exp, kk_main__absOpExp absOp, kk_context_t* _ctx) { /* (exp : exp, absOp : absOpExp) -> attrGrammar () */ 
+  kk_std_core_hnd__ev evx_11114 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5194;
   {
-    struct kk_std_core_hnd_Ev* _con_x6296 = kk_std_core_hnd__as_Ev(evx_11242, _ctx);
-    kk_box_t _box_x251 = _con_x6296->hnd;
-    int32_t m = _con_x6296->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x251, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5195 = kk_std_core_hnd__as_Ev(evx_11114, _ctx);
+    kk_box_t _box_x540 = _con_x5195->hnd;
+    int32_t m = _con_x5195->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x540, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6297 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6297->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6297->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6297->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6297->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6297->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6297->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6297->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6297->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_8 = _con_x6297->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6297->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6297->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6297->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6297->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6297->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6297->_fun_setPaths;
-      kk_std_core_hnd__clause2 _fun_setQueryCondition = _con_x6297->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6297->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5196 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5196->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5196->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5196->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5196->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5196->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_5 = _con_x5196->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5196->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5196->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5196->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5196->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5196->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5196->_fun_setPaths;
+      kk_std_core_hnd__clause2 _fun_setQueryCondition = _con_x5196->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5196->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2299,20 +3193,20 @@ static inline kk_unit_t kk_main_setQueryCondition(kk_main__exp exp, kk_main__abs
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x256 = _fun_setQueryCondition.clause;
-        _x_x6295 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x256, (_fun_unbox_x256, m, evx_11242, kk_main__exp_box(exp, _ctx), kk_main__absOp_box(absOp, _ctx), _ctx), _ctx); /*1016*/
+        kk_function_t _fun_unbox_x545 = _fun_setQueryCondition.clause;
+        _x_x5194 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x545, (_fun_unbox_x545, m, evx_11114, kk_main__exp_box(exp, _ctx), kk_main__absOpExp_box(absOp, _ctx), _ctx), _ctx); /*1016*/
       }
     }
   }
-  kk_unit_unbox(_x_x6295); return kk_Unit;
+  kk_unit_unbox(_x_x5194); return kk_Unit;
 }
  
 // select `getDataDependence` operation out of effect `:attrGrammar`
 
 static inline kk_std_core_hnd__clause1 kk_main__select_getDataDependence(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,bool,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6298 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause1 _fun_getDataDependence = _con_x6298->_fun_getDataDependence;
+    struct kk_main__Hnd_attrGrammar* _con_x5197 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause1 _fun_getDataDependence = _con_x5197->_fun_getDataDependence;
     return kk_std_core_hnd__clause1_dup(_fun_getDataDependence, _ctx);
   }
 }
@@ -2320,46 +3214,40 @@ static inline kk_std_core_hnd__clause1 kk_main__select_getDataDependence(kk_main
 // Call the `fun getDataDependence` operation of the effect `:attrGrammar`
 
 static inline bool kk_main_getDataDependence(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar bool */ 
-  kk_std_core_hnd__ev ev_11246 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6299;
+  kk_std_core_hnd__ev ev_11118 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5198;
   {
-    struct kk_std_core_hnd_Ev* _con_x6300 = kk_std_core_hnd__as_Ev(ev_11246, _ctx);
-    kk_box_t _box_x261 = _con_x6300->hnd;
-    int32_t m = _con_x6300->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x261, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5199 = kk_std_core_hnd__as_Ev(ev_11118, _ctx);
+    kk_box_t _box_x550 = _con_x5199->hnd;
+    int32_t m = _con_x5199->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x550, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6301 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6301->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6301->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _fun_getDataDependence = _con_x6301->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6301->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6301->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6301->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6301->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6301->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6301->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_8 = _con_x6301->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6301->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6301->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6301->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6301->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6301->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6301->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6301->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5200 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5200->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5200->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _fun_getDataDependence = _con_x5200->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5200->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5200->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5200->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_5 = _con_x5200->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5200->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5200->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5200->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5200->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5200->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5200->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5200->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2371,20 +3259,20 @@ static inline bool kk_main_getDataDependence(kk_main__exp exp, kk_context_t* _ct
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x265 = _fun_getDataDependence.clause;
-        _x_x6299 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x265, (_fun_unbox_x265, m, ev_11246, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
+        kk_function_t _fun_unbox_x554 = _fun_getDataDependence.clause;
+        _x_x5198 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x554, (_fun_unbox_x554, m, ev_11118, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
       }
     }
   }
-  return kk_bool_unbox(_x_x6299);
+  return kk_bool_unbox(_x_x5198);
 }
  
 // select `setDataDependence` operation out of effect `:attrGrammar`
 
 static inline kk_std_core_hnd__clause2 kk_main__select_setDataDependence(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,bool,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6302 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause2 _fun_setDataDependence = _con_x6302->_fun_setDataDependence;
+    struct kk_main__Hnd_attrGrammar* _con_x5201 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_setDataDependence = _con_x5201->_fun_setDataDependence;
     return kk_std_core_hnd__clause2_dup(_fun_setDataDependence, _ctx);
   }
 }
@@ -2392,46 +3280,40 @@ static inline kk_std_core_hnd__clause2 kk_main__select_setDataDependence(kk_main
 // Call the `fun setDataDependence` operation of the effect `:attrGrammar`
 
 static inline kk_unit_t kk_main_setDataDependence(kk_main__exp exp, bool dependence, kk_context_t* _ctx) { /* (exp : exp, dependence : bool) -> attrGrammar () */ 
-  kk_std_core_hnd__ev evx_11249 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6303;
+  kk_std_core_hnd__ev evx_11121 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5202;
   {
-    struct kk_std_core_hnd_Ev* _con_x6304 = kk_std_core_hnd__as_Ev(evx_11249, _ctx);
-    kk_box_t _box_x269 = _con_x6304->hnd;
-    int32_t m = _con_x6304->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x269, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5203 = kk_std_core_hnd__as_Ev(evx_11121, _ctx);
+    kk_box_t _box_x558 = _con_x5203->hnd;
+    int32_t m = _con_x5203->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x558, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6305 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6305->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6305->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6305->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6305->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6305->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6305->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6305->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6305->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_8 = _con_x6305->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6305->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _fun_setDataDependence = _con_x6305->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6305->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6305->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6305->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6305->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6305->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6305->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5204 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5204->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5204->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5204->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5204->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5204->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_5 = _con_x5204->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5204->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _fun_setDataDependence = _con_x5204->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5204->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5204->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5204->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5204->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5204->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5204->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2443,67 +3325,61 @@ static inline kk_unit_t kk_main_setDataDependence(kk_main__exp exp, bool depende
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x274 = _fun_setDataDependence.clause;
-        _x_x6303 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x274, (_fun_unbox_x274, m, evx_11249, kk_main__exp_box(exp, _ctx), kk_bool_box(dependence), _ctx), _ctx); /*1016*/
+        kk_function_t _fun_unbox_x563 = _fun_setDataDependence.clause;
+        _x_x5202 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x563, (_fun_unbox_x563, m, evx_11121, kk_main__exp_box(exp, _ctx), kk_bool_box(dependence), _ctx), _ctx); /*1016*/
       }
     }
   }
-  kk_unit_unbox(_x_x6303); return kk_Unit;
+  kk_unit_unbox(_x_x5202); return kk_Unit;
 }
  
 // select `getIteratorContext` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause1 kk_main__select_getIteratorContext(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,list<path>,attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause1 kk_main__select_getIteratorContext(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,iteratorContextExp,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6306 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause1 _fun_getIteratorContext = _con_x6306->_fun_getIteratorContext;
+    struct kk_main__Hnd_attrGrammar* _con_x5205 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause1 _fun_getIteratorContext = _con_x5205->_fun_getIteratorContext;
     return kk_std_core_hnd__clause1_dup(_fun_getIteratorContext, _ctx);
   }
 }
  
 // Call the `fun getIteratorContext` operation of the effect `:attrGrammar`
 
-static inline kk_std_core_types__list kk_main_getIteratorContext(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar list<path> */ 
-  kk_std_core_hnd__ev ev_11253 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6307;
+static inline kk_main__iteratorContextExp kk_main_getIteratorContext(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar iteratorContextExp */ 
+  kk_std_core_hnd__ev ev_11125 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5206;
   {
-    struct kk_std_core_hnd_Ev* _con_x6308 = kk_std_core_hnd__as_Ev(ev_11253, _ctx);
-    kk_box_t _box_x279 = _con_x6308->hnd;
-    int32_t m = _con_x6308->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x279, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5207 = kk_std_core_hnd__as_Ev(ev_11125, _ctx);
+    kk_box_t _box_x568 = _con_x5207->hnd;
+    int32_t m = _con_x5207->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x568, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6309 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6309->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6309->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6309->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6309->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _fun_getIteratorContext = _con_x6309->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6309->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6309->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6309->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6309->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_8 = _con_x6309->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6309->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6309->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6309->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6309->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6309->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6309->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6309->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5208 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5208->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5208->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5208->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _fun_getIteratorContext = _con_x5208->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5208->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5208->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_5 = _con_x5208->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5208->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5208->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5208->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5208->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5208->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5208->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5208->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2515,67 +3391,61 @@ static inline kk_std_core_types__list kk_main_getIteratorContext(kk_main__exp ex
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x283 = _fun_getIteratorContext.clause;
-        _x_x6307 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x283, (_fun_unbox_x283, m, ev_11253, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
+        kk_function_t _fun_unbox_x572 = _fun_getIteratorContext.clause;
+        _x_x5206 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x572, (_fun_unbox_x572, m, ev_11125, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
       }
     }
   }
-  return kk_std_core_types__list_unbox(_x_x6307, KK_OWNED, _ctx);
+  return kk_main__iteratorContextExp_unbox(_x_x5206, KK_OWNED, _ctx);
 }
  
 // select `setIteratorContext` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause2 kk_main__select_setIteratorContext(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,list<path>,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main__select_setIteratorContext(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,iteratorContextExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6310 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause2 _fun_setIteratorContext = _con_x6310->_fun_setIteratorContext;
+    struct kk_main__Hnd_attrGrammar* _con_x5209 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_setIteratorContext = _con_x5209->_fun_setIteratorContext;
     return kk_std_core_hnd__clause2_dup(_fun_setIteratorContext, _ctx);
   }
 }
  
 // Call the `fun setIteratorContext` operation of the effect `:attrGrammar`
 
-static inline kk_unit_t kk_main_setIteratorContext(kk_main__exp exp, kk_std_core_types__list paths, kk_context_t* _ctx) { /* (exp : exp, paths : list<path>) -> attrGrammar () */ 
-  kk_std_core_hnd__ev evx_11256 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6311;
+static inline kk_unit_t kk_main_setIteratorContext(kk_main__exp exp, kk_main__iteratorContextExp paths, kk_context_t* _ctx) { /* (exp : exp, paths : iteratorContextExp) -> attrGrammar () */ 
+  kk_std_core_hnd__ev evx_11128 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5210;
   {
-    struct kk_std_core_hnd_Ev* _con_x6312 = kk_std_core_hnd__as_Ev(evx_11256, _ctx);
-    kk_box_t _box_x287 = _con_x6312->hnd;
-    int32_t m = _con_x6312->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x287, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5211 = kk_std_core_hnd__as_Ev(evx_11128, _ctx);
+    kk_box_t _box_x576 = _con_x5211->hnd;
+    int32_t m = _con_x5211->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x576, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6313 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6313->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6313->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6313->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6313->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6313->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6313->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6313->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6313->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_8 = _con_x6313->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6313->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6313->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6313->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _fun_setIteratorContext = _con_x6313->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6313->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6313->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6313->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6313->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5212 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5212->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5212->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5212->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5212->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5212->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_5 = _con_x5212->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5212->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5212->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5212->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _fun_setIteratorContext = _con_x5212->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5212->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5212->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5212->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5212->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2587,67 +3457,61 @@ static inline kk_unit_t kk_main_setIteratorContext(kk_main__exp exp, kk_std_core
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x292 = _fun_setIteratorContext.clause;
-        _x_x6311 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x292, (_fun_unbox_x292, m, evx_11256, kk_main__exp_box(exp, _ctx), kk_std_core_types__list_box(paths, _ctx), _ctx), _ctx); /*1016*/
+        kk_function_t _fun_unbox_x581 = _fun_setIteratorContext.clause;
+        _x_x5210 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x581, (_fun_unbox_x581, m, evx_11128, kk_main__exp_box(exp, _ctx), kk_main__iteratorContextExp_box(paths, _ctx), _ctx), _ctx); /*1016*/
       }
     }
   }
-  kk_unit_unbox(_x_x6311); return kk_Unit;
+  kk_unit_unbox(_x_x5210); return kk_Unit;
 }
  
 // select `getTraversalSummary` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause1 kk_main__select_getTraversalSummary(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,std/data/hashset/hash-set<path>,attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause1 kk_main__select_getTraversalSummary(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause1<exp,pathExp,attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6314 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause1 _fun_getTraversalSummary = _con_x6314->_fun_getTraversalSummary;
+    struct kk_main__Hnd_attrGrammar* _con_x5213 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause1 _fun_getTraversalSummary = _con_x5213->_fun_getTraversalSummary;
     return kk_std_core_hnd__clause1_dup(_fun_getTraversalSummary, _ctx);
   }
 }
  
 // Call the `fun getTraversalSummary` operation of the effect `:attrGrammar`
 
-static inline kk_std_data_hashset__hash_set kk_main_getTraversalSummary(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar std/data/hashset/hash-set<path> */ 
-  kk_std_core_hnd__ev ev_11260 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6315;
+static inline kk_main__pathExp kk_main_getTraversalSummary(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> attrGrammar pathExp */ 
+  kk_std_core_hnd__ev ev_11132 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5214;
   {
-    struct kk_std_core_hnd_Ev* _con_x6316 = kk_std_core_hnd__as_Ev(ev_11260, _ctx);
-    kk_box_t _box_x297 = _con_x6316->hnd;
-    int32_t m = _con_x6316->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x297, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5215 = kk_std_core_hnd__as_Ev(ev_11132, _ctx);
+    kk_box_t _box_x586 = _con_x5215->hnd;
+    int32_t m = _con_x5215->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x586, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6317 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6317->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6317->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6317->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6317->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6317->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6317->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6317->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6317->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _fun_getTraversalSummary = _con_x6317->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_8 = _con_x6317->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6317->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6317->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6317->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6317->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6317->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6317->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6317->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5216 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5216->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5216->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5216->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5216->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5216->_fun_getPaths;
+      kk_std_core_hnd__clause1 _fun_getTraversalSummary = _con_x5216->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_5 = _con_x5216->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5216->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5216->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5216->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5216->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5216->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5216->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5216->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2659,67 +3523,61 @@ static inline kk_std_data_hashset__hash_set kk_main_getTraversalSummary(kk_main_
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x301 = _fun_getTraversalSummary.clause;
-        _x_x6315 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x301, (_fun_unbox_x301, m, ev_11260, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
+        kk_function_t _fun_unbox_x590 = _fun_getTraversalSummary.clause;
+        _x_x5214 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_context_t*), _fun_unbox_x590, (_fun_unbox_x590, m, ev_11132, kk_main__exp_box(exp, _ctx), _ctx), _ctx); /*1010*/
       }
     }
   }
-  return kk_std_data_hashset__hash_set_unbox(_x_x6315, KK_OWNED, _ctx);
+  return kk_main__pathExp_unbox(_x_x5214, KK_OWNED, _ctx);
 }
  
 // select `setTraversalSummary` operation out of effect `:attrGrammar`
 
-static inline kk_std_core_hnd__clause2 kk_main__select_setTraversalSummary(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,std/data/hashset/hash-set<path>,(),attrGrammar,e,a> */ 
+static inline kk_std_core_hnd__clause2 kk_main__select_setTraversalSummary(kk_main__attrGrammar hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : attrGrammar<e,a>) -> hnd/clause2<exp,pathExp,(),attrGrammar,e,a> */ 
   {
-    struct kk_main__Hnd_attrGrammar* _con_x6318 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
-    kk_std_core_hnd__clause2 _fun_setTraversalSummary = _con_x6318->_fun_setTraversalSummary;
+    struct kk_main__Hnd_attrGrammar* _con_x5217 = kk_main__as_Hnd_attrGrammar(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_setTraversalSummary = _con_x5217->_fun_setTraversalSummary;
     return kk_std_core_hnd__clause2_dup(_fun_setTraversalSummary, _ctx);
   }
 }
  
 // Call the `fun setTraversalSummary` operation of the effect `:attrGrammar`
 
-static inline kk_unit_t kk_main_setTraversalSummary(kk_main__exp exp, kk_std_data_hashset__hash_set summary, kk_context_t* _ctx) { /* (exp : exp, summary : std/data/hashset/hash-set<path>) -> attrGrammar () */ 
-  kk_std_core_hnd__ev evx_11263 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
-  kk_box_t _x_x6319;
+static inline kk_unit_t kk_main_setTraversalSummary(kk_main__exp exp, kk_main__pathExp summary, kk_context_t* _ctx) { /* (exp : exp, summary : pathExp) -> attrGrammar () */ 
+  kk_std_core_hnd__ev evx_11135 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/attrGrammar>*/;
+  kk_box_t _x_x5218;
   {
-    struct kk_std_core_hnd_Ev* _con_x6320 = kk_std_core_hnd__as_Ev(evx_11263, _ctx);
-    kk_box_t _box_x305 = _con_x6320->hnd;
-    int32_t m = _con_x6320->marker;
-    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x305, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5219 = kk_std_core_hnd__as_Ev(evx_11135, _ctx);
+    kk_box_t _box_x594 = _con_x5219->hnd;
+    int32_t m = _con_x5219->marker;
+    kk_main__attrGrammar h = kk_main__attrGrammar_unbox(_box_x594, KK_BORROWED, _ctx);
     kk_main__attrGrammar_dup(h, _ctx);
     {
-      struct kk_main__Hnd_attrGrammar* _con_x6321 = kk_main__as_Hnd_attrGrammar(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6321->_cfc;
-      kk_std_core_hnd__clause1 _pat_1_0 = _con_x6321->_fun_getAbstractValue;
-      kk_std_core_hnd__clause1 _pat_2_0 = _con_x6321->_fun_getDataDependence;
-      kk_std_core_hnd__clause1 _pat_3 = _con_x6321->_fun_getInputStore;
-      kk_std_core_hnd__clause1 _pat_4 = _con_x6321->_fun_getIteratorContext;
-      kk_std_core_hnd__clause1 _pat_5 = _con_x6321->_fun_getOutputStore;
-      kk_std_core_hnd__clause1 _pat_6 = _con_x6321->_fun_getPaths;
-      kk_std_core_hnd__clause1 _pat_7 = _con_x6321->_fun_getQueryCondition;
-      kk_std_core_hnd__clause1 _pat_8 = _con_x6321->_fun_getTraversalSummary;
-      kk_std_core_hnd__clause2 _pat_9 = _con_x6321->_fun_setAbstractValue;
-      kk_std_core_hnd__clause2 _pat_10 = _con_x6321->_fun_setDataDependence;
-      kk_std_core_hnd__clause2 _pat_11 = _con_x6321->_fun_setInputStore;
-      kk_std_core_hnd__clause2 _pat_12 = _con_x6321->_fun_setIteratorContext;
-      kk_std_core_hnd__clause2 _pat_13 = _con_x6321->_fun_setOutputStore;
-      kk_std_core_hnd__clause2 _pat_14 = _con_x6321->_fun_setPaths;
-      kk_std_core_hnd__clause2 _pat_15 = _con_x6321->_fun_setQueryCondition;
-      kk_std_core_hnd__clause2 _fun_setTraversalSummary = _con_x6321->_fun_setTraversalSummary;
+      struct kk_main__Hnd_attrGrammar* _con_x5220 = kk_main__as_Hnd_attrGrammar(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5220->_cfc;
+      kk_std_core_hnd__clause1 _pat_1_0 = _con_x5220->_fun_getAbstractValue;
+      kk_std_core_hnd__clause1 _pat_2_0 = _con_x5220->_fun_getDataDependence;
+      kk_std_core_hnd__clause1 _pat_3 = _con_x5220->_fun_getIteratorContext;
+      kk_std_core_hnd__clause1 _pat_4 = _con_x5220->_fun_getPaths;
+      kk_std_core_hnd__clause1 _pat_5 = _con_x5220->_fun_getTraversalSummary;
+      kk_std_core_hnd__clause2 _pat_6 = _con_x5220->_fun_setAbstractValue;
+      kk_std_core_hnd__clause2 _pat_7 = _con_x5220->_fun_setDataDependence;
+      kk_std_core_hnd__clause2 _pat_8 = _con_x5220->_fun_setInputStore;
+      kk_std_core_hnd__clause2 _pat_9 = _con_x5220->_fun_setIteratorContext;
+      kk_std_core_hnd__clause2 _pat_10 = _con_x5220->_fun_setOutputStore;
+      kk_std_core_hnd__clause2 _pat_11 = _con_x5220->_fun_setPaths;
+      kk_std_core_hnd__clause2 _pat_12 = _con_x5220->_fun_setQueryCondition;
+      kk_std_core_hnd__clause2 _fun_setTraversalSummary = _con_x5220->_fun_setTraversalSummary;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_9, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_8, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_7, _ctx);
-        kk_std_core_hnd__clause1_drop(_pat_6, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_8, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_7, _ctx);
+        kk_std_core_hnd__clause2_drop(_pat_6, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_5, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_4, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_3, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_2_0, _ctx);
         kk_std_core_hnd__clause1_drop(_pat_1_0, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_15, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_14, _ctx);
-        kk_std_core_hnd__clause2_drop(_pat_13, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_12, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_11, _ctx);
         kk_std_core_hnd__clause2_drop(_pat_10, _ctx);
@@ -2731,12 +3589,26 @@ static inline kk_unit_t kk_main_setTraversalSummary(kk_main__exp exp, kk_std_dat
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x310 = _fun_setTraversalSummary.clause;
-        _x_x6319 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x310, (_fun_unbox_x310, m, evx_11263, kk_main__exp_box(exp, _ctx), kk_std_data_hashset__hash_set_box(summary, _ctx), _ctx), _ctx); /*1016*/
+        kk_function_t _fun_unbox_x599 = _fun_setTraversalSummary.clause;
+        _x_x5218 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x599, (_fun_unbox_x599, m, evx_11135, kk_main__exp_box(exp, _ctx), kk_main__pathExp_box(summary, _ctx), _ctx), _ctx); /*1016*/
       }
     }
   }
-  kk_unit_unbox(_x_x6319); return kk_Unit;
+  kk_unit_unbox(_x_x5218); return kk_Unit;
+}
+
+extern kk_std_core_hnd__htag kk_main__tag_subst;
+
+kk_box_t kk_main__handle_subst(kk_main__subst hnd, kk_function_t ret, kk_function_t action, kk_context_t* _ctx); /* forall<a,e,b> (hnd : subst<e,b>, ret : (res : a) -> e b, action : () -> <subst|e> a) -> e b */ 
+ 
+// select `substAV` operation out of effect `:subst`
+
+static inline kk_std_core_hnd__clause2 kk_main__select_substAV(kk_main__subst hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : subst<e,a>) -> hnd/clause2<exp,exp,absValueExp,subst,e,a> */ 
+  {
+    struct kk_main__Hnd_subst* _con_x5224 = kk_main__as_Hnd_subst(hnd, _ctx);
+    kk_std_core_hnd__clause2 _fun_substAV = _con_x5224->_fun_substAV;
+    return kk_std_core_hnd__clause2_dup(_fun_substAV, _ctx);
+  }
 }
 
 extern kk_std_core_hnd__htag kk_main__tag_nondet;
@@ -2747,27 +3619,97 @@ kk_box_t kk_main__handle_nondet(kk_main__nondet hnd, kk_function_t ret, kk_funct
 
 static inline kk_std_core_hnd__clause2 kk_main__select_choose(kk_main__nondet hnd, kk_context_t* _ctx) { /* forall<a,e,b> (hnd : nondet<e,b>) -> hnd/clause2<a,a,a,nondet,e,b> */ 
   {
-    struct kk_main__Hnd_nondet* _con_x6325 = kk_main__as_Hnd_nondet(hnd, _ctx);
-    kk_std_core_hnd__clause2 _ctl_choose = _con_x6325->_ctl_choose;
+    struct kk_main__Hnd_nondet* _con_x5228 = kk_main__as_Hnd_nondet(hnd, _ctx);
+    kk_std_core_hnd__clause2 _ctl_choose = _con_x5228->_ctl_choose;
     return kk_std_core_hnd__clause2_dup(_ctl_choose, _ctx);
   }
+}
+ 
+// select `fail` operation out of effect `:nondet`
+
+static inline kk_std_core_hnd__clause0 kk_main__select_fail(kk_main__nondet hnd, kk_context_t* _ctx) { /* forall<a,e,b> (hnd : nondet<e,b>) -> hnd/clause0<a,nondet,e,b> */ 
+  {
+    struct kk_main__Hnd_nondet* _con_x5229 = kk_main__as_Hnd_nondet(hnd, _ctx);
+    kk_std_core_hnd__clause0 _brk_fail = _con_x5229->_brk_fail;
+    return kk_std_core_hnd__clause0_dup(_brk_fail, _ctx);
+  }
+}
+
+kk_main__absValue kk_main__lp__dot__dot__rp_(kk_main__absValue value, kk_main__fieldName fieldName, kk_context_t* _ctx); /* (value : absValue, fieldName : fieldName) -> exn absValue */ 
+
+kk_main__absValueExp kk_main_absValueExp_fs__mlift_trmc_simplify_10944(kk_std_core_types__cctx _acc, kk_main__absValueExp _y_x10331, kk_context_t* _ctx); /* (ctx<absValueExp>, absValueExp) -> <attrGrammar,exn,div> absValueExp */ 
+
+kk_main__absValueExp kk_main_absValueExp_fs__mlift_trmc_simplify_10945(kk_std_core_types__cctx _acc_0, kk_main__absValue _y_x10332, kk_context_t* _ctx); /* (ctx<absValueExp>, absValue) -> <exn,attrGrammar,div> absValueExp */ 
+
+kk_main__absValueExp kk_main_absValueExp_fs__trmc_simplify(kk_main__absValueExp ave, kk_std_core_types__cctx _acc_1, kk_context_t* _ctx); /* (ave : absValueExp, ctx<absValueExp>) -> <pure,attrGrammar> absValueExp */ 
+
+kk_main__absValueExp kk_main_absValueExp_fs_simplify(kk_main__absValueExp ave_0, kk_context_t* _ctx); /* (ave : absValueExp) -> <pure,attrGrammar> absValueExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs__mlift_trmc_simplify_10946(kk_std_core_types__cctx _acc, kk_main__absValueExp _y_x10336, kk_context_t* _ctx); /* (ctx<pathExp>, absValueExp) -> <pure,attrGrammar> pathExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs__mlift_trmc_simplify_10947(kk_std_core_types__cctx _acc_0, kk_main__pathExp pathExp, kk_main__iteratorContextExp _y_x10338, kk_context_t* _ctx); /* (ctx<pathExp>, pathExp : pathExp, iteratorContextExp) -> <attrGrammar,exn,div> pathExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs__mlift_trmc_simplify_10948(kk_std_core_types__cctx _acc_1, kk_main__pathExp _y_x10340, kk_context_t* _ctx); /* (ctx<pathExp>, pathExp) -> <attrGrammar,exn,div> pathExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs__mlift_trmc_simplify_10949(kk_std_core_types__cctx _acc_2, kk_main__pathExp _y_x10343, kk_context_t* _ctx); /* (ctx<pathExp>, pathExp) -> <attrGrammar,exn,div> pathExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs__mlift_trmc_simplify_10950(kk_std_core_types__cctx _acc_3, kk_main__pathExp b_0, kk_main__pathExp _trmc_x10261, kk_context_t* _ctx); /* (ctx<pathExp>, b@0 : pathExp, pathExp) -> <pure,attrGrammar> pathExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs__mlift_trmc_simplify_10951(kk_std_core_types__cctx _acc_4, kk_main__pathExp a_0, kk_main__pathExp b_0_0, bool _y_x10344, kk_context_t* _ctx); /* (ctx<pathExp>, a@0 : pathExp, b@0 : pathExp, bool) -> <div,exn,attrGrammar> pathExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs__mlift_trmc_simplify_10952(kk_std_core_types__cctx _acc_5, kk_main__pathExp els, kk_main__pathExp thn, bool _y_x10349, kk_context_t* _ctx); /* (ctx<pathExp>, els : pathExp, thn : pathExp, bool) -> <attrGrammar,div,exn> pathExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs__trmc_simplify(kk_main__pathExp pathExp_0, kk_std_core_types__cctx _acc_6, kk_context_t* _ctx); /* (pathExp : pathExp, ctx<pathExp>) -> <pure,attrGrammar> pathExp */ 
+
+kk_main__pathExp kk_main_pathExp_fs_simplify(kk_main__pathExp pathExp_1, kk_context_t* _ctx); /* (pathExp : pathExp) -> <pure,attrGrammar> pathExp */ 
+ 
+// Call the `fun substAV` operation of the effect `:subst`
+
+static inline kk_main__absValueExp kk_main_substAV(kk_main__exp exp, kk_main__exp noCycle, kk_context_t* _ctx) { /* (exp : exp, noCycle : exp) -> subst absValueExp */ 
+  kk_std_core_hnd__ev evx_11185 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/subst>*/;
+  kk_box_t _x_x5393;
+  {
+    struct kk_std_core_hnd_Ev* _con_x5394 = kk_std_core_hnd__as_Ev(evx_11185, _ctx);
+    kk_box_t _box_x940 = _con_x5394->hnd;
+    int32_t m = _con_x5394->marker;
+    kk_main__subst h = kk_main__subst_unbox(_box_x940, KK_BORROWED, _ctx);
+    kk_main__subst_dup(h, _ctx);
+    {
+      struct kk_main__Hnd_subst* _con_x5395 = kk_main__as_Hnd_subst(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5395->_cfc;
+      kk_std_core_hnd__clause2 _fun_substAV = _con_x5395->_fun_substAV;
+      if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
+        kk_integer_drop(_pat_0_0, _ctx);
+        kk_datatype_ptr_free(h, _ctx);
+      }
+      else {
+        kk_std_core_hnd__clause2_dup(_fun_substAV, _ctx);
+        kk_datatype_ptr_decref(h, _ctx);
+      }
+      {
+        kk_function_t _fun_unbox_x945 = _fun_substAV.clause;
+        _x_x5393 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), _fun_unbox_x945, (_fun_unbox_x945, m, evx_11185, kk_main__exp_box(exp, _ctx), kk_main__exp_box(noCycle, _ctx), _ctx), _ctx); /*1016*/
+      }
+    }
+  }
+  return kk_main__absValueExp_unbox(_x_x5393, KK_OWNED, _ctx);
 }
  
 // Call the `ctl choose` operation of the effect `:nondet`
 
 static inline kk_box_t kk_main_choose(kk_box_t x, kk_box_t y, kk_context_t* _ctx) { /* forall<a> (x : a, y : a) -> nondet a */ 
-  kk_std_core_hnd__ev evx_11268 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/nondet>*/;
+  kk_std_core_hnd__ev evx_11189 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/nondet>*/;
   {
-    struct kk_std_core_hnd_Ev* _con_x6326 = kk_std_core_hnd__as_Ev(evx_11268, _ctx);
-    kk_box_t _box_x323 = _con_x6326->hnd;
-    int32_t m = _con_x6326->marker;
-    kk_main__nondet h = kk_main__nondet_unbox(_box_x323, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5396 = kk_std_core_hnd__as_Ev(evx_11189, _ctx);
+    kk_box_t _box_x950 = _con_x5396->hnd;
+    int32_t m = _con_x5396->marker;
+    kk_main__nondet h = kk_main__nondet_unbox(_box_x950, KK_BORROWED, _ctx);
     kk_main__nondet_dup(h, _ctx);
     {
-      struct kk_main__Hnd_nondet* _con_x6327 = kk_main__as_Hnd_nondet(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6327->_cfc;
-      kk_std_core_hnd__clause2 _ctl_choose = _con_x6327->_ctl_choose;
-      kk_std_core_hnd__clause0 _pat_1_0 = _con_x6327->_brk_fail;
+      struct kk_main__Hnd_nondet* _con_x5397 = kk_main__as_Hnd_nondet(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5397->_cfc;
+      kk_std_core_hnd__clause2 _ctl_choose = _con_x5397->_ctl_choose;
+      kk_std_core_hnd__clause0 _pat_1_0 = _con_x5397->_brk_fail;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause0_drop(_pat_1_0, _ctx);
         kk_integer_drop(_pat_0_0, _ctx);
@@ -2779,37 +3721,27 @@ static inline kk_box_t kk_main_choose(kk_box_t x, kk_box_t y, kk_context_t* _ctx
       }
       {
         kk_function_t f = _ctl_choose.clause;
-        return kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), f, (f, m, evx_11268, x, y, _ctx), _ctx);
+        return kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_box_t, kk_box_t, kk_context_t*), f, (f, m, evx_11189, x, y, _ctx), _ctx);
       }
     }
-  }
-}
- 
-// select `fail` operation out of effect `:nondet`
-
-static inline kk_std_core_hnd__clause0 kk_main__select_fail(kk_main__nondet hnd, kk_context_t* _ctx) { /* forall<a,e,b> (hnd : nondet<e,b>) -> hnd/clause0<a,nondet,e,b> */ 
-  {
-    struct kk_main__Hnd_nondet* _con_x6328 = kk_main__as_Hnd_nondet(hnd, _ctx);
-    kk_std_core_hnd__clause0 _brk_fail = _con_x6328->_brk_fail;
-    return kk_std_core_hnd__clause0_dup(_brk_fail, _ctx);
   }
 }
  
 // Call the `final ctl fail` operation of the effect `:nondet`
 
 static inline kk_box_t kk_main_fail(kk_context_t* _ctx) { /* forall<a> () -> nondet a */ 
-  kk_std_core_hnd__ev ev_11272 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/nondet>*/;
+  kk_std_core_hnd__ev ev_11193 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/nondet>*/;
   {
-    struct kk_std_core_hnd_Ev* _con_x6329 = kk_std_core_hnd__as_Ev(ev_11272, _ctx);
-    kk_box_t _box_x324 = _con_x6329->hnd;
-    int32_t m = _con_x6329->marker;
-    kk_main__nondet h = kk_main__nondet_unbox(_box_x324, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x5398 = kk_std_core_hnd__as_Ev(ev_11193, _ctx);
+    kk_box_t _box_x951 = _con_x5398->hnd;
+    int32_t m = _con_x5398->marker;
+    kk_main__nondet h = kk_main__nondet_unbox(_box_x951, KK_BORROWED, _ctx);
     kk_main__nondet_dup(h, _ctx);
     {
-      struct kk_main__Hnd_nondet* _con_x6330 = kk_main__as_Hnd_nondet(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x6330->_cfc;
-      kk_std_core_hnd__clause2 _pat_1_0 = _con_x6330->_ctl_choose;
-      kk_std_core_hnd__clause0 _brk_fail = _con_x6330->_brk_fail;
+      struct kk_main__Hnd_nondet* _con_x5399 = kk_main__as_Hnd_nondet(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x5399->_cfc;
+      kk_std_core_hnd__clause2 _pat_1_0 = _con_x5399->_ctl_choose;
+      kk_std_core_hnd__clause0 _brk_fail = _con_x5399->_brk_fail;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_std_core_hnd__clause2_drop(_pat_1_0, _ctx);
         kk_integer_drop(_pat_0_0, _ctx);
@@ -2821,139 +3753,137 @@ static inline kk_box_t kk_main_fail(kk_context_t* _ctx) { /* forall<a> () -> non
       }
       {
         kk_function_t f = _brk_fail.clause;
-        return kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), f, (f, m, ev_11272, _ctx), _ctx);
+        return kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), f, (f, m, ev_11193, _ctx), _ctx);
       }
     }
   }
 }
 
-kk_main__absValue kk_main__lp__dot__dot__rp_(kk_main__absValue value, kk_main__fieldName fieldName, kk_context_t* _ctx); /* (value : absValue, fieldName : fieldName) -> exn absValue */ 
-
-kk_box_t kk_main_getOrThrow(kk_std_data_hashmap__hash_map map, kk_box_t key, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx); /* forall<a,b> (map : std/data/hashmap/hash-map<a,b>, key : a, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> exn b */ 
-
 
 // lift anonymous function
-struct kk_main_hash_map_fs_insert_fun6395__t {
+struct kk_main_hash_map_fs_insert_fun5402__t {
   struct kk_function_s _base;
 };
-extern bool kk_main_hash_map_fs_insert_fun6395(kk_function_t _fself, kk_integer_t _x1_x6393, kk_integer_t _x2_x6394, kk_context_t* _ctx);
-static inline kk_function_t kk_main_hash_map_fs_new_insert_fun6395(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main_hash_map_fs_insert_fun6395, _ctx)
+extern bool kk_main_hash_map_fs_insert_fun5402(kk_function_t _fself, kk_integer_t _x1_x5400, kk_integer_t _x2_x5401, kk_context_t* _ctx);
+static inline kk_function_t kk_main_hash_map_fs_new_insert_fun5402(kk_context_t* _ctx) {
+  kk_define_static_function(_fself, kk_main_hash_map_fs_insert_fun5402, _ctx)
   return kk_function_dup(_fself,kk_context());
 }
 
 
 
 // lift anonymous function
-struct kk_main_hash_map_fs_insert_fun6398__t {
+struct kk_main_hash_map_fs_insert_fun5405__t {
   struct kk_function_s _base;
 };
-extern kk_integer_t kk_main_hash_map_fs_insert_fun6398(kk_function_t _fself, kk_integer_t _x1_x6396, kk_integer_t _x2_x6397, kk_context_t* _ctx);
-static inline kk_function_t kk_main_hash_map_fs_new_insert_fun6398(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main_hash_map_fs_insert_fun6398, _ctx)
+extern kk_integer_t kk_main_hash_map_fs_insert_fun5405(kk_function_t _fself, kk_integer_t _x1_x5403, kk_integer_t _x2_x5404, kk_context_t* _ctx);
+static inline kk_function_t kk_main_hash_map_fs_new_insert_fun5405(kk_context_t* _ctx) {
+  kk_define_static_function(_fself, kk_main_hash_map_fs_insert_fun5405, _ctx)
   return kk_function_dup(_fself,kk_context());
 }
 
 
 static inline kk_std_data_hashmap__hash_map kk_main_hash_map_fs_insert(kk_std_data_hashmap__hash_map map, kk_box_t key, kk_box_t value, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx) { /* forall<a,b> (map : std/data/hashmap/hash-map<a,b>, key : a, value : b, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> std/data/hashmap/hash-map<a,b> */ 
-  return kk_std_data_hashmap_insert(map, key, value, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, kk_main_hash_map_fs_new_insert_fun6395(_ctx), kk_main_hash_map_fs_new_insert_fun6398(_ctx), _ctx);
+  return kk_std_data_hashmap_insert(map, key, value, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, kk_main_hash_map_fs_new_insert_fun5402(_ctx), kk_main_hash_map_fs_new_insert_fun5405(_ctx), _ctx);
 }
 
 
 // lift anonymous function
-struct kk_main_hash_set_fs_insert_fun6401__t {
+struct kk_main_hash_set_fs_insert_fun5408__t {
   struct kk_function_s _base;
 };
-extern bool kk_main_hash_set_fs_insert_fun6401(kk_function_t _fself, kk_integer_t _x1_x6399, kk_integer_t _x2_x6400, kk_context_t* _ctx);
-static inline kk_function_t kk_main_hash_set_fs_new_insert_fun6401(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main_hash_set_fs_insert_fun6401, _ctx)
+extern bool kk_main_hash_set_fs_insert_fun5408(kk_function_t _fself, kk_integer_t _x1_x5406, kk_integer_t _x2_x5407, kk_context_t* _ctx);
+static inline kk_function_t kk_main_hash_set_fs_new_insert_fun5408(kk_context_t* _ctx) {
+  kk_define_static_function(_fself, kk_main_hash_set_fs_insert_fun5408, _ctx)
   return kk_function_dup(_fself,kk_context());
 }
 
 
 
 // lift anonymous function
-struct kk_main_hash_set_fs_insert_fun6404__t {
+struct kk_main_hash_set_fs_insert_fun5411__t {
   struct kk_function_s _base;
 };
-extern kk_integer_t kk_main_hash_set_fs_insert_fun6404(kk_function_t _fself, kk_integer_t _x1_x6402, kk_integer_t _x2_x6403, kk_context_t* _ctx);
-static inline kk_function_t kk_main_hash_set_fs_new_insert_fun6404(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main_hash_set_fs_insert_fun6404, _ctx)
+extern kk_integer_t kk_main_hash_set_fs_insert_fun5411(kk_function_t _fself, kk_integer_t _x1_x5409, kk_integer_t _x2_x5410, kk_context_t* _ctx);
+static inline kk_function_t kk_main_hash_set_fs_new_insert_fun5411(kk_context_t* _ctx) {
+  kk_define_static_function(_fself, kk_main_hash_set_fs_insert_fun5411, _ctx)
   return kk_function_dup(_fself,kk_context());
 }
 
 
 static inline kk_std_data_hashset__hash_set kk_main_hash_set_fs_insert(kk_std_data_hashset__hash_set set, kk_box_t x, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx) { /* forall<a> (set : std/data/hashset/hash-set<a>, x : a, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> std/data/hashset/hash-set<a> */ 
-  return kk_std_data_hashset_insert(set, x, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, kk_main_hash_set_fs_new_insert_fun6401(_ctx), kk_main_hash_set_fs_new_insert_fun6404(_ctx), _ctx);
+  return kk_std_data_hashset_insert(set, x, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, kk_main_hash_set_fs_new_insert_fun5408(_ctx), kk_main_hash_set_fs_new_insert_fun5411(_ctx), _ctx);
 }
-
-kk_unit_t kk_main_hashmap_fs__mlift_insertAll_11076(kk_std_data_hashmap__hash_map _y_x10259, kk_box_t key, kk_ref_t result, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_box_t _y_x10262, kk_context_t* _ctx); /* forall<_e,h,a,b> (std/data/hashmap/hash-map<a,b>, key : a, result : local-var<h,std/data/hashmap/hash-map<a,b>>, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int, b) -> <exn,local<h>,div|_e> () */ 
-
-kk_unit_t kk_main_hashmap_fs__mlift_insertAll_11077(kk_std_data_hashmap__hash_map b, kk_box_t key, kk_ref_t result, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_std_data_hashmap__hash_map _y_x10259, kk_context_t* _ctx); /* forall<_e,h,a,b> (b : std/data/hashmap/hash-map<a,b>, key : a, result : local-var<h,std/data/hashmap/hash-map<a,b>>, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int, std/data/hashmap/hash-map<a,b>) -> <local<h>,exn,div|_e> () */ 
- 
-// monadic lift
-
-static inline kk_std_data_hashmap__hash_map kk_main_hashmap_fs__mlift_insertAll_11078(kk_ref_t result, kk_unit_t wild__, kk_context_t* _ctx) { /* forall<_e,h,a,b> (result : local-var<h,std/data/hashmap/hash-map<a,b>>, wild_ : ()) -> <div,exn,local<h>|_e> std/data/hashmap/hash-map<a,b> */ 
-  kk_box_t _x_x6455 = kk_ref_get(result,kk_context()); /*9648*/
-  return kk_std_data_hashmap__hash_map_unbox(_x_x6455, KK_OWNED, _ctx);
-}
-
-kk_std_data_hashmap__hash_map kk_main_hashmap_fs_insertAll(kk_std_data_hashmap__hash_map a, kk_std_data_hashmap__hash_map b, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx); /* forall<a,b> (a : std/data/hashmap/hash-map<a,b>, b : std/data/hashmap/hash-map<a,b>, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> std/data/hashmap/hash-map<a,b> */ 
 
 
 // lift anonymous function
-struct kk_main_hashset_fs_singleton_fun6472__t {
+struct kk_main_hashset_fs_singleton_fun5414__t {
   struct kk_function_s _base;
 };
-extern bool kk_main_hashset_fs_singleton_fun6472(kk_function_t _fself, kk_integer_t _x1_x6470, kk_integer_t _x2_x6471, kk_context_t* _ctx);
-static inline kk_function_t kk_main_hashset_fs_new_singleton_fun6472(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main_hashset_fs_singleton_fun6472, _ctx)
+extern bool kk_main_hashset_fs_singleton_fun5414(kk_function_t _fself, kk_integer_t _x1_x5412, kk_integer_t _x2_x5413, kk_context_t* _ctx);
+static inline kk_function_t kk_main_hashset_fs_new_singleton_fun5414(kk_context_t* _ctx) {
+  kk_define_static_function(_fself, kk_main_hashset_fs_singleton_fun5414, _ctx)
   return kk_function_dup(_fself,kk_context());
 }
 
 
 
 // lift anonymous function
-struct kk_main_hashset_fs_singleton_fun6475__t {
+struct kk_main_hashset_fs_singleton_fun5417__t {
   struct kk_function_s _base;
 };
-extern kk_integer_t kk_main_hashset_fs_singleton_fun6475(kk_function_t _fself, kk_integer_t _x1_x6473, kk_integer_t _x2_x6474, kk_context_t* _ctx);
-static inline kk_function_t kk_main_hashset_fs_new_singleton_fun6475(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main_hashset_fs_singleton_fun6475, _ctx)
+extern kk_integer_t kk_main_hashset_fs_singleton_fun5417(kk_function_t _fself, kk_integer_t _x1_x5415, kk_integer_t _x2_x5416, kk_context_t* _ctx);
+static inline kk_function_t kk_main_hashset_fs_new_singleton_fun5417(kk_context_t* _ctx) {
+  kk_define_static_function(_fself, kk_main_hashset_fs_singleton_fun5417, _ctx)
   return kk_function_dup(_fself,kk_context());
 }
 
 
 static inline kk_std_data_hashset__hash_set kk_main_hashset_fs_singleton(kk_box_t x, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx) { /* forall<a> (x : a, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> std/data/hashset/hash-set<a> */ 
-  kk_std_data_hashset__hash_set set_10133 = kk_std_data_hashset_thread_fs_hash_set(kk_std_core_types__new_None(_ctx), _ctx); /*std/data/hashset/hash-set<7725>*/;
-  return kk_std_data_hashset_insert(set_10133, x, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, kk_main_hashset_fs_new_singleton_fun6472(_ctx), kk_main_hashset_fs_new_singleton_fun6475(_ctx), _ctx);
+  kk_std_data_hashset__hash_set set_10210 = kk_std_data_hashset_thread_fs_hash_set(kk_std_core_types__new_None(_ctx), _ctx); /*std/data/hashset/hash-set<14628>*/;
+  return kk_std_data_hashset_insert(set_10210, x, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, kk_main_hashset_fs_new_singleton_fun5414(_ctx), kk_main_hashset_fs_new_singleton_fun5417(_ctx), _ctx);
 }
 
 kk_main__absValue kk_main_applyOp(kk_main__op op, kk_main__absValue a, kk_main__absValue b, kk_context_t* _ctx); /* (op : op, a : absValue, b : absValue) -> absValue */ 
 
+kk_box_t kk_main_getOrThrow(kk_std_data_hashmap__hash_map map, kk_box_t key, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx); /* forall<a,b> (map : std/data/hashmap/hash-map<a,b>, key : a, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> exn b */ 
+
+kk_unit_t kk_main_hashmap_fs__mlift_insertAll_10953(kk_std_data_hashmap__hash_map _y_x10358, kk_box_t key, kk_ref_t result, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_box_t _c_x10360, kk_context_t* _ctx); /* forall<h,a,b> (std/data/hashmap/hash-map<a,b>, key : a, result : local-var<h,std/data/hashmap/hash-map<a,b>>, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int, b) -> () */ 
+
+kk_unit_t kk_main_hashmap_fs__mlift_insertAll_10954(kk_std_data_hashmap__hash_map b, kk_box_t key, kk_ref_t result, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_std_data_hashmap__hash_map _y_x10358, kk_context_t* _ctx); /* forall<h,a,b> (b : std/data/hashmap/hash-map<a,b>, key : a, result : local-var<h,std/data/hashmap/hash-map<a,b>>, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int, std/data/hashmap/hash-map<a,b>) -> <local<h>,exn,div> () */ 
+ 
+// monadic lift
+
+static inline kk_std_data_hashmap__hash_map kk_main_hashmap_fs__mlift_insertAll_10955(kk_ref_t result, kk_unit_t wild__, kk_context_t* _ctx) { /* forall<h,a,b> (result : local-var<h,std/data/hashmap/hash-map<a,b>>, wild_ : ()) -> <div,exn,local<h>> std/data/hashmap/hash-map<a,b> */ 
+  kk_box_t _x_x5495 = kk_ref_get(result,kk_context()); /*17112*/
+  return kk_std_data_hashmap__hash_map_unbox(_x_x5495, KK_OWNED, _ctx);
+}
+
+kk_std_data_hashmap__hash_map kk_main_hashmap_fs_insertAll(kk_std_data_hashmap__hash_map a, kk_std_data_hashmap__hash_map b, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx); /* forall<a,b> (a : std/data/hashmap/hash-map<a,b>, b : std/data/hashmap/hash-map<a,b>, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> pure std/data/hashmap/hash-map<a,b> */ 
+
+kk_unit_t kk_main__mlift_updateAbstractValue_10956(kk_main__exp exp, kk_main__absValueExp _c_x10366, kk_context_t* _ctx); /* (exp : exp, absValueExp) -> () */ 
+
+kk_unit_t kk_main_updateAbstractValue(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
+
 kk_std_data_hashset__hash_set kk_main_extractPaths(kk_main__absValue absValue, kk_context_t* _ctx); /* (absValue : absValue) -> std/data/hashset/hash-set<path> */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11079(kk_std_data_hashmap__hash_map inputStorePlusV, kk_main__exp s, kk_std_data_hashmap__hash_map _y_x10275, kk_context_t* _ctx); /* (inputStorePlusV : std/data/hashmap/hash-map<varName,absValue>, s : exp, store) -> <attrGrammar,exn> () */ 
+kk_unit_t kk_main_updatePaths(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11080(kk_std_data_hashmap__hash_map inputStore, kk_main__exp s_0, kk_main__varName v, kk_main__absValue _y_x10273, kk_context_t* _ctx); /* (inputStore : store, s : exp, v : varName, absValue) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main_updateOutputStore(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <pure,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11081(kk_std_data_hashmap__hash_map inputStore_0, kk_main__exp s_1, kk_main__varName v_0, kk_main__absValue _y_x10272, kk_context_t* _ctx); /* (inputStore : store, s : exp, v : varName, absValue) -> <attrGrammar,exn> () */ 
+kk_unit_t kk_main__mlift_updateInputStore_10957(kk_main__exp e, kk_main__storeExp inputStore, kk_main__exp s, kk_main__varName v, kk_unit_t wild___0, kk_context_t* _ctx); /* (e : exp, inputStore : storeExp, s : exp, v : varName, wild_@0 : ()) -> <pure,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11082(kk_main__exp e, kk_std_data_hashmap__hash_map inputStore_1, kk_main__exp s_2, kk_main__varName v_1, kk_unit_t wild___0, kk_context_t* _ctx); /* (e : exp, inputStore : store, s : exp, v : varName, wild_@0 : ()) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main__mlift_updateInputStore_10958(kk_main__exp s1, kk_main__exp s2, kk_unit_t wild___1, kk_context_t* _ctx); /* (s1 : exp, s2 : exp, wild_@1 : ()) -> <pure,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11083(kk_main__exp s2, kk_std_data_hashmap__hash_map _y_x10279, kk_context_t* _ctx); /* (s2 : exp, store) -> <attrGrammar,exn> () */ 
+kk_unit_t kk_main__mlift_updateInputStore_10959(kk_main__exp e2, kk_main__storeExp inputStore_0, kk_unit_t wild___2, kk_context_t* _ctx); /* (e2 : exp, inputStore : storeExp, wild_@2 : ()) -> <pure,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11084(kk_main__exp s1, kk_main__exp s2_0, kk_unit_t wild___1, kk_context_t* _ctx); /* (s1 : exp, s2 : exp, wild_@1 : ()) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main__mlift_updateInputStore_10960(kk_main__storeExp inputStore_1, kk_main__exp s2_0, kk_unit_t wild___4, kk_context_t* _ctx); /* (inputStore : storeExp, s2@0 : exp, wild_@4 : ()) -> <pure,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11085(kk_main__exp e2, kk_std_data_hashmap__hash_map inputStore_2, kk_unit_t wild___2, kk_context_t* _ctx); /* (e2 : exp, inputStore : store, wild_@2 : ()) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main__mlift_updateInputStore_10961(kk_main__storeExp inputStore_2, kk_main__exp s1_0, kk_main__exp s2_0_0, kk_unit_t wild___3, kk_context_t* _ctx); /* (inputStore : storeExp, s1@0 : exp, s2@0 : exp, wild_@3 : ()) -> <pure,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11086(kk_std_data_hashmap__hash_map inputStore_3, kk_main__exp s2_0_0, kk_unit_t wild___4, kk_context_t* _ctx); /* (inputStore : store, s2@0 : exp, wild_@4 : ()) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main__mlift_updateInputStore_10962(kk_main__exp exp, kk_main__storeExp inputStore_3, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, inputStore : storeExp, wild_ : ()) -> <attrGrammar,div,exn> () */ 
 
-kk_unit_t kk_main__mlift_updateInputStore_11087(kk_std_data_hashmap__hash_map inputStore_4, kk_main__exp s1_0, kk_main__exp s2_0_1, kk_unit_t wild___3, kk_context_t* _ctx); /* (inputStore : store, s1@0 : exp, s2@0 : exp, wild_@3 : ()) -> <exn,attrGrammar> () */ 
-
-kk_unit_t kk_main__mlift_updateInputStore_11088(kk_main__exp exp, kk_std_data_hashmap__hash_map inputStore_5, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, inputStore : store, wild_ : ()) -> <attrGrammar,exn> () */ 
-
-kk_unit_t kk_main_updateInputStore(kk_main__exp exp_0, kk_std_data_hashmap__hash_map inputStore_6, kk_context_t* _ctx); /* (exp : exp, inputStore : store) -> <attrGrammar,exn> () */ 
+kk_unit_t kk_main_updateInputStore(kk_main__exp exp_0, kk_main__storeExp inputStore_4, kk_context_t* _ctx); /* (exp : exp, inputStore : storeExp) -> <pure,attrGrammar> () */ 
 
 bool kk_main_isValidQueryCondition(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> bool */ 
 
@@ -2961,68 +3891,114 @@ kk_main__absOp kk_main_absOp_fs__lp__amp__rp_(kk_main__absOp absOp, kk_main__abs
 
 kk_main__absValue kk_main_absValue_fs_not(kk_main__absValue absValue, kk_context_t* _ctx); /* (absValue : absValue) -> absValue */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11089(kk_main__absOp queryCondition, kk_main__exp s2, kk_main__absValue _y_x10294, kk_context_t* _ctx); /* (queryCondition : absOp, s2 : exp, absValue) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateQueryCondition_10963(kk_main__exp e, kk_main__absOpExp queryCondition, kk_main__exp s2, kk_unit_t wild___1, kk_context_t* _ctx); /* (e : exp, queryCondition : absOpExp, s2 : exp, wild_@1 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11090(kk_main__exp e, kk_main__absOp queryCondition_0, kk_main__exp s2_0, kk_unit_t wild___1, kk_context_t* _ctx); /* (e : exp, queryCondition : absOp, s2 : exp, wild_@1 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateQueryCondition_10964(kk_main__absOpExp queryCondition_0, kk_main__exp s2_0, kk_unit_t wild___2, kk_context_t* _ctx); /* (queryCondition : absOpExp, s2 : exp, wild_@2 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11091(kk_main__exp e_0, kk_main__absOp queryCondition_1, kk_main__exp s1, kk_main__exp s2_1, kk_main__absValue _y_x10292, kk_context_t* _ctx); /* (e : exp, queryCondition : absOp, s1 : exp, s2 : exp, absValue) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateQueryCondition_10965(kk_main__exp e_0, kk_main__absOpExp queryCondition_1, kk_main__exp s1, kk_main__exp s2_1, kk_unit_t wild___0, kk_context_t* _ctx); /* (e : exp, queryCondition : absOpExp, s1 : exp, s2 : exp, wild_@0 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11092(kk_main__absOp queryCondition_2, kk_main__exp s2_2, kk_unit_t wild___2, kk_context_t* _ctx); /* (queryCondition : absOp, s2 : exp, wild_@2 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateQueryCondition_10966(kk_main__exp e2, kk_main__absOpExp queryCondition_2, kk_unit_t wild___3, kk_context_t* _ctx); /* (e2 : exp, queryCondition : absOpExp, wild_@3 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11093(kk_main__exp e_1, kk_main__absOp queryCondition_3, kk_main__exp s1_0, kk_main__exp s2_3, kk_unit_t wild___0, kk_context_t* _ctx); /* (e : exp, queryCondition : absOp, s1 : exp, s2 : exp, wild_@0 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateQueryCondition_10967(kk_main__absOpExp queryCondition_3, kk_main__exp s, kk_unit_t wild___4, kk_context_t* _ctx); /* (queryCondition : absOpExp, s : exp, wild_@4 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11094(kk_main__exp e2, kk_main__absOp queryCondition_4, kk_unit_t wild___3, kk_context_t* _ctx); /* (e2 : exp, queryCondition : absOp, wild_@3 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateQueryCondition_10968(kk_main__absOpExp queryCondition_4, kk_main__exp s2_0_0, kk_unit_t wild___5, kk_context_t* _ctx); /* (queryCondition : absOpExp, s2@0 : exp, wild_@5 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11095(kk_main__absOp queryCondition_5, kk_main__exp s, kk_unit_t wild___4, kk_context_t* _ctx); /* (queryCondition : absOp, s : exp, wild_@4 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateQueryCondition_10969(kk_main__exp exp, kk_main__absOpExp queryCondition_5, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, queryCondition : absOpExp, wild_ : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11096(kk_main__absOp queryCondition_6, kk_main__exp s2_0_0, kk_unit_t wild___5, kk_context_t* _ctx); /* (queryCondition : absOp, s2@0 : exp, wild_@5 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main_updateQueryCondition(kk_main__exp exp_0, kk_main__absOpExp queryCondition_6, kk_context_t* _ctx); /* (exp : exp, queryCondition : absOpExp) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateQueryCondition_11097(kk_main__exp exp, kk_main__absOp queryCondition_7, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, queryCondition : absOp, wild_ : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateDataDependence_10970(bool dependence, kk_main__exp e2, kk_unit_t wild___0, kk_context_t* _ctx); /* (dependence : bool, e2 : exp, wild_@0 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main_updateQueryCondition(kk_main__exp exp_0, kk_main__absOp queryCondition_8, kk_context_t* _ctx); /* (exp : exp, queryCondition : absOp) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateDataDependence_10971(bool dependence_0, kk_main__exp s2, kk_unit_t wild___2, kk_context_t* _ctx); /* (dependence : bool, s2 : exp, wild_@2 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateDataDependence_11098(bool dependence, kk_main__exp e2, kk_unit_t wild___0, kk_context_t* _ctx); /* (dependence : bool, e2 : exp, wild_@0 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateDataDependence_10972(bool dependence_1, kk_main__exp s1, kk_main__exp s2_0, kk_unit_t wild___1, kk_context_t* _ctx); /* (dependence : bool, s1 : exp, s2 : exp, wild_@1 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateDataDependence_11099(bool dependence_0, kk_main__exp s2, kk_unit_t wild___2, kk_context_t* _ctx); /* (dependence : bool, s2 : exp, wild_@2 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateDataDependence_10973(bool dependence_2, kk_main__exp s, kk_unit_t wild___3, kk_context_t* _ctx); /* (dependence : bool, s : exp, wild_@3 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateDataDependence_11100(bool dependence_1, kk_main__exp s1, kk_main__exp s2_0, kk_unit_t wild___1, kk_context_t* _ctx); /* (dependence : bool, s1 : exp, s2 : exp, wild_@1 : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateDataDependence_10974(bool dependence_3, kk_main__exp s2_0_0, kk_unit_t wild___4, kk_context_t* _ctx); /* (dependence : bool, s2@0 : exp, wild_@4 : ()) -> attrGrammar () */ 
 
-kk_unit_t kk_main__mlift_updateDataDependence_11101(bool dependence_2, kk_main__exp s, kk_unit_t wild___3, kk_context_t* _ctx); /* (dependence : bool, s : exp, wild_@3 : ()) -> attrGrammar () */ 
-
-kk_unit_t kk_main__mlift_updateDataDependence_11102(bool dependence_3, kk_main__exp s2_0_0, kk_unit_t wild___4, kk_context_t* _ctx); /* (dependence : bool, s2@0 : exp, wild_@4 : ()) -> attrGrammar () */ 
-
-kk_unit_t kk_main__mlift_updateDataDependence_11103(bool dependence_4, kk_main__exp exp, kk_unit_t wild__, kk_context_t* _ctx); /* (dependence : bool, exp : exp, wild_ : ()) -> attrGrammar () */ 
+kk_unit_t kk_main__mlift_updateDataDependence_10975(bool dependence_4, kk_main__exp exp, kk_unit_t wild__, kk_context_t* _ctx); /* (dependence : bool, exp : exp, wild_ : ()) -> attrGrammar () */ 
 
 kk_unit_t kk_main_updateDataDependence(kk_main__exp exp_0, bool parentDependence, kk_context_t* _ctx); /* (exp : exp, parentDependence : bool) -> attrGrammar () */ 
 
 bool kk_main_extends(kk_main__absValue absValue, kk_std_core_types__list paths, kk_context_t* _ctx); /* (absValue : absValue, paths : list<path>) -> bool */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11104(kk_std_core_types__list paths, kk_main__exp s, kk_main__absValue _y_x10331, kk_context_t* _ctx); /* (paths : list<path>, s : exp, absValue) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main__mlift_updateIteratorContext_10976(kk_main__exp e, kk_main__exp exp, kk_main__exp s, kk_unit_t wild___0, kk_context_t* _ctx); /* (e : exp, exp : exp, s : exp, wild_@0 : ()) -> <exn,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11105(kk_std_core_types__list paths_0, kk_main__exp s_0, kk_main__absValue _y_x10330, kk_context_t* _ctx); /* (paths : list<path>, s : exp, absValue) -> <attrGrammar,exn> () */ 
+kk_unit_t kk_main__mlift_updateIteratorContext_10977(kk_main__iteratorContextExp paths, kk_main__exp s2, kk_unit_t wild___1, kk_context_t* _ctx); /* (paths : iteratorContextExp, s2 : exp, wild_@1 : ()) -> <exn,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11106(kk_main__exp e, kk_std_core_types__list paths_1, kk_main__exp s_1, kk_main__absValue _y_x10328, kk_context_t* _ctx); /* (e : exp, paths : list<path>, s : exp, absValue) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main__mlift_updateIteratorContext_10978(kk_main__exp e2, kk_main__iteratorContextExp paths_0, kk_unit_t wild___2, kk_context_t* _ctx); /* (e2 : exp, paths : iteratorContextExp, wild_@2 : ()) -> <exn,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11107(kk_main__exp e_0, kk_std_core_types__list paths_3, kk_main__exp s_2, kk_main__absValue _y_x10327, kk_context_t* _ctx); /* (e : exp, paths : list<path>, s : exp, absValue) -> <attrGrammar,exn> () */ 
+kk_unit_t kk_main__mlift_updateIteratorContext_10979(kk_main__iteratorContextExp paths_1, kk_main__exp s2_0, kk_unit_t wild___4, kk_context_t* _ctx); /* (paths : iteratorContextExp, s2@0 : exp, wild_@4 : ()) -> <exn,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11108(kk_main__exp e_1, kk_std_core_types__list paths_4, kk_main__exp s_3, kk_unit_t wild___0, kk_context_t* _ctx); /* (e : exp, paths : list<path>, s : exp, wild_@0 : ()) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main__mlift_updateIteratorContext_10980(kk_main__iteratorContextExp paths_2, kk_main__exp s1_0, kk_main__exp s2_0_0, kk_unit_t wild___3, kk_context_t* _ctx); /* (paths : iteratorContextExp, s1@0 : exp, s2@0 : exp, wild_@3 : ()) -> <exn,attrGrammar> () */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11109(kk_std_core_types__list paths_5, kk_main__exp s2, kk_unit_t wild___1, kk_context_t* _ctx); /* (paths : list<path>, s2 : exp, wild_@1 : ()) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main__mlift_updateIteratorContext_10981(kk_main__exp exp_0, kk_main__iteratorContextExp paths_3, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, paths : iteratorContextExp, wild_ : ()) -> <attrGrammar,exn> () */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11110(kk_main__exp e2, kk_std_core_types__list paths_6, kk_unit_t wild___2, kk_context_t* _ctx); /* (e2 : exp, paths : list<path>, wild_@2 : ()) -> <exn,attrGrammar> () */ 
+kk_unit_t kk_main_updateIteratorContext(kk_main__exp exp_1, kk_main__iteratorContextExp paths_4, kk_context_t* _ctx); /* (exp : exp, paths : iteratorContextExp) -> <attrGrammar,exn> () */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11111(kk_std_core_types__list paths_7, kk_main__exp s2_0, kk_unit_t wild___4, kk_context_t* _ctx); /* (paths : list<path>, s2@0 : exp, wild_@4 : ()) -> <exn,attrGrammar> () */ 
+kk_box_t kk_main_firstOrThrow(kk_std_core_types__list l, kk_context_t* _ctx); /* forall<a> (l : list<a>) -> exn a */ 
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11112(kk_std_core_types__list paths_8, kk_main__exp s1_0, kk_main__exp s2_0_0, kk_unit_t wild___3, kk_context_t* _ctx); /* (paths : list<path>, s1@0 : exp, s2@0 : exp, wild_@3 : ()) -> <exn,attrGrammar> () */ 
+static inline kk_main__pathExp kk_main_iter(kk_main__exp exp, kk_context_t* _ctx) { /* (exp : exp) -> pathExp */ 
+  kk_main__pathExp _x_x5999;
+  kk_main__iteratorContextExp _x_x6000;
+  kk_main__exp _x_x6001 = kk_main__exp_dup(exp, _ctx); /*main/exp*/
+  _x_x6000 = kk_main__new_ICEIT(kk_reuse_null, 0, _x_x6001, _ctx); /*main/iteratorContextExp*/
+  _x_x5999 = kk_main__new_PELast(kk_reuse_null, 0, _x_x6000, _ctx); /*main/pathExp*/
+  kk_main__absOpExp _x_x6002 = kk_main__new_AOEC(kk_reuse_null, 0, exp, _ctx); /*main/absOpExp*/
+  return kk_main__new_PEValue(kk_reuse_null, 0, _x_x5999, _x_x6002, true, _ctx);
+}
 
-kk_unit_t kk_main__mlift_updateIteratorContext_11113(kk_main__exp exp, kk_std_core_types__list paths_9, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, paths : list<path>, wild_ : ()) -> <attrGrammar,exn> () */ 
+kk_unit_t kk_main__mlift_updateTraversalSummary_10982(kk_main__exp exp, kk_main__pathExp _c_x10436, kk_context_t* _ctx); /* (exp : exp, pathExp) -> () */ 
 
-kk_unit_t kk_main_updateIteratorContext(kk_main__exp exp_0, kk_std_core_types__list paths_10, kk_context_t* _ctx); /* (exp : exp, paths : list<path>) -> <attrGrammar,exn> () */ 
+kk_unit_t kk_main_updateTraversalSummary(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
+
+kk_main__absValue kk_main_absValue_fs_join(kk_main__absValue v1, kk_main__absValue v2, kk_context_t* _ctx); /* (v1 : absValue, v2 : absValue) -> exn absValue */ 
+ 
+// monadic lift
+
+static inline kk_unit_t kk_main__mlift_updateSynthesizedAttrs_10983(kk_main__exp exp, kk_unit_t wild___1, kk_context_t* _ctx) { /* (exp : exp, wild_@1 : ()) -> <pure,attrGrammar> () */ 
+  kk_main_updateTraversalSummary(exp, _ctx); return kk_Unit;
+}
+
+kk_unit_t kk_main__mlift_updateSynthesizedAttrs_10984(kk_main__exp exp, kk_unit_t wild___0, kk_context_t* _ctx); /* (exp : exp, wild_@0 : ()) -> <attrGrammar,exn> () */ 
+
+kk_unit_t kk_main__mlift_updateSynthesizedAttrs_10985(kk_main__exp exp, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, wild_ : ()) -> <attrGrammar,exn> () */ 
+
+kk_unit_t kk_main_updateSynthesizedAttrs(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <pure,attrGrammar> () */ 
+
+kk_unit_t kk_main__mlift_visit_10986(kk_main__exp e2, kk_function_t f, kk_unit_t wild___0, kk_context_t* _ctx); /* forall<e> (e2 : exp, f : (exp) -> e (), wild_@0 : ()) -> e () */ 
+
+kk_unit_t kk_main__mlift_visit_10987(kk_function_t f_0, kk_main__exp s2, kk_unit_t wild___2, kk_context_t* _ctx); /* forall<e> (f : (exp) -> e (), s2 : exp, wild_@2 : ()) -> e () */ 
+
+kk_unit_t kk_main__mlift_visit_10988(kk_function_t f_1, kk_main__exp s1, kk_main__exp s2_0, kk_unit_t wild___1, kk_context_t* _ctx); /* forall<e> (f : (exp) -> e (), s1 : exp, s2 : exp, wild_@1 : ()) -> e () */ 
+
+kk_unit_t kk_main__mlift_visit_10989(kk_function_t f_2, kk_main__exp s, kk_unit_t wild___3, kk_context_t* _ctx); /* forall<e> (f : (exp) -> e (), s : exp, wild_@3 : ()) -> e () */ 
+
+kk_unit_t kk_main__mlift_visit_10990(kk_function_t f_3, kk_main__exp s2_0_0, kk_unit_t wild___4, kk_context_t* _ctx); /* forall<e> (f : (exp) -> e (), s2@0 : exp, wild_@4 : ()) -> e () */ 
+
+kk_unit_t kk_main__mlift_visit_10991(kk_main__exp exp, kk_function_t f_4, kk_unit_t wild__, kk_context_t* _ctx); /* forall<e> (exp : exp, f : (exp) -> e (), wild_ : ()) -> e () */ 
+
+kk_unit_t kk_main_visit(kk_main__exp exp_0, kk_function_t f_5, kk_context_t* _ctx); /* forall<e> (exp : exp, f : (exp) -> e ()) -> e () */ 
+ 
+// monadic lift
+
+static inline kk_unit_t kk_main__mlift_iterateAttributeGrammar_10992(kk_main__exp exp, kk_unit_t wild___2, kk_context_t* _ctx) { /* (exp : exp, wild_@2 : ()) -> <attrGrammar,exn,div> () */ 
+  kk_main_updateIteratorContext(exp, kk_main__new_ICEEmpty(_ctx), _ctx); return kk_Unit;
+}
+
+kk_unit_t kk_main__mlift_iterateAttributeGrammar_10993(kk_main__exp exp, kk_unit_t wild___1, kk_context_t* _ctx); /* (exp : exp, wild_@1 : ()) -> <attrGrammar,exn,div> () */ 
+
+kk_unit_t kk_main__mlift_iterateAttributeGrammar_10994(kk_main__exp exp, kk_unit_t wild___0, kk_context_t* _ctx); /* (exp : exp, wild_@0 : ()) -> <pure,attrGrammar> () */ 
+
+kk_unit_t kk_main__mlift_iterateAttributeGrammar_10995(kk_main__exp exp, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, wild_ : ()) -> <attrGrammar,div,exn> () */ 
+
+kk_unit_t kk_main_iterateAttributeGrammar(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <pure,attrGrammar> () */ 
 
 static inline kk_box_t kk_main_getOrDefault(kk_std_data_hashmap__hash_map map, kk_box_t key, kk_box_t kkloc_default, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx) { /* forall<a,b> (map : std/data/hashmap/hash-map<a,b>, key : a, default : b, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int) -> b */ 
-  kk_std_core_types__maybe _match_x5608 = kk_std_data_hashmap_get(map, key, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, _ctx); /*maybe<3177>*/;
-  if (kk_std_core_types__is_Just(_match_x5608, _ctx)) {
-    kk_box_t value = _match_x5608._cons.Just.value;
+  kk_std_core_types__maybe _match_x3720 = kk_std_data_hashmap_get(map, key, _implicit_fs_hash, _implicit_fs__lp__eq__eq__rp_, _ctx); /*maybe<3177>*/;
+  if (kk_std_core_types__is_Just(_match_x3720, _ctx)) {
+    kk_box_t value = _match_x3720._cons.Just.value;
     kk_box_drop(kkloc_default, _ctx);
     return value;
   }
@@ -3030,142 +4006,6 @@ static inline kk_box_t kk_main_getOrDefault(kk_std_data_hashmap__hash_map map, k
     return kkloc_default;
   }
 }
-
-kk_main__absValue kk_main__mlift_updateAbstractValue_11114(kk_main__fieldName f, kk_main__absValue _y_x10347, kk_context_t* _ctx); /* (f : fieldName, absValue) -> <attrGrammar,exn> absValue */ 
-
-kk_main__absValue kk_main__mlift_updateAbstractValue_11115(kk_main__absValue _y_x10350, kk_main__op op, kk_main__absValue _y_x10352, kk_context_t* _ctx); /* (absValue, op : op, absValue) -> <attrGrammar,exn> absValue */ 
-
-kk_main__absValue kk_main__mlift_updateAbstractValue_11116(kk_main__op op, kk_main__exp rhs, kk_main__absValue _y_x10350, kk_context_t* _ctx); /* (op : op, rhs : exp, absValue) -> <attrGrammar,exn> absValue */ 
-
-kk_main__absValue kk_main__mlift_updateAbstractValue_11117(kk_main__varName v, kk_std_data_hashmap__hash_map _y_x10354, kk_context_t* _ctx); /* (v : varName, store) -> <attrGrammar,exn> absValue */ 
-
-kk_unit_t kk_main__mlift_updateAbstractValue_11118(kk_main__exp exp, kk_main__absValue _c_x10355, kk_context_t* _ctx); /* (exp : exp, absValue) -> () */ 
-
-kk_unit_t kk_main_updateAbstractValue(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11119(kk_main__absValue _y_x10359, kk_context_t* _ctx); /* (absValue) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11120(kk_main__absValue _y_x10361, kk_context_t* _ctx); /* (absValue) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11121(kk_std_data_hashset__hash_set _y_x10363, kk_std_data_hashset__hash_set _y_x10365, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11122(kk_main__exp rhs, kk_std_data_hashset__hash_set _y_x10363, kk_context_t* _ctx); /* (rhs : exp, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11123(kk_std_data_hashset__hash_set _y_x10369, kk_std_data_hashset__hash_set _y_x10371, kk_std_data_hashset__hash_set _y_x10373, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, std/data/hashset/hash-set<path>, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11124(kk_std_data_hashset__hash_set _y_x10369, kk_main__exp s2, kk_std_data_hashset__hash_set _y_x10371, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, s2 : exp, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11125(kk_main__exp s1, kk_main__exp s2, kk_std_data_hashset__hash_set _y_x10369, kk_context_t* _ctx); /* (s1 : exp, s2 : exp, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11126(kk_std_data_hashset__hash_set _y_x10375, kk_main__absValue _y_x10378, kk_std_data_hashset__hash_set _y_x10380, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, absValue, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11127(kk_std_data_hashset__hash_set _y_x10375, kk_main__exp s, kk_main__absValue _y_x10378, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, s : exp, absValue) -> <exn,attrGrammar> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11128(kk_std_data_hashset__hash_set _y_x10375, kk_main__exp s, kk_main__absValue _y_x10377, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, s : exp, absValue) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11129(kk_main__exp e_1, kk_main__exp s, kk_std_data_hashset__hash_set _y_x10375, kk_context_t* _ctx); /* (e@1 : exp, s : exp, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11130(kk_std_data_hashset__hash_set _y_x10382, kk_std_data_hashset__hash_set _y_x10384, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updatePaths_11131(kk_main__exp s2_0, kk_std_data_hashset__hash_set _y_x10382, kk_context_t* _ctx); /* (s2@0 : exp, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_unit_t kk_main__mlift_updatePaths_11132(kk_main__exp exp, kk_std_data_hashset__hash_set _c_x10387, kk_context_t* _ctx); /* (exp : exp, std/data/hashset/hash-set<path>) -> () */ 
-
-kk_unit_t kk_main_updatePaths(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
-
-kk_main__absValue kk_main_absValue_fs_join(kk_main__absValue v1, kk_main__absValue v2, kk_context_t* _ctx); /* (v1 : absValue, v2 : absValue) -> exn absValue */ 
-
-kk_std_data_hashmap__hash_map kk_main__mlift_updateOutputStore_11133(kk_std_data_hashmap__hash_map _y_x10395, kk_main__varName v, kk_main__absValue _y_x10398, kk_context_t* _ctx); /* (store, v : varName, absValue) -> <exn,attrGrammar> std/data/hashmap/hash-map<varName,absValue> */ 
-
-kk_std_data_hashmap__hash_map kk_main__mlift_updateOutputStore_11134(kk_std_data_hashmap__hash_map _y_x10395, kk_main__absValue previousV, kk_main__varName v, kk_main__absValue _y_x10397, kk_context_t* _ctx); /* (store, previousV : absValue, v : varName, absValue) -> <attrGrammar,exn> std/data/hashmap/hash-map<varName,absValue> */ 
-
-kk_std_data_hashmap__hash_map kk_main__mlift_updateOutputStore_11135(kk_main__exp e, kk_main__absValue previousV, kk_main__varName v, kk_std_data_hashmap__hash_map _y_x10395, kk_context_t* _ctx); /* (e : exp, previousV : absValue, v : varName, store) -> <attrGrammar,exn> std/data/hashmap/hash-map<varName,absValue> */ 
-
-kk_std_data_hashmap__hash_map kk_main__mlift_updateOutputStore_11136(kk_main__exp e, kk_main__exp exp, kk_main__varName v, kk_std_data_hashmap__hash_map _y_x10393, kk_context_t* _ctx); /* (e : exp, exp : exp, v : varName, store) -> <attrGrammar,exn> std/data/hashmap/hash-map<varName,absValue> */ 
-
-kk_std_data_hashmap__hash_map kk_main__mlift_updateOutputStore_11137(kk_std_data_hashmap__hash_map _y_x10400, kk_std_data_hashmap__hash_map _y_x10402, kk_context_t* _ctx); /* (store, store) -> <attrGrammar,exn> std/data/hashmap/hash-map<varName,absValue> */ 
-
-kk_std_data_hashmap__hash_map kk_main__mlift_updateOutputStore_11138(kk_main__exp s2, kk_std_data_hashmap__hash_map _y_x10400, kk_context_t* _ctx); /* (s2 : exp, store) -> <attrGrammar,exn> std/data/hashmap/hash-map<varName,absValue> */ 
-
-kk_std_data_hashmap__hash_map kk_main__mlift_updateOutputStore_11139(kk_main__varName v_0, kk_std_data_hashmap__hash_map _y_x10404, kk_context_t* _ctx); /* (v@0 : varName, store) -> <attrGrammar,exn> std/data/hashmap/hash-map<varName,absValue> */ 
-
-kk_unit_t kk_main__mlift_updateOutputStore_11140(kk_main__exp exp, kk_std_data_hashmap__hash_map _c_x10409, kk_context_t* _ctx); /* (exp : exp, std/data/hashmap/hash-map<varName,absValue>) -> () */ 
-
-kk_unit_t kk_main_updateOutputStore(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
-
-kk_box_t kk_main_firstOrThrow(kk_std_core_types__list l, kk_context_t* _ctx); /* forall<a> (l : list<a>) -> exn a */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_iter_11141(kk_main__path latestIteratorContext, kk_main__absOp _y_x10415, kk_context_t* _ctx); /* (latestIteratorContext : path, absOp) -> attrGrammar std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_iter_11142(kk_main__exp exp, kk_std_core_types__list _y_x10414, kk_context_t* _ctx); /* (exp : exp, list<path>) -> attrGrammar std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main_iter(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> attrGrammar std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11143(kk_std_core_types__list _y_x10423, kk_context_t* _ctx); /* (list<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11144(kk_main__absOp queryCondition, kk_main__absValue _y_x10422, kk_context_t* _ctx); /* (queryCondition : absOp, absValue) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11145(kk_std_core_types__list _y_x10426, kk_context_t* _ctx); /* (list<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11146(kk_main__absOp queryCondition, kk_std_data_hashset__hash_set _y_x10425, kk_context_t* _ctx); /* (queryCondition : absOp, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11147(kk_main__exp exp, kk_main__absOp queryCondition, bool _y_x10420, kk_context_t* _ctx); /* (exp : exp, queryCondition : absOp, bool) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11148(kk_main__exp exp, kk_main__absOp queryCondition, kk_context_t* _ctx); /* (exp : exp, queryCondition : absOp) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11149(kk_std_data_hashset__hash_set _y_x10429, kk_std_data_hashset__hash_set _y_x10430, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11150(kk_main__exp exp, kk_std_data_hashset__hash_set _y_x10429, kk_context_t* _ctx); /* (exp : exp, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11151(kk_std_data_hashset__hash_set _y_x10432, kk_std_data_hashset__hash_set _c_x10436, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, std/data/hashset/hash-set<path>) -> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11152(kk_std_data_hashset__hash_set _y_x10432, kk_main__exp exp, bool _y_x10434, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>, exp : exp, bool) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_std_data_hashset__hash_set kk_main__mlift_updateTraversalSummary_11153(kk_main__exp exp, kk_std_data_hashset__hash_set _y_x10432, kk_context_t* _ctx); /* (exp : exp, std/data/hashset/hash-set<path>) -> <attrGrammar,exn> std/data/hashset/hash-set<path> */ 
-
-kk_unit_t kk_main__mlift_updateTraversalSummary_11154(kk_main__exp exp, kk_std_data_hashset__hash_set _c_x10437, kk_context_t* _ctx); /* (exp : exp, std/data/hashset/hash-set<path>) -> () */ 
-
-kk_unit_t kk_main_updateTraversalSummary(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
- 
-// monadic lift
-
-static inline kk_unit_t kk_main__mlift_updateSynthesizedAttrs_11155(kk_main__exp exp, kk_unit_t wild___1, kk_context_t* _ctx) { /* (exp : exp, wild_@1 : ()) -> <attrGrammar,exn> () */ 
-  kk_main_updateTraversalSummary(exp, _ctx); return kk_Unit;
-}
-
-kk_unit_t kk_main__mlift_updateSynthesizedAttrs_11156(kk_main__exp exp, kk_unit_t wild___0, kk_context_t* _ctx); /* (exp : exp, wild_@0 : ()) -> <attrGrammar,exn> () */ 
-
-kk_unit_t kk_main__mlift_updateSynthesizedAttrs_11157(kk_main__exp exp, kk_unit_t wild__, kk_context_t* _ctx); /* (exp : exp, wild_ : ()) -> <attrGrammar,exn> () */ 
-
-kk_unit_t kk_main_updateSynthesizedAttrs(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
-
-kk_unit_t kk_main__mlift_visit_11158(kk_main__exp e2, kk_function_t f, kk_unit_t wild___0, kk_context_t* _ctx); /* forall<e> (e2 : exp, f : (exp) -> e (), wild_@0 : ()) -> e () */ 
-
-kk_unit_t kk_main__mlift_visit_11159(kk_function_t f_0, kk_main__exp s2, kk_unit_t wild___2, kk_context_t* _ctx); /* forall<e> (f : (exp) -> e (), s2 : exp, wild_@2 : ()) -> e () */ 
-
-kk_unit_t kk_main__mlift_visit_11160(kk_function_t f_1, kk_main__exp s1, kk_main__exp s2_0, kk_unit_t wild___1, kk_context_t* _ctx); /* forall<e> (f : (exp) -> e (), s1 : exp, s2 : exp, wild_@1 : ()) -> e () */ 
-
-kk_unit_t kk_main__mlift_visit_11161(kk_function_t f_2, kk_main__exp s, kk_unit_t wild___3, kk_context_t* _ctx); /* forall<e> (f : (exp) -> e (), s : exp, wild_@3 : ()) -> e () */ 
-
-kk_unit_t kk_main__mlift_visit_11162(kk_function_t f_3, kk_main__exp s2_0_0, kk_unit_t wild___4, kk_context_t* _ctx); /* forall<e> (f : (exp) -> e (), s2@0 : exp, wild_@4 : ()) -> e () */ 
-
-kk_unit_t kk_main__mlift_visit_11163(kk_main__exp exp, kk_function_t f_4, kk_unit_t wild__, kk_context_t* _ctx); /* forall<e> (exp : exp, f : (exp) -> e (), wild_ : ()) -> e () */ 
-
-kk_unit_t kk_main_visit(kk_main__exp exp_0, kk_function_t f_5, kk_context_t* _ctx); /* forall<e> (exp : exp, f : (exp) -> e ()) -> e () */ 
- 
-// monadic lift
-
-static inline kk_unit_t kk_main__mlift_iterateAttributeGrammar_11164(kk_main__exp exp, kk_unit_t wild___3, kk_context_t* _ctx) { /* (exp : exp, wild_@3 : ()) -> <attrGrammar,exn> () */ 
-  kk_main_updateIteratorContext(exp, kk_std_core_types__new_Nil(_ctx), _ctx); return kk_Unit;
-}
-
-kk_unit_t kk_main__mlift_iterateAttributeGrammar_11165(kk_main__exp exp, kk_unit_t wild___2, kk_context_t* _ctx); /* (exp : exp, wild_@2 : ()) -> <attrGrammar,exn> () */ 
-
-kk_unit_t kk_main__mlift_iterateAttributeGrammar_11166(kk_main__exp exp, kk_unit_t wild___1, kk_context_t* _ctx); /* (exp : exp, wild_@1 : ()) -> <attrGrammar,exn> () */ 
-
-kk_unit_t kk_main__mlift_iterateAttributeGrammar_11167(kk_main__exp exp, kk_unit_t wild___0, kk_context_t* _ctx); /* (exp : exp, wild_@0 : ()) -> <attrGrammar,exn> () */ 
-
-kk_unit_t kk_main_iterateAttributeGrammar(kk_main__exp exp, kk_context_t* _ctx); /* (exp : exp) -> <attrGrammar,exn> () */ 
 
 extern kk_std_core_hnd__htag kk_main__tag_fixpoint;
 
@@ -3175,8 +4015,8 @@ kk_box_t kk_main__handle_fixpoint(kk_main__fixpoint hnd, kk_function_t ret, kk_f
 
 static inline kk_std_core_hnd__clause0 kk_main__select_modified(kk_main__fixpoint hnd, kk_context_t* _ctx) { /* forall<e,a> (hnd : fixpoint<e,a>) -> hnd/clause0<(),fixpoint,e,a> */ 
   {
-    struct kk_main__Hnd_fixpoint* _con_x8467 = kk_main__as_Hnd_fixpoint(hnd, _ctx);
-    kk_std_core_hnd__clause0 _fun_modified = _con_x8467->_fun_modified;
+    struct kk_main__Hnd_fixpoint* _con_x6317 = kk_main__as_Hnd_fixpoint(hnd, _ctx);
+    kk_std_core_hnd__clause0 _fun_modified = _con_x6317->_fun_modified;
     return kk_std_core_hnd__clause0_dup(_fun_modified, _ctx);
   }
 }
@@ -3184,18 +4024,18 @@ static inline kk_std_core_hnd__clause0 kk_main__select_modified(kk_main__fixpoin
 // Call the `fun modified` operation of the effect `:fixpoint`
 
 static inline kk_unit_t kk_main_modified(kk_context_t* _ctx) { /* () -> fixpoint () */ 
-  kk_std_core_hnd__ev ev_11824 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/fixpoint>*/;
-  kk_box_t _x_x8468;
+  kk_std_core_hnd__ev ev_11442 = kk_evv_at(((KK_IZ(0))),kk_context()); /*hnd/ev<main/fixpoint>*/;
+  kk_box_t _x_x6318;
   {
-    struct kk_std_core_hnd_Ev* _con_x8469 = kk_std_core_hnd__as_Ev(ev_11824, _ctx);
-    kk_box_t _box_x4116 = _con_x8469->hnd;
-    int32_t m = _con_x8469->marker;
-    kk_main__fixpoint h = kk_main__fixpoint_unbox(_box_x4116, KK_BORROWED, _ctx);
+    struct kk_std_core_hnd_Ev* _con_x6319 = kk_std_core_hnd__as_Ev(ev_11442, _ctx);
+    kk_box_t _box_x1987 = _con_x6319->hnd;
+    int32_t m = _con_x6319->marker;
+    kk_main__fixpoint h = kk_main__fixpoint_unbox(_box_x1987, KK_BORROWED, _ctx);
     kk_main__fixpoint_dup(h, _ctx);
     {
-      struct kk_main__Hnd_fixpoint* _con_x8470 = kk_main__as_Hnd_fixpoint(h, _ctx);
-      kk_integer_t _pat_0_0 = _con_x8470->_cfc;
-      kk_std_core_hnd__clause0 _fun_modified = _con_x8470->_fun_modified;
+      struct kk_main__Hnd_fixpoint* _con_x6320 = kk_main__as_Hnd_fixpoint(h, _ctx);
+      kk_integer_t _pat_0_0 = _con_x6320->_cfc;
+      kk_std_core_hnd__clause0 _fun_modified = _con_x6320->_fun_modified;
       if kk_likely(kk_datatype_ptr_is_unique(h, _ctx)) {
         kk_integer_drop(_pat_0_0, _ctx);
         kk_datatype_ptr_free(h, _ctx);
@@ -3205,209 +4045,117 @@ static inline kk_unit_t kk_main_modified(kk_context_t* _ctx) { /* () -> fixpoint
         kk_datatype_ptr_decref(h, _ctx);
       }
       {
-        kk_function_t _fun_unbox_x4119 = _fun_modified.clause;
-        _x_x8468 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), _fun_unbox_x4119, (_fun_unbox_x4119, m, ev_11824, _ctx), _ctx); /*1005*/
+        kk_function_t _fun_unbox_x1990 = _fun_modified.clause;
+        _x_x6318 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), _fun_unbox_x1990, (_fun_unbox_x1990, m, ev_11442, _ctx), _ctx); /*1005*/
       }
     }
   }
-  kk_unit_unbox(_x_x8468); return kk_Unit;
-}
- 
-// monadic lift
-
-
-// lift anonymous function
-struct kk_main__mlift_update_11168_fun8472__t {
-  struct kk_function_s _base;
-  kk_box_t key;
-  kk_std_data_hashmap__hash_map map;
-  kk_box_t value;
-  kk_function_t _implicit_fs__lp__eq__eq__rp_;
-  kk_function_t _implicit_fs_hash;
-};
-extern kk_box_t kk_main__mlift_update_11168_fun8472(kk_function_t _fself, kk_context_t* _ctx);
-static inline kk_function_t kk_main__new_mlift_update_11168_fun8472(kk_box_t key, kk_std_data_hashmap__hash_map map, kk_box_t value, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_context_t* _ctx) {
-  struct kk_main__mlift_update_11168_fun8472__t* _self = kk_function_alloc_as(struct kk_main__mlift_update_11168_fun8472__t, 6, _ctx);
-  _self->_base.fun = kk_kkfun_ptr_box(&kk_main__mlift_update_11168_fun8472, kk_context());
-  _self->key = key;
-  _self->map = map;
-  _self->value = value;
-  _self->_implicit_fs__lp__eq__eq__rp_ = _implicit_fs__lp__eq__eq__rp_;
-  _self->_implicit_fs_hash = _implicit_fs_hash;
-  return kk_datatype_from_base(&_self->_base, kk_context());
+  kk_unit_unbox(_x_x6318); return kk_Unit;
 }
 
-
-
-// lift anonymous function
-struct kk_main__mlift_update_11168_fun8476__t {
-  struct kk_function_s _base;
-};
-extern bool kk_main__mlift_update_11168_fun8476(kk_function_t _fself, kk_integer_t _x1_x8474, kk_integer_t _x2_x8475, kk_context_t* _ctx);
-static inline kk_function_t kk_main__new_mlift_update_11168_fun8476(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main__mlift_update_11168_fun8476, _ctx)
-  return kk_function_dup(_fself,kk_context());
+static inline kk_string_t kk_main_mapShow(kk_std_data_hashmap__hash_map map, kk_function_t _implicit_fs_keyShow, kk_function_t _implicit_fs_valueShow, kk_context_t* _ctx) { /* forall<a,b> (map : std/data/hashmap/hash-map<a,b>, ?keyShow : (a) -> string, ?valueShow : (b) -> string) -> string */ 
+  return kk_main_hashmap_fs_show(map, _implicit_fs_keyShow, _implicit_fs_valueShow, _ctx);
 }
 
+kk_main__absValueExp kk_main__mlift_analyze_10996(kk_main__exp exp, kk_std_data_hashmap__hash_map _y_x10466, kk_context_t* _ctx); /* forall<h> (exp : exp, std/data/hashmap/hash-map<exp,absValueExp>) -> <local<h>,div,exn,fixpoint> absValueExp */ 
 
+bool kk_main__mlift_analyze_10997(kk_main__exp exp_0, kk_std_data_hashmap__hash_map _y_x10467, kk_context_t* _ctx); /* forall<h> (exp@0 : exp, std/data/hashmap/hash-map<exp,bool>) -> <local<h>,div,exn,fixpoint> bool */ 
 
-// lift anonymous function
-struct kk_main__mlift_update_11168_fun8479__t {
-  struct kk_function_s _base;
-};
-extern kk_integer_t kk_main__mlift_update_11168_fun8479(kk_function_t _fself, kk_integer_t _x1_x8477, kk_integer_t _x2_x8478, kk_context_t* _ctx);
-static inline kk_function_t kk_main__new_mlift_update_11168_fun8479(kk_context_t* _ctx) {
-  kk_define_static_function(_fself, kk_main__mlift_update_11168_fun8479, _ctx)
-  return kk_function_dup(_fself,kk_context());
-}
+kk_main__iteratorContextExp kk_main__mlift_analyze_10998(kk_main__exp exp_1, kk_std_data_hashmap__hash_map _y_x10468, kk_context_t* _ctx); /* forall<h> (exp@1 : exp, std/data/hashmap/hash-map<exp,iteratorContextExp>) -> <local<h>,div,exn,fixpoint> iteratorContextExp */ 
 
+kk_main__pathExp kk_main__mlift_analyze_10999(kk_main__exp exp_2, kk_std_data_hashmap__hash_map _y_x10469, kk_context_t* _ctx); /* forall<h> (exp@2 : exp, std/data/hashmap/hash-map<exp,pathExp>) -> <local<h>,div,exn,fixpoint> pathExp */ 
 
-static inline kk_std_data_hashmap__hash_map kk_main__mlift_update_11168(kk_box_t key, kk_std_data_hashmap__hash_map map, kk_box_t value, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_unit_t wild__, kk_context_t* _ctx) { /* forall<a,b> (key : a, map : std/data/hashmap/hash-map<a,b>, value : b, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int, wild_ : ()) -> fixpoint std/data/hashmap/hash-map<a,b> */ 
-  kk_box_t _x_x8471 = kk_std_core_hnd__open_none0(kk_main__new_mlift_update_11168_fun8472(key, map, value, _implicit_fs__lp__eq__eq__rp_, _implicit_fs_hash, _ctx), _ctx); /*1000*/
-  return kk_std_data_hashmap__hash_map_unbox(_x_x8471, KK_OWNED, _ctx);
-}
+kk_main__pathExp kk_main__mlift_analyze_11000(kk_main__exp exp_3, kk_std_data_hashmap__hash_map _y_x10470, kk_context_t* _ctx); /* forall<h> (exp@3 : exp, std/data/hashmap/hash-map<exp,pathExp>) -> <local<h>,div,exn,fixpoint> pathExp */ 
 
-kk_std_data_hashmap__hash_map kk_main__mlift_update_11169(kk_box_t key, kk_std_data_hashmap__hash_map map, kk_box_t value, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, bool _c_x10464, kk_context_t* _ctx); /* forall<a,b> (key : a, map : std/data/hashmap/hash-map<a,b>, value : b, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int, bool) -> std/data/hashmap/hash-map<a,b> */ 
+kk_unit_t kk_main__mlift_analyze_11001(kk_ref_t abstractValues, kk_main__absValueExp absValue, kk_main__exp exp_4, kk_std_data_hashmap__hash_map _y_x10471, kk_context_t* _ctx); /* forall<h> (abstractValues : local-var<h,std/data/hashmap/hash-map<exp,absValueExp>>, absValue : absValueExp, exp@4 : exp, std/data/hashmap/hash-map<exp,absValueExp>) -> <local<h>,div,exn,fixpoint> () */ 
 
-kk_std_data_hashmap__hash_map kk_main_update(kk_std_data_hashmap__hash_map map, kk_box_t key, kk_box_t value, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_hash, kk_function_t _implicit_fs_value_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_show, kk_context_t* _ctx); /* forall<a,b> (map : std/data/hashmap/hash-map<a,b>, key : a, value : b, ?(==) : (a, a) -> bool, ?hash : (a, int64) -> int, ?value/(==) : (b, b) -> bool, ?show : (b) -> string) -> fixpoint std/data/hashmap/hash-map<a,b> */ 
+kk_unit_t kk_main__mlift_analyze_11002(kk_ref_t dataDependences, bool dependence, kk_main__exp exp_5, kk_std_data_hashmap__hash_map _y_x10473, kk_context_t* _ctx); /* forall<h> (dataDependences : local-var<h,std/data/hashmap/hash-map<exp,bool>>, dependence : bool, exp@5 : exp, std/data/hashmap/hash-map<exp,bool>) -> <local<h>,div,exn,fixpoint> () */ 
 
-kk_main__absValue kk_main__mlift_analyze_11170(kk_main__exp exp, kk_std_data_hashmap__hash_map _y_x10468, kk_context_t* _ctx); /* forall<h> (exp : exp, std/data/hashmap/hash-map<exp,absValue>) -> <local<h>,fixpoint,div,exn> absValue */ 
+kk_unit_t kk_main__mlift_analyze_11003(kk_main__exp exp_6, kk_main__storeExp inputStore, kk_ref_t inputStores, kk_std_data_hashmap__hash_map _y_x10475, kk_context_t* _ctx); /* forall<h> (exp@6 : exp, inputStore : storeExp, inputStores : local-var<h,std/data/hashmap/hash-map<exp,storeExp>>, std/data/hashmap/hash-map<exp,storeExp>) -> <local<h>,div,exn,fixpoint> () */ 
 
-bool kk_main__mlift_analyze_11171(kk_main__exp exp_0, kk_std_data_hashmap__hash_map _y_x10469, kk_context_t* _ctx); /* forall<h> (exp@0 : exp, std/data/hashmap/hash-map<exp,bool>) -> <local<h>,fixpoint,div,exn> bool */ 
+kk_unit_t kk_main__mlift_analyze_11004(kk_main__exp exp_7, kk_main__iteratorContextExp iteratorContext, kk_ref_t iteratorContexts, kk_std_data_hashmap__hash_map _y_x10477, kk_context_t* _ctx); /* forall<h> (exp@7 : exp, iteratorContext : iteratorContextExp, iteratorContexts : local-var<h,std/data/hashmap/hash-map<exp,iteratorContextExp>>, std/data/hashmap/hash-map<exp,iteratorContextExp>) -> <local<h>,div,exn,fixpoint> () */ 
 
-kk_std_data_hashmap__hash_map kk_main__mlift_analyze_11172(kk_main__exp exp_1, kk_std_data_hashmap__hash_map _y_x10470, kk_context_t* _ctx); /* forall<h> (exp@1 : exp, std/data/hashmap/hash-map<exp,store>) -> <local<h>,fixpoint,div,exn> store */ 
+kk_unit_t kk_main__mlift_analyze_11005(kk_main__exp exp_8, kk_main__storeExp outputStore, kk_ref_t outputStores, kk_std_data_hashmap__hash_map _y_x10479, kk_context_t* _ctx); /* forall<h> (exp@8 : exp, outputStore : storeExp, outputStores : local-var<h,std/data/hashmap/hash-map<exp,storeExp>>, std/data/hashmap/hash-map<exp,storeExp>) -> <local<h>,div,exn,fixpoint> () */ 
 
-kk_std_core_types__list kk_main__mlift_analyze_11173(kk_main__exp exp_2, kk_std_data_hashmap__hash_map _y_x10471, kk_context_t* _ctx); /* forall<h> (exp@2 : exp, std/data/hashmap/hash-map<exp,list<path>>) -> <local<h>,fixpoint,div,exn> list<path> */ 
+kk_unit_t kk_main__mlift_analyze_11006(kk_main__exp exp_9, kk_main__pathExp paths, kk_ref_t pathsByExp, kk_std_data_hashmap__hash_map _y_x10481, kk_context_t* _ctx); /* forall<h> (exp@9 : exp, paths : pathExp, pathsByExp : local-var<h,std/data/hashmap/hash-map<exp,pathExp>>, std/data/hashmap/hash-map<exp,pathExp>) -> <local<h>,div,exn,fixpoint> () */ 
 
-kk_std_data_hashmap__hash_map kk_main__mlift_analyze_11174(kk_main__exp exp_3, kk_std_data_hashmap__hash_map _y_x10472, kk_context_t* _ctx); /* forall<h> (exp@3 : exp, std/data/hashmap/hash-map<exp,store>) -> <local<h>,fixpoint,div,exn> store */ 
+kk_unit_t kk_main__mlift_analyze_11007(kk_main__exp exp_10, kk_main__absOpExp queryCondition, kk_ref_t queryConditions, kk_std_data_hashmap__hash_map _y_x10483, kk_context_t* _ctx); /* forall<h> (exp@10 : exp, queryCondition : absOpExp, queryConditions : local-var<h,std/data/hashmap/hash-map<exp,absOpExp>>, std/data/hashmap/hash-map<exp,absOpExp>) -> <local<h>,div,exn,fixpoint> () */ 
 
-kk_std_data_hashset__hash_set kk_main__mlift_analyze_11175(kk_main__exp exp_4, kk_std_data_hashmap__hash_map _y_x10473, kk_context_t* _ctx); /* forall<h> (exp@4 : exp, std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>) -> <local<h>,fixpoint,div,exn> std/data/hashset/hash-set<path> */ 
+kk_unit_t kk_main__mlift_analyze_11008(kk_main__exp exp_11, kk_ref_t traversalSummaries, kk_main__pathExp traversalSummary, kk_std_data_hashmap__hash_map _y_x10485, kk_context_t* _ctx); /* forall<h> (exp@11 : exp, traversalSummaries : local-var<h,std/data/hashmap/hash-map<exp,pathExp>>, traversalSummary : pathExp, std/data/hashmap/hash-map<exp,pathExp>) -> <local<h>,div,exn,fixpoint> () */ 
 
-kk_main__absOp kk_main__mlift_analyze_11176(kk_main__exp exp_5, kk_std_data_hashmap__hash_map _y_x10474, kk_context_t* _ctx); /* forall<h> (exp@5 : exp, std/data/hashmap/hash-map<exp,absOp>) -> <local<h>,fixpoint,div,exn> absOp */ 
+kk_main__pathExp kk_main__mlift_analyze_11009(kk_main__pathExp _y_x10517, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_std_data_hashset__hash_set kk_main__mlift_analyze_11177(kk_main__exp exp_6, kk_std_data_hashmap__hash_map _y_x10475, kk_context_t* _ctx); /* forall<h> (exp@6 : exp, std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>) -> <local<h>,fixpoint,div,exn> std/data/hashset/hash-set<path> */ 
- 
-// monadic lift
+kk_main__pathExp kk_main__mlift_analyze_11010(kk_main__pathExp _y_x10516, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-static inline kk_unit_t kk_main__mlift_analyze_11178(kk_ref_t abstractValues, kk_std_data_hashmap__hash_map _y_x10477, kk_context_t* _ctx) { /* forall<h> (abstractValues : local-var<h,std/data/hashmap/hash-map<exp,absValue>>, std/data/hashmap/hash-map<exp,absValue>) -> <fixpoint,local<h>,div,exn> () */ 
-  kk_unit_t _brw_x5516 = kk_Unit;
-  kk_ref_set_borrow(abstractValues,(kk_std_data_hashmap__hash_map_box(_y_x10477, _ctx)),kk_context());
-  kk_ref_drop(abstractValues, _ctx);
-  _brw_x5516; return kk_Unit;
-}
+kk_main__pathExp kk_main__mlift_analyze_11011(kk_main__pathExp _y_x10515, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11179(kk_ref_t abstractValues, kk_main__absValue absValue, kk_main__exp exp_7, kk_std_data_hashmap__hash_map _y_x10476, kk_context_t* _ctx); /* forall<h> (abstractValues : local-var<h,std/data/hashmap/hash-map<exp,absValue>>, absValue : absValue, exp@7 : exp, std/data/hashmap/hash-map<exp,absValue>) -> <local<h>,fixpoint,div,exn> () */ 
- 
-// monadic lift
+kk_main__pathExp kk_main__mlift_analyze_11012(kk_main__pathExp _y_x10514, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-static inline kk_unit_t kk_main__mlift_analyze_11180(kk_ref_t dataDependences, kk_std_data_hashmap__hash_map _y_x10480, kk_context_t* _ctx) { /* forall<h> (dataDependences : local-var<h,std/data/hashmap/hash-map<exp,bool>>, std/data/hashmap/hash-map<exp,bool>) -> <fixpoint,local<h>,div,exn> () */ 
-  kk_unit_t _brw_x5512 = kk_Unit;
-  kk_ref_set_borrow(dataDependences,(kk_std_data_hashmap__hash_map_box(_y_x10480, _ctx)),kk_context());
-  kk_ref_drop(dataDependences, _ctx);
-  _brw_x5512; return kk_Unit;
-}
+kk_std_core_types__tuple3 kk_main__mlift_analyze_11013(kk_std_data_hashmap__hash_map _y_x10488, kk_std_data_hashmap__hash_map _y_x10512, kk_std_data_hashmap__hash_map _y_x10519, kk_context_t* _ctx); /* forall<h> (std/data/hashmap/hash-map<exp,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>) -> <attrGrammar,div,exn,local<h>,fixpoint> (std/data/hashmap/hash-map<int,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>) */ 
 
-kk_unit_t kk_main__mlift_analyze_11181(kk_ref_t dataDependences, bool dependence, kk_main__exp exp_8, kk_std_data_hashmap__hash_map _y_x10479, kk_context_t* _ctx); /* forall<h> (dataDependences : local-var<h,std/data/hashmap/hash-map<exp,bool>>, dependence : bool, exp@8 : exp, std/data/hashmap/hash-map<exp,bool>) -> <local<h>,fixpoint,div,exn> () */ 
- 
-// monadic lift
+kk_std_core_types__tuple3 kk_main__mlift_analyze_11014(kk_std_data_hashmap__hash_map _y_x10488, kk_std_data_hashmap__hash_map _y_x10512, kk_std_data_hashmap__hash_map _y_x10513, kk_context_t* _ctx); /* forall<h> (std/data/hashmap/hash-map<exp,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<exp,pathExp>) -> <local<h>,attrGrammar,div,exn,fixpoint> (std/data/hashmap/hash-map<int,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>) */ 
 
-static inline kk_unit_t kk_main__mlift_analyze_11182(kk_ref_t inputStores, kk_std_data_hashmap__hash_map _y_x10483, kk_context_t* _ctx) { /* forall<h> (inputStores : local-var<h,std/data/hashmap/hash-map<exp,store>>, std/data/hashmap/hash-map<exp,store>) -> <fixpoint,local<h>,div,exn> () */ 
-  kk_unit_t _brw_x5508 = kk_Unit;
-  kk_ref_set_borrow(inputStores,(kk_std_data_hashmap__hash_map_box(_y_x10483, _ctx)),kk_context());
-  kk_ref_drop(inputStores, _ctx);
-  _brw_x5508; return kk_Unit;
-}
+kk_main__pathExp kk_main__mlift_analyze_11015(kk_main__pathExp _y_x10510, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11183(kk_main__exp exp_9, kk_std_data_hashmap__hash_map inputStore, kk_ref_t inputStores, kk_std_data_hashmap__hash_map _y_x10482, kk_context_t* _ctx); /* forall<h> (exp@9 : exp, inputStore : store, inputStores : local-var<h,std/data/hashmap/hash-map<exp,store>>, std/data/hashmap/hash-map<exp,store>) -> <local<h>,fixpoint,div,exn> () */ 
- 
-// monadic lift
+kk_main__pathExp kk_main__mlift_analyze_11016(kk_main__pathExp _y_x10509, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-static inline kk_unit_t kk_main__mlift_analyze_11184(kk_ref_t iteratorContexts, kk_std_data_hashmap__hash_map _y_x10486, kk_context_t* _ctx) { /* forall<h> (iteratorContexts : local-var<h,std/data/hashmap/hash-map<exp,list<path>>>, std/data/hashmap/hash-map<exp,list<path>>) -> <fixpoint,local<h>,div,exn> () */ 
-  kk_unit_t _brw_x5504 = kk_Unit;
-  kk_ref_set_borrow(iteratorContexts,(kk_std_data_hashmap__hash_map_box(_y_x10486, _ctx)),kk_context());
-  kk_ref_drop(iteratorContexts, _ctx);
-  _brw_x5504; return kk_Unit;
-}
+kk_main__pathExp kk_main__mlift_analyze_11017(kk_main__pathExp _y_x10508, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11185(kk_main__exp exp_10, kk_std_core_types__list iteratorContext, kk_ref_t iteratorContexts, kk_std_data_hashmap__hash_map _y_x10485, kk_context_t* _ctx); /* forall<h> (exp@10 : exp, iteratorContext : list<path>, iteratorContexts : local-var<h,std/data/hashmap/hash-map<exp,list<path>>>, std/data/hashmap/hash-map<exp,list<path>>) -> <local<h>,fixpoint,div,exn> () */ 
- 
-// monadic lift
+kk_main__pathExp kk_main__mlift_analyze_11018(kk_main__pathExp _y_x10507, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-static inline kk_unit_t kk_main__mlift_analyze_11186(kk_ref_t outputStores, kk_std_data_hashmap__hash_map _y_x10489, kk_context_t* _ctx) { /* forall<h> (outputStores : local-var<h,std/data/hashmap/hash-map<exp,store>>, std/data/hashmap/hash-map<exp,store>) -> <fixpoint,local<h>,div,exn> () */ 
-  kk_unit_t _brw_x5500 = kk_Unit;
-  kk_ref_set_borrow(outputStores,(kk_std_data_hashmap__hash_map_box(_y_x10489, _ctx)),kk_context());
-  kk_ref_drop(outputStores, _ctx);
-  _brw_x5500; return kk_Unit;
-}
+kk_main__pathExp kk_main__mlift_analyze_11019(kk_main__pathExp _y_x10506, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11187(kk_main__exp exp_11, kk_std_data_hashmap__hash_map outputStore, kk_ref_t outputStores, kk_std_data_hashmap__hash_map _y_x10488, kk_context_t* _ctx); /* forall<h> (exp@11 : exp, outputStore : store, outputStores : local-var<h,std/data/hashmap/hash-map<exp,store>>, std/data/hashmap/hash-map<exp,store>) -> <local<h>,fixpoint,div,exn> () */ 
- 
-// monadic lift
+kk_main__pathExp kk_main__mlift_analyze_11020(kk_main__pathExp _y_x10505, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-static inline kk_unit_t kk_main__mlift_analyze_11188(kk_ref_t pathsByExp, kk_std_data_hashmap__hash_map _y_x10492, kk_context_t* _ctx) { /* forall<h> (pathsByExp : local-var<h,std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>>, std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>) -> <fixpoint,local<h>,div,exn> () */ 
-  kk_unit_t _brw_x5496 = kk_Unit;
-  kk_ref_set_borrow(pathsByExp,(kk_std_data_hashmap__hash_map_box(_y_x10492, _ctx)),kk_context());
-  kk_ref_drop(pathsByExp, _ctx);
-  _brw_x5496; return kk_Unit;
-}
+kk_main__pathExp kk_main__mlift_analyze_11021(kk_main__pathExp _y_x10504, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11189(kk_main__exp exp_12, kk_std_data_hashset__hash_set paths, kk_ref_t pathsByExp, kk_std_data_hashmap__hash_map _y_x10491, kk_context_t* _ctx); /* forall<h> (exp@12 : exp, paths : std/data/hashset/hash-set<path>, pathsByExp : local-var<h,std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>>, std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>) -> <local<h>,fixpoint,div,exn> () */ 
- 
-// monadic lift
+kk_main__pathExp kk_main__mlift_analyze_11022(kk_main__pathExp _y_x10503, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-static inline kk_unit_t kk_main__mlift_analyze_11190(kk_ref_t queryConditions, kk_std_data_hashmap__hash_map _y_x10495, kk_context_t* _ctx) { /* forall<h> (queryConditions : local-var<h,std/data/hashmap/hash-map<exp,absOp>>, std/data/hashmap/hash-map<exp,absOp>) -> <fixpoint,local<h>,div,exn> () */ 
-  kk_unit_t _brw_x5492 = kk_Unit;
-  kk_ref_set_borrow(queryConditions,(kk_std_data_hashmap__hash_map_box(_y_x10495, _ctx)),kk_context());
-  kk_ref_drop(queryConditions, _ctx);
-  _brw_x5492; return kk_Unit;
-}
+kk_main__pathExp kk_main__mlift_analyze_11023(kk_main__pathExp _y_x10502, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11191(kk_main__exp exp_13, kk_main__absOp queryCondition, kk_ref_t queryConditions, kk_std_data_hashmap__hash_map _y_x10494, kk_context_t* _ctx); /* forall<h> (exp@13 : exp, queryCondition : absOp, queryConditions : local-var<h,std/data/hashmap/hash-map<exp,absOp>>, std/data/hashmap/hash-map<exp,absOp>) -> <local<h>,fixpoint,div,exn> () */ 
- 
-// monadic lift
+kk_main__pathExp kk_main__mlift_analyze_11024(kk_main__pathExp _y_x10501, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-static inline kk_unit_t kk_main__mlift_analyze_11192(kk_ref_t traversalSummaries, kk_std_data_hashmap__hash_map _y_x10498, kk_context_t* _ctx) { /* forall<h> (traversalSummaries : local-var<h,std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>>, std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>) -> <fixpoint,local<h>,div,exn> () */ 
-  kk_unit_t _brw_x5488 = kk_Unit;
-  kk_ref_set_borrow(traversalSummaries,(kk_std_data_hashmap__hash_map_box(_y_x10498, _ctx)),kk_context());
-  kk_ref_drop(traversalSummaries, _ctx);
-  _brw_x5488; return kk_Unit;
-}
+kk_main__pathExp kk_main__mlift_analyze_11025(kk_main__pathExp _y_x10500, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11193(kk_main__exp exp_14, kk_ref_t traversalSummaries, kk_std_data_hashset__hash_set traversalSummary, kk_std_data_hashmap__hash_map _y_x10497, kk_context_t* _ctx); /* forall<h> (exp@14 : exp, traversalSummaries : local-var<h,std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>>, traversalSummary : std/data/hashset/hash-set<path>, std/data/hashmap/hash-map<exp,std/data/hashset/hash-set<path>>) -> <local<h>,fixpoint,div,exn> () */ 
+kk_main__pathExp kk_main__mlift_analyze_11026(kk_main__pathExp _y_x10499, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_std_data_hashset__hash_set kk_main__mlift_analyze_11194(kk_main__exp root, kk_unit_t _c_x10509, kk_context_t* _ctx); /* forall<h> (root : exp, ()) -> std/data/hashset/hash-set<path> */ 
+kk_main__pathExp kk_main__mlift_analyze_11027(kk_main__pathExp _y_x10498, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_std_data_hashset__hash_set kk_main__mlift_analyze_11195(kk_main__exp root, kk_integer_t _y_x10508, kk_context_t* _ctx); /* forall<h> (root : exp, int) -> <local<h>,attrGrammar,div,exn,fixpoint> std/data/hashset/hash-set<path> */ 
- 
-// monadic lift
+kk_main__pathExp kk_main__mlift_analyze_11028(kk_main__pathExp _y_x10497, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-static inline bool kk_main__mlift_analyze_11196(kk_integer_t _y_x10501, kk_context_t* _ctx) { /* forall<h> (int) -> <local<h>,div,attrGrammar,exn,fixpoint> bool */ 
-  bool _brw_x5481 = kk_integer_gt_borrow(_y_x10501,(kk_integer_from_small(0)),kk_context()); /*bool*/;
-  kk_integer_drop(_y_x10501, _ctx);
-  return _brw_x5481;
-}
+kk_main__pathExp kk_main__mlift_analyze_11029(kk_main__pathExp _y_x10496, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-bool kk_main__mlift_analyze_11197(kk_ref_t gas, bool _y_x10500, kk_context_t* _ctx); /* forall<h> (gas : local-var<h,int>, bool) -> <local<h>,div,attrGrammar,exn,fixpoint> bool */ 
+kk_main__pathExp kk_main__mlift_analyze_11030(kk_main__pathExp _y_x10495, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11198(kk_main__exp root, kk_unit_t wild___0, kk_context_t* _ctx); /* forall<h> (root : exp, wild_@0 : ()) -> <local<h>,attrGrammar,exn,div,fixpoint> () */ 
+kk_main__pathExp kk_main__mlift_analyze_11031(kk_main__pathExp _y_x10494, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11199(kk_ref_t gas, kk_main__exp root, kk_integer_t _y_x10504, kk_context_t* _ctx); /* forall<h> (gas : local-var<h,int>, root : exp, int) -> <local<h>,attrGrammar,exn,div,fixpoint> () */ 
+kk_main__pathExp kk_main__mlift_analyze_11032(kk_main__pathExp _y_x10493, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_unit_t kk_main__mlift_analyze_11200(kk_ref_t gas, kk_main__exp root, kk_unit_t wild__, kk_context_t* _ctx); /* forall<h> (gas : local-var<h,int>, root : exp, wild_ : ()) -> <local<h>,attrGrammar,exn,div,fixpoint> () */ 
+kk_main__pathExp kk_main__mlift_analyze_11033(kk_main__pathExp _y_x10492, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_std_data_hashset__hash_set kk_main__mlift_analyze_11201(kk_ref_t gas, kk_main__exp root, kk_unit_t wild___1, kk_context_t* _ctx); /* forall<h> (gas : local-var<h,int>, root : exp, wild_@1 : ()) -> <div,local<h>,attrGrammar,exn,fixpoint> std/data/hashset/hash-set<path> */ 
+kk_main__pathExp kk_main__mlift_analyze_11034(kk_main__pathExp _y_x10491, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
 
-kk_std_data_hashset__hash_set kk_main_analyze(kk_main__exp root, kk_context_t* _ctx); /* (root : exp) -> pure std/data/hashset/hash-set<path> */ 
+kk_main__pathExp kk_main__mlift_analyze_11035(kk_main__pathExp _y_x10490, kk_context_t* _ctx); /* forall<h> (pathExp) -> <attrGrammar,div,exn,local<h>,fixpoint> pathExp */ 
+
+kk_std_core_types__tuple3 kk_main__mlift_analyze_11036(kk_std_data_hashmap__hash_map _y_x10488, kk_ref_t traversalSummaries, kk_std_data_hashmap__hash_map _y_x10512, kk_context_t* _ctx); /* forall<h> (std/data/hashmap/hash-map<exp,storeExp>, traversalSummaries : local-var<h,std/data/hashmap/hash-map<exp,pathExp>>, std/data/hashmap/hash-map<int,pathExp>) -> <attrGrammar,div,exn,local<h>,fixpoint> (std/data/hashmap/hash-map<int,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>) */ 
+
+kk_std_core_types__tuple3 kk_main__mlift_analyze_11037(kk_std_data_hashmap__hash_map _y_x10488, kk_ref_t traversalSummaries, kk_std_data_hashmap__hash_map _y_x10489, kk_context_t* _ctx); /* forall<h> (std/data/hashmap/hash-map<exp,storeExp>, traversalSummaries : local-var<h,std/data/hashmap/hash-map<exp,pathExp>>, std/data/hashmap/hash-map<exp,pathExp>) -> <local<h>,attrGrammar,div,exn,fixpoint> (std/data/hashmap/hash-map<int,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>) */ 
+
+kk_std_core_types__tuple3 kk_main__mlift_analyze_11038(kk_ref_t pathsByExp, kk_ref_t traversalSummaries, kk_std_data_hashmap__hash_map _y_x10488, kk_context_t* _ctx); /* forall<h> (pathsByExp : local-var<h,std/data/hashmap/hash-map<exp,pathExp>>, traversalSummaries : local-var<h,std/data/hashmap/hash-map<exp,pathExp>>, std/data/hashmap/hash-map<exp,storeExp>) -> <local<h>,attrGrammar,div,exn,fixpoint> (std/data/hashmap/hash-map<int,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>) */ 
+
+kk_std_core_types__tuple3 kk_main__mlift_analyze_11039(kk_ref_t inputStores, kk_ref_t pathsByExp, kk_ref_t traversalSummaries, kk_unit_t wild__, kk_context_t* _ctx); /* forall<h> (inputStores : local-var<h,std/data/hashmap/hash-map<exp,storeExp>>, pathsByExp : local-var<h,std/data/hashmap/hash-map<exp,pathExp>>, traversalSummaries : local-var<h,std/data/hashmap/hash-map<exp,pathExp>>, wild_ : ()) -> <attrGrammar,div,exn,local<h>,fixpoint> (std/data/hashmap/hash-map<int,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>) */ 
+
+kk_std_core_types__tuple3 kk_main_analyze(kk_main__exp root, kk_context_t* _ctx); /* (root : exp) -> pure (std/data/hashmap/hash-map<int,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>) */ 
 
 extern kk_main__exp kk_main_line1;
 
 extern kk_main__exp kk_main_paperExample;
 
-kk_unit_t kk_main__mlift_check_11202(kk_box_t expected, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_show, kk_std_core_exn__error _y_x10525, kk_context_t* _ctx); /* forall<a,e> (expected : a, ?(==) : (a, a) -> div bool, ?show : (a) -> div string, error<a>) -> <console/console,div|e> () */ 
+kk_unit_t kk_main__mlift_check_11040(kk_box_t expected, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_function_t _implicit_fs_show, kk_std_core_exn__error _y_x10532, kk_context_t* _ctx); /* forall<a,e> (expected : a, ?(==) : (a, a) -> div bool, ?show : (a) -> div string, error<a>) -> <console/console,div|e> () */ 
 
 kk_unit_t kk_main_check(kk_box_t expected, kk_function_t f, kk_function_t _implicit_fs__lp__eq__eq__rp_, kk_string_t _implicit_fs_kk_file_line, kk_function_t _implicit_fs_show, kk_context_t* _ctx); /* forall<a,e> (expected : a, f : () -> <console/console,pure|e> a, ?(==) : (a, a) -> div bool, ?kk-file-line : string, ?show : (a) -> div string) -> <console/console,div|e> () */ 
 
-kk_unit_t kk_main__mlift_main_11203(kk_std_data_hashset__hash_set _y_x10528, kk_context_t* _ctx); /* (std/data/hashset/hash-set<path>) -> pure () */ 
+kk_unit_t kk_main__mlift_main_11041(kk_function_t prettyPrintNoDiv, kk_std_core_types__tuple3 _y_x10535, kk_context_t* _ctx); /* (prettyPrintNoDiv : (x : std/data/hashmap/hash-map<int,pathExp>) -> string, (std/data/hashmap/hash-map<int,storeExp>, std/data/hashmap/hash-map<int,pathExp>, std/data/hashmap/hash-map<int,pathExp>)) -> pure () */ 
 
 kk_unit_t kk_main_main(kk_context_t* _ctx); /* () -> <pure,console/console> () */ 
 

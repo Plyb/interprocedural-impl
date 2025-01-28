@@ -486,7 +486,7 @@ static inline kk_string_t kk_std_test_test__val_scope_name(kk_context_t* _ctx) {
       }
       {
         kk_function_t _fun_unbox_x96 = _val_scope_name_0.clause;
-        _x_x1018 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), _fun_unbox_x96, (_fun_unbox_x96, m, ev_10264, _ctx), _ctx); /*1005*/
+        _x_x1018 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), _fun_unbox_x96, (_fun_unbox_x96, m, ev_10264, _ctx), _ctx); /*35*/
       }
     }
   }
@@ -532,7 +532,7 @@ static inline kk_string_t kk_std_test_test__val_indentation(kk_context_t* _ctx) 
       }
       {
         kk_function_t _fun_unbox_x102 = _val_indentation_0.clause;
-        _x_x1022 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), _fun_unbox_x102, (_fun_unbox_x102, m, ev_10266, _ctx), _ctx); /*1005*/
+        _x_x1022 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), _fun_unbox_x102, (_fun_unbox_x102, m, ev_10266, _ctx), _ctx); /*35*/
       }
     }
   }
@@ -578,7 +578,7 @@ static inline kk_unit_t kk_std_test_test_report_fail(kk_context_t* _ctx) { /* ()
       }
       {
         kk_function_t _fun_unbox_x108 = _fun_report_fail.clause;
-        _x_x1026 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), _fun_unbox_x108, (_fun_unbox_x108, m, ev_10268, _ctx), _ctx); /*1005*/
+        _x_x1026 = kk_function_call(kk_box_t, (kk_function_t, int32_t, kk_std_core_hnd__ev, kk_context_t*), _fun_unbox_x108, (_fun_unbox_x108, m, ev_10268, _ctx), _ctx); /*35*/
       }
     }
   }
@@ -619,7 +619,7 @@ static inline kk_function_t kk_std_test_test__new_mlift_expect_that_10224_fun109
 
 
 static inline bool kk_std_test_test__mlift_expect_that_10224(kk_function_t predicate, kk_box_t res_0, kk_ssize_t _y_x10104, kk_context_t* _ctx) { /* forall<a,e> (predicate : (a) -> <exn|e> bool, res@0 : a, hnd/ev-index) -> <test,exn|e> bool */ 
-  kk_box_t _x_x1096 = kk_std_core_hnd__mask_at(_y_x10104, false, kk_std_test_test__new_mlift_expect_that_10224_fun1097(predicate, res_0, _ctx), _ctx); /*1000*/
+  kk_box_t _x_x1096 = kk_std_core_hnd__mask_at(_y_x10104, false, kk_std_test_test__new_mlift_expect_that_10224_fun1097(predicate, res_0, _ctx), _ctx); /*4118*/
   return kk_bool_unbox(_x_x1096);
 }
 
@@ -681,7 +681,7 @@ static inline kk_function_t kk_std_test_test_istest_fs__new_mlift_scope_10231_fu
 
 
 static inline kk_unit_t kk_std_test_test_istest_fs__mlift_scope_10231(kk_function_t f, kk_ssize_t _y_x10130, kk_context_t* _ctx) { /* forall<e> (f : () -> <test-scope,console/console|e> (), hnd/ev-index) -> <test-scope,test-scope,console/console|e> () */ 
-  kk_box_t _x_x1281 = kk_std_core_hnd__mask_at(_y_x10130, true, kk_std_test_test_istest_fs__new_mlift_scope_10231_fun1282(f, _ctx), _ctx); /*1000*/
+  kk_box_t _x_x1281 = kk_std_core_hnd__mask_at(_y_x10130, true, kk_std_test_test_istest_fs__new_mlift_scope_10231_fun1282(f, _ctx), _ctx); /*4118*/
   kk_unit_unbox(_x_x1281); return kk_Unit;
 }
 

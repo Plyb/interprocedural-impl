@@ -109,10 +109,10 @@ static inline kk_std_core_types__order2 kk_std_core_dash_extras_str_fs_order2(kk
   if (_match_x243) {
     kk_box_t _x_x266;
     kk_string_t _x_x267 = kk_string_dup(x, _ctx); /*string*/
-    _x_x266 = kk_string_box(_x_x267); /*1031*/
+    _x_x266 = kk_string_box(_x_x267); /*102*/
     kk_box_t _x_x268;
     kk_string_t _x_x269 = kk_string_dup(y, _ctx); /*string*/
-    _x_x268 = kk_string_box(_x_x269); /*1031*/
+    _x_x268 = kk_string_box(_x_x269); /*102*/
     return kk_std_core_types__new_Lt2(_x_x266, _x_x268, _ctx);
   }
   {
@@ -123,16 +123,16 @@ static inline kk_std_core_types__order2 kk_std_core_dash_extras_str_fs_order2(kk
     if (_match_x244) {
       kk_box_t _x_x272;
       kk_string_t _x_x273 = kk_string_dup(x, _ctx); /*string*/
-      _x_x272 = kk_string_box(_x_x273); /*1030*/
+      _x_x272 = kk_string_box(_x_x273); /*102*/
       return kk_std_core_types__new_Eq2(_x_x272, _ctx);
     }
     {
       kk_box_t _x_x274;
       kk_string_t _x_x275 = kk_string_dup(y, _ctx); /*string*/
-      _x_x274 = kk_string_box(_x_x275); /*1031*/
+      _x_x274 = kk_string_box(_x_x275); /*102*/
       kk_box_t _x_x276;
       kk_string_t _x_x277 = kk_string_dup(x, _ctx); /*string*/
-      _x_x276 = kk_string_box(_x_x277); /*1031*/
+      _x_x276 = kk_string_box(_x_x277); /*102*/
       return kk_std_core_types__new_Gt2(_x_x274, _x_x276, _ctx);
     }
   }
