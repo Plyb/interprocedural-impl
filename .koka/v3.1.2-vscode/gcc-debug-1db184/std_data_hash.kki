@@ -1,0 +1,144 @@
+// A module to provide hashing functionality
+// The hash function used is xxhash64, while not cryptographically secure, it should be fast and avoid collisions.
+module interface std/data/hash
+ 
+//------------------------------
+//#kki: import declarations
+ 
+import std/core/types = std/core/types pub = "";
+import std/core/hnd = std/core/hnd pub = "";
+import std/core/exn = std/core/exn pub = "";
+import std/core/bool = std/core/bool pub = "";
+import std/core/order = std/core/order pub = "";
+import std/core/char = std/core/char pub = "";
+import std/core/int = std/core/int pub = "";
+import std/core/vector = std/core/vector pub = "";
+import std/core/string = std/core/string pub = "";
+import std/core/sslice = std/core/sslice pub = "";
+import std/core/list = std/core/list pub = "";
+import std/core/maybe = std/core/maybe pub = "";
+import std/core/either = std/core/either pub = "";
+import std/core/tuple = std/core/tuple pub = "";
+import std/core/show = std/core/show pub = "";
+import std/core/debug = std/core/debug pub = "";
+import std/core/delayed = std/core/delayed pub = "";
+import std/core/console = std/core/console pub = "";
+import std/core = std/core = "";
+import std/num/int64 = std/num/int64 = "";
+import std/test/test = std/test/test = "";
+import std/core-extras = std/core-extras = "";
+ 
+//------------------------------
+//#kki: external imports
+ 
+ 
+//------------------------------
+//#kki: fixity declarations
+ 
+ 
+//------------------------------
+//#kki: local imported aliases
+ 
+ 
+//------------------------------
+//#kki: type declarations
+ 
+ 
+//------------------------------
+//#kki: declarations
+ 
+pub val thread/seed[26,9,26,19] : std/core/types/int64;
+pub  fun int/hash[28,9,28,16] : (i : std/core/types/int, seed : std/core/types/int64) -> std/core/types/int;
+ fun list-hash-helper[53,12,53,27] : forall<a> (l : (std/core/types/list :: V -> V)<a>, buf : (std/core/types/vector :: V -> V)<std/core/types/int64>, index : std/core/types/int, ?hasher : (a, std/core/types/int64) -> std/core/types/int, ?seed : std/core/types/int64) -> ();
+// A hashing function for lists. It takes a list `l`, an implicit `hasher` for hashing each element, and an implicit `seed` which is is an `int64`.
+// Note: Currently a vector and list with the same elements will have the same hash.
+pub  fun list/hash[47,9,47,17] : forall<a> (l : (std/core/types/list :: V -> V)<a>, ?hasher : (a, std/core/types/int64) -> std/core/types/int, ?seed : std/core/types/int64) -> std/core/types/int;
+// A hashing function for vectors. It takes a vector `l`, an implicit `hasher` for hashing each element, and an implicit `seed` which is is an `int64`.
+// Note: Currently a vector and list with the same elements will have the same hash.
+pub  fun vector/hash[62,9,62,19] : forall<a> (v : (std/core/types/vector :: V -> V)<a>, ?hasher : (a, std/core/types/int64) -> std/core/types/int, ?seed : std/core/types/int64) -> std/core/types/int;
+// A hashing function for eithers. It takes an either `e`, 2 implicit `hasher`s for hashing `Left` and `Right`, and an implicit `seed` which is is an `int64`.
+pub  fun either/hash[86,9,86,19] : forall<a,b> (e : (std/core/types/either :: (V, V) -> V)<a,b>, ?l/hasher : (a, std/core/types/int64) -> std/core/types/int, ?r/hasher : (b, std/core/types/int64) -> std/core/types/int, seed : std/core/types/int64) -> std/core/types/int;
+// A hashing function for booleans. It takes a bool `b` and an implicit `seed` which is is an `int64`.
+pub  fun bool/hash[36,9,36,17] : (b : std/core/types/bool, seed : std/core/types/int64) -> std/core/types/int;
+// A hashing function for characters. It takes a char `c` and an implicit `seed` which is is an `int64`.
+pub  fun char/hash[32,9,32,17] : (c : std/core/types/char, seed : std/core/types/int64) -> std/core/types/int;
+// A hashing function for maybes. It takes a maybe `m`, an implicit `hasher` for `Just(a)`, and an implicit `seed` which is is an `int64`.
+pub  fun maybe/hash[75,9,75,18] : forall<a> (m : (std/core/types/maybe :: V -> V)<a>, ?hasher : (a, std/core/types/int64) -> std/core/types/int, seed : std/core/types/int64) -> std/core/types/int;
+ fun test-hash[97,5,97,13] : () -> <(std/core/console/console :: X)> ();
+ 
+//------------------------------
+//#kki: external declarations
+ 
+pub  extern thread/get-seed[18,19,18,33] : () -> std/core/types/int64 {
+  c inline "kk_thread_seed(kk_context())";
+};
+// A hashing function for integers. It takes an int `i` and an implicit `seed` which is is an `int64`.
+// Note: Big Ints may not work as expected.
+pub  extern extern-int-hash[23,19,23,33] : (i : std/core/types/int, seed : std/core/types/int64) -> std/core/types/int {
+  c inline "kk_integer_hash(#1,#2,kk_context())";
+};
+// A hashing function for strings. It takes a string `s` and an implicit `seed` which is is an `int64`.
+pub  extern string/hash[42,19,42,29] : (s : std/core/types/string, seed : std/core/types/int64) -> std/core/types/int {
+  c inline "kk_string_hash(#1,#2,kk_context())";
+};
+// Helper function for hashing vectors of int64
+ extern hash-vector-int64[70,15,70,31] : (v : (std/core/types/vector :: V -> V)<std/core/types/int64>, seed : std/core/types/int64) -> std/core/types/int {
+  c inline "kk_hash_vector_int64(#1,#2,kk_context())";
+};
+ 
+//------------------------------
+//#kki: inline definitions
+ 
+//.inline-section
+recursive specialize "___*_"  fun list-hash-helper // inline size: 7
+  = forall<a> fn(l: (std/core/types/list :: V -> V)<a>, buf: (std/core/types/vector :: V -> V)<std/core/types/int64>, index: std/core/types/int, @implicit/hasher: (a, std/core/types/int64) -> std/core/types/int, @implicit/seed: std/core/types/int64){
+    (match (l) {
+      ((std/core/types/Nil() : (std/core/types/list :: V -> V)<a> ) as @pat: ((std/core/types/list :: V -> V)<a>))
+         -> std/core/types/Unit;
+      ((@skip std/core/types/Cons((x: a) : a, (xs: (std/core/types/list :: V -> V)<a>) : (std/core/types/list :: V -> V)<a>) : (std/core/types/list :: V -> V)<a> ) as @pat@0: ((std/core/types/list :: V -> V)<a>))
+         -> val _[57,7,57,64] : ()
+                  = std/core-extras/unsafe-assign<std/core/types/int64>(buf, (std/core/int/ssize_t(index)), (std/num/int64/int64((@implicit/hasher(x, @implicit/seed)))));
+        std/data/hash/list-hash-helper<a>(xs, buf, (std/core/int/int-add(index, 1)), @implicit/hasher, @implicit/seed);
+    });
+  };
+specialize "_*_"  fun list/hash // inline size: 1
+  = forall<a> fn(l: (std/core/types/list :: V -> V)<a>, @implicit/hasher: (a, std/core/types/int64) -> std/core/types/int, @implicit/seed: std/core/types/int64){
+    val vec[48,7,48,9] : (std/core/types/vector :: V -> V)<std/core/types/int64>
+      = std/core-extras/unsafe-vector<std/core/types/int64>((std/core/int/ssize_t((std/core/list/@lift-length@4947<a>(l, 0)))));
+    val _[49,3,49,31] : ()
+      = std/data/hash/list-hash-helper<a>(l, vec, 0, @implicit/hasher, @implicit/seed);
+    std/data/hash/hash-vector-int64(vec, @implicit/seed);
+  };
+specialize "***"  fun vector/hash // inline size: 1
+  = forall<a> fn(v: (std/core/types/vector :: V -> V)<a>, @implicit/hasher: (a, std/core/types/int64) -> std/core/types/int, @implicit/seed: std/core/types/int64){
+    val vec[63,7,63,9] : (std/core/types/vector :: V -> V)<std/core/types/int64>
+      = std/core-extras/unsafe-vector<std/core/types/int64>((std/core/int/ssize_t((std/core/int/#ssize_t/int((std/core/vector/lengthz<a>(v)))))));
+    val _[64,3,64,17] : ()
+      = std/core/for<(std/core/types/total :: E)>((std/core/int/#ssize_t/int((std/core/vector/lengthz<a>(v)))), (fn(i: std/core/types/int){
+          (std/core-extras/unsafe-assign<std/core/types/int64>(vec, (std/core/int/ssize_t(i)), (std/num/int64/int64((@implicit/hasher((std/core-extras/unsafe-idx<a>(v, (std/core/int/ssize_t(i)))), @implicit/seed))))));
+        }));
+    std/data/hash/hash-vector-int64(vec, @implicit/seed);
+  };
+ fun int/hash // inline size: 1
+  = fn(i: std/core/types/int, seed: std/core/types/int64){
+    std/data/hash/extern-int-hash(i, seed);
+  };
+ fun bool/hash // inline size: 3
+  = fn(b: std/core/types/bool, seed: std/core/types/int64){
+    match (b) {
+      ((std/core/types/True() : std/core/types/bool ) as @pat: std/core/types/bool)
+         -> std/data/hash/extern-int-hash(1, seed);
+      ((@skip std/core/types/False() : std/core/types/bool ) as @pat@0: std/core/types/bool)
+         -> std/data/hash/extern-int-hash(0, seed);
+    };
+  };
+ fun char/hash // inline size: 2
+  = fn(c: std/core/types/char, seed: std/core/types/int64){
+    val i@10009[1,0,1,0] : std/core/types/int
+          = std/core/char/int(c);
+    std/data/hash/extern-int-hash(i@10009, seed);
+  };
+ fun test-hash // inline size: 3
+  = fn<<(std/core/console/console :: X)>>(){
+    std/core/console/printsln((std/core/int/show((std/num/int64/int(std/data/hash/#thread/seed)))));
+  };
