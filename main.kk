@@ -3,6 +3,7 @@ import std/data/hashset
 import std/data/hash
 import std/core/undiv
 import std/core/unsafe
+import std/data/sort
 
 fun hashset/list(set: hash-set<a>): list<a> {
   pretend-no-div(fn() {
@@ -37,9 +38,17 @@ fun hashmap/(==)(a: hash-map<k, v>, b: hash-map<k, v>, ?(==): (k, k) -> bool, ?h
 }
 
 fun hashmap/show(map: hash-map<k, v>, ?key/show: k -> string, ?value/show: v -> string): string {
-  var result := "{"
-  map.foreach(fn(k, v) -> result := result ++ "(" ++ k.key/show ++ "," ++ v.value/show ++ ")")
+  var result := "{\n"
+  map.foreach(fn(k, v) result := result ++ k.key/show ++ ": " ++ v.value/show ++ ")\n")
   result ++ "}"
+}
+
+fun hashmap/prettyPrint(map: hash-map<int, v>, ?value/show: v -> string): div string {
+  var tuples := []
+  map.foreach(fn(k, v) tuples := Cons((k, v), tuples))
+  tuples
+    .sort(fn((k1, _), (k2, _)) int/(<)(k1, k2))
+    .foldl("{\n", fn(acc, (k, v)) acc ++ "\t" ++ k.show ++ ": " ++ v.show ++ "\n") ++ "}"
 }
 
 value type fieldName {
@@ -57,7 +66,7 @@ fun fieldName/(==)(a: fieldName, b: fieldName): bool {
 
 fun fieldName/show(fieldName: fieldName): string {
   match fieldName {
-    FNNamed(name) -> "FNNamed(" ++ name ++ ")"
+    FNNamed(name) -> name
     FNL -> "FNL"
   }
 }
@@ -166,7 +175,7 @@ fun path/(==)(a: path, b: path): bool {
 }
 
 fun path/showDiv(path: path): div string {
-  "Path(" ++ path.names.show ++ ", " ++ path.absOp.showDiv ++ ", " ++ path.dependence.show ++ ")"
+  "(" ++ path.names.show ++ ", " ++ path.absOp.showDiv ++ ", " ++ path.dependence.show ++ ")"
 }
 
 fun path/show(path: path): string {
@@ -183,13 +192,70 @@ fun path/hash(path: path, x: int64): int {
 
 type pathExp {
   PEEmpty
-  PEAV(exp: exp)
-  PEAVDot(exp: exp)
-  PEValue(names: list<fieldName>, queryCondition: absOpExp, dependence: bool)
+  PEAV(absValue: absValueExp)
+  PEValue(paths: pathExp, queryCondition: absOpExp, dependence: bool)
   PETS(exp: exp)
   PEP(exp: exp)
+  PEIT(exp: exp)
   PEUnion(a: pathExp, b: pathExp)
   PECond(cond: exp, thn: pathExp, els: pathExp)
+  PELast(paths: iteratorContextExp)
+  // PEValues(paths: hash-set<path>)
+}
+
+fun pathExp/simplify(pathExp: pathExp) {
+  match pathExp {
+    PEAV(av) -> PEAV(av.simplify)
+    PEValue(PELast(ICEIT(exp)), _, _) -> {
+      match exp.getIteratorContext {
+        ICEEmpty -> PEEmpty
+        _ -> pathExp
+      }
+    }
+    PEValue(PEP(e), _, _) -> if e.getPaths == PEEmpty
+      then PEEmpty
+      else pathExp
+    PETS(e) -> if (e.exp-any/id > 10) then e.getTraversalSummary else pathExp
+    PEP(e) -> e.getPaths
+    PEUnion(a, PEEmpty) -> a
+    PEUnion(PEEmpty, b) -> b
+    PEUnion(a, b) -> if a == b
+      then a
+      else PEUnion(a.simplify, b.simplify)
+    // PEUnion(PEValues(aVals), PEValues(bVals)) -> PEValues(aVals.union(bVals))
+    PECond(cond, thn, els) -> if cond.getDataDependence then thn.simplify else els.simplify
+    // PELast(it) -> 
+    _ -> pathExp
+  }
+}
+
+fun pathExp/show(pathExp: pathExp) {
+  match pathExp {
+    PEEmpty -> "{}"
+    PEAV(av) -> av.show
+    PEValue(p, c, d) -> "(" ++ p.show ++ ", " ++ c.show ++ ", " ++ d.show ++ ")"
+    PETS(e) -> "TS(" ++ e.exp-any/id.show ++ ")"
+    PEP(e) -> "P(" ++ e.exp-any/id.show ++ ")"
+    PEIT(e) -> "IT(" ++ e.exp-any/id.show ++ ")"
+    PEUnion(a, b) -> a.show ++ " U " ++ b.show
+    PECond(cond, thn, els) -> "(if D(" ++ cond.exp-any/id.show ++ ") then " ++ thn.show ++ " else " ++ els.show ++ ")"
+    PELast(ps) -> "{last(" ++ ps.show ++ ")}"
+  }
+}
+
+fun pathExp/(==)(a: pathExp, b: pathExp) {
+  match (a, b) {
+    (PEEmpty, PEEmpty) -> True
+    (PEAV(av), PEAV(bv)) -> av == bv
+    (PEValue(ap, ac, ad), PEValue(bp, bc, bd)) -> ap == bp && ac == bc && ad == bd
+    (PETS(ae), PETS(be)) -> ae == be
+    (PEP(ae), PEP(be)) -> ae == be
+    (PEIT(ae), PEIT(be)) -> ae == be
+    (PEUnion(aa, ab), PEUnion(ba, bb)) -> aa == ba && ab == bb
+    (PECond(acond, athn, aels), PECond(bcond, bthn, bels)) -> acond == bcond && athn == bthn && aels == bels
+    (PELast(aps), PELast(bps)) -> aps == bps
+    _ -> False
+  }
 }
 
 type absOp {
@@ -234,10 +300,31 @@ fun absOp/hash(absOp: absOp, x: int64): int {
 }
 
 type absOpExp {
+  AOETrue
   AOEC(exp: exp)
   AOEAnd(a: absOpExp, b: absOpExp)
   AOEAV(absValueExp: absValueExp)
   AOENot(absOpExp: absOpExp)
+}
+
+fun absOpExp/show(absOpExp: absOpExp): div string {
+  match absOpExp {
+    AOETrue -> "true"
+    AOEC(e) -> "C(" ++ e.exp-any/id.show ++ ")"
+    AOEAnd(a, b) -> a.show ++ " /\\ " ++ b.show
+    AOEAV(av) -> av.show
+    AOENot(ao) -> "!" ++ ao.show
+  }
+}
+
+fun absOpExp/(==)(a: absOpExp, b: absOpExp) {
+  match (a, b) {
+    (AOETrue, AOETrue) -> True
+    (AOEC(ae), AOEC(be)) -> ae == be
+    (AOEAnd(aa, ab), AOEAnd(ba, bb)) -> aa == ba && ab == bb
+    (AOEAV(av), AOEAV(bv)) -> av == bv
+    (AOENot(ae), AOENot(be)) -> ae == be
+  }
 }
 
 type absValue {
@@ -266,7 +353,7 @@ fun absValue/showDiv(absValue: absValue): div string {
     AVBot -> "AVBot"
     AVLit(lits) -> "AVLit(" ++ lits.show ++ ")"
     AVOp(ops) -> "AVOp(" ++ ops.show(?show = fn(op) pretend-no-div(fn() absOp/showDiv(op))) ++ ")"
-    AVPath(paths) -> "AVPath(" ++ paths.show(?show = fn(path) pretend-no-div(fn() path/showDiv(path))) ++ ")"
+    AVPath(paths) -> paths.show(?show = fn(path) pretend-no-div(fn() path/showDiv(path)))
   }
 }
 
@@ -288,11 +375,68 @@ fun absValue/hash(absValue: absValue, x: int64): int {
 }
 
 type absValueExp {
-  AVEBot
+  AVEExp(exp: exp)
   AVEValue(absValue: absValue)
   AVEDot(absValueExp: absValueExp, f: fieldName)
   AVEOp(op: op, e1: absValueExp, e2: absValueExp)
-  AVEIS(storeExp: storeExp, v: varName)
+  AVEStore(storeExp: storeExp, v: varName)
+  AVEJoin(a: absValueExp, b: absValueExp)
+}
+
+fun absValueExp/show(absValueExp: absValueExp): div string {
+  match absValueExp {
+    AVEExp(e) -> "AV(" ++ e.exp-any/id.show ++ ")"
+    AVEValue(v) -> "{" ++ v.show ++ "}"
+    AVEDot(e, f) -> e.show ++ "." ++ f.show
+    AVEOp(op, e1, e2) -> e1.show ++ " " ++ op.show ++ " " ++ e2.show
+    AVEStore(s, v) -> s.show ++ "[" ++ v.show ++ "]"
+    AVEJoin(a, b) -> a.show ++ " U " ++ b.show
+  }
+}
+
+fun absValueExp/(==)(a: absValueExp, b: absValueExp) {
+  match (a, b) {
+    (AVEExp(ae), AVEExp(be)) -> ae == be
+    (AVEValue(av), AVEValue(bv)) -> av == bv
+    (AVEDot(ae, af), AVEDot(be, bf)) -> ae == be && af == bf
+    (AVEOp(aop, ae1, ae2), AVEOp(bop, be1, be2)) -> aop == bop && ae1 == be1 && ae2 == be2
+    (AVEStore(as', av), AVEStore(bs, bv)) -> as' == bs && av == bv
+    (AVEJoin(aa, ab), AVEJoin(ba, bb)) -> aa == ab && ba == bb
+    _ -> False
+  }
+}
+
+fun absValueExp/simplify(ave: absValueExp) {
+  match ave {
+    AVEExp(e) -> e.getAbstractValue
+    AVEDot(AVEValue(av), f) -> AVEValue(av..f)
+    AVEDot(e, f) -> {
+      // trace("avedot " ++ e.show ++ " " ++ f.show)
+      AVEDot(e.simplify, f)
+    }
+    // AVEOp(op, AVEValue(aAv), AVEValue(bAv)) -> AVEValue(op.applyOp(aAv, bAv))
+    // AVEOp(op, e1, e2) -> AVEOp(op, e1.simplify, e2.simplify)
+    AVEStore(SEIS(e), v) -> if e.exp-any/id > 10
+      then match e.getInputStore.get(v) {
+        Just(av) -> av
+        _ -> {
+          // trace("failed store get " ++ e.exp-any/id.show ++ v.show);
+          ave
+        }
+      }
+      else ave
+    AVEStore(s, v) -> {
+      // trace("avestore " ++ s.show ++ v.show)
+      match s.get(v) {
+        Just(av) -> av
+        _ -> ave
+      }
+    }
+    // AVEStore(s, v) -> AVEStore(s.simplify, v)
+    // AVEJoin(AVEValue(a), AVEValue(b)) -> AVEValue(a.join(b))
+    // AVEJoin(a, b) -> AVEJoin(a.simplify, b.simplify)
+    _ -> ave
+  }
 }
 
 alias store = hash-map<varName, absValue>
@@ -305,10 +449,46 @@ type storeExp {
   SEEmpty
   SEOS(exp: exp)
   SEIS(exp: exp)
-  SEInsert(v: varName, absValueExp: absValueExp, storeExp: storeExp)
+  SEInsert(storeExp: storeExp, v: varName, absValueExp: absValueExp)
   SEUnion(a: storeExp, b: storeExp)
   SERemove(storeExp: storeExp, v: varName)
+  SEValue(store: store)
 }
+
+fun storeExp/show(storeExp: storeExp): div string {
+  match storeExp {
+    SEEmpty -> "{}"
+    SEOS(e) -> "OS(" ++ e.exp-any/id.show ++ ")"
+    SEIS(e) -> "IS(" ++ e.exp-any/id.show ++ ")"
+    SEInsert(s, v, av) -> "[" ++ v.show ++ "<-" ++ av.show ++ "]" ++ s.show
+    SEUnion(a, b) -> a.show ++ " U " ++ b.show
+    SERemove(s, v) -> s.show ++ "/" ++ v.show
+    SEValue(s) -> s.show
+  }
+}
+
+fun storeExp/(==)(a: storeExp, b: storeExp) {
+  match (a, b) {
+    (SEEmpty, SEEmpty) -> True
+    (SEOS(ae), SEOS(be)) -> ae == be
+    (SEIS(ae), SEIS(be)) -> ae == be
+    (SEInsert(as', av, aav), SEInsert(bs, bv, bav)) -> as' == bs && av == bv && aav == bav
+    (SEUnion(aa, ab), SEUnion(ba, bb)) -> aa == ba && ab == bb
+    (SERemove(as', av), SERemove(bs, bv)) -> as' == bs && av == bv
+    _ -> False
+  }
+}
+
+fun storeExp/get(store: storeExp, v: varName) {
+  match store {
+    SEInsert(s, v', av) -> { trace("comp " ++ v.show ++ " " ++ v'.show ++ (v == v').show); if v == v' then Just(av) else s.get(v)}
+    SEUnion(a, b) -> match a.get(v) {
+      Just(av) -> Just(av)
+      Nothing -> b.get(v)
+    }
+    _ -> Nothing
+  }
+} 
 
 type exp {
   NullE(id: int)
@@ -392,29 +572,65 @@ fun exp/(==)(a: exp, b: exp): bool {
   pretend-no-div(fn() eqDiv(a, b))
 }
 
-type iteratorContextExp {
-  ICEIT(exp: exp)
-  ICEPlusIf(itExp: exp, avdotExp: exp)
+fun exp-any/id(exp: exp): int {
+  match exp {
+    NullE(id) -> id
+    LitE(_, id) -> id
+    RootE(id) -> id
+    DotE(_, _, id) -> id
+    OpE(_, _, _, id) -> id
+    VarE(_, id) -> id
+    AsgnE(_, _, id) -> id
+    IfE(_, _, _, id) -> id
+    ForE(_, _, _, id) -> id
+    SeqE(_, _, id) -> id
+    PrintE(_, id) -> id
+  }
 }
 
+type iteratorContextExp {
+  ICEEmpty
+  ICEIT(exp: exp)
+  ICEPlusIf(itExp: iteratorContextExp, avExp: absValueExp)
+}
+
+fun iteratorContextExp/show(ice: iteratorContextExp): div string {
+  match ice {
+    ICEEmpty -> "[]"
+    ICEIT(e) -> "IT(" ++ e.exp-any/id.show ++ ")"
+    ICEPlusIf(it, av) -> it.show ++ " + " ++ av.show ++ "if*"
+  }
+}
+
+fun iteratorContextExp/(==)(a: iteratorContextExp, b: iteratorContextExp) {
+  match (a, b) {
+    (ICEEmpty, ICEEmpty) -> True
+    (ICEIT(ae), ICEIT(be)) -> ae == be
+    (ICEPlusIf(ait, aav), ICEPlusIf(bit, bav)) -> ait == bit && aav == bav
+  }
+}
 
 effect attrGrammar {
-  fun getAbstractValue(exp: exp): absValue
-  fun setAbstractValue(exp: exp, absValue: absValue): ()
-  fun getPaths(exp: exp): hash-set<path>
-  fun setPaths(exp: exp, paths: hash-set<path>): ()
-  fun getOutputStore(exp: exp): store
-  fun setOutputStore(exp: exp, store: store): ()
-  fun getInputStore(exp: exp): store
-  fun setInputStore(exp: exp, store: store): ()
-  fun getQueryCondition(exp: exp): absOp
-  fun setQueryCondition(exp: exp, absOp: absOp): ()
+  fun getAbstractValue(exp: exp): absValueExp
+  fun setAbstractValue(exp: exp, absValue: absValueExp): ()
+  fun getPaths(exp: exp): pathExp
+  fun setPaths(exp: exp, paths: pathExp): ()
+  // fun getOutputStore(exp: exp): storeExp
+  fun setOutputStore(exp: exp, store: storeExp): ()
+  fun getInputStore(exp: exp): storeExp
+  fun setInputStore(exp: exp, store: storeExp): ()
+  // fun getQueryCondition(exp: exp): absOpExp
+  fun setQueryCondition(exp: exp, absOp: absOpExp): ()
   fun getDataDependence(exp: exp): bool
   fun setDataDependence(exp: exp, dependence: bool): ()
-  fun getIteratorContext(exp: exp): list<path>
-  fun setIteratorContext(exp: exp, paths: list<path>): ()
-  fun getTraversalSummary(exp: exp): hash-set<path>
-  fun setTraversalSummary(exp: exp, summary: hash-set<path>): ()
+  fun getIteratorContext(exp: exp): iteratorContextExp
+  fun setIteratorContext(exp: exp, paths: iteratorContextExp): ()
+  fun getTraversalSummary(exp: exp): pathExp
+  fun setTraversalSummary(exp: exp, summary: pathExp): ()
+}
+
+effect subst {
+  fun substAV(exp: exp, noCycle: exp): absValueExp
 }
 
 
@@ -466,14 +682,13 @@ fun hashset/singleton(x : a, ?(==): (a, a) -> bool, ?hash: (a, int64) -> int): t
 }
 
 fun updateAbstractValue(exp: exp): <exn, attrGrammar> () {
-  val newAbstractValue = match exp {
-    LitE(lit) -> AVLit(singleton(lit))
-    RootE -> AVPath(singleton(Path([], AOTrue, False), ?(==) = path/(==), ?hash = path/hash))
-    DotE(e, f) -> e.getAbstractValue()..f
-    OpE(op, lhs, rhs) ->
-      applyOp(op, lhs.getAbstractValue(), rhs.getAbstractValue())
-    VarE(v) -> exp.getInputStore().getOrDefault(v, AVBot)
-    _ -> AVBot
+  val newAbstractValue: absValueExp = match exp {
+    LitE(lit) -> AVEValue(AVLit(singleton(lit)))
+    RootE -> AVEValue(AVPath(singleton(Path([], AOTrue, False), ?(==) = path/(==), ?hash = path/hash)))
+    DotE(e, f) -> AVEDot(AVEExp(e), f)
+    OpE(op, lhs, rhs) -> AVEOp(op, AVEExp(lhs), AVEExp(rhs))
+    VarE(v) -> AVEStore(SEIS(exp), v)
+    _ -> AVEValue(AVBot)
   }
 
   exp.setAbstractValue(newAbstractValue)
@@ -488,19 +703,19 @@ fun extractPaths(absValue: absValue): hash-set<path> {
 
 fun updatePaths(exp: exp): <exn, attrGrammar> () {
   val newPaths = match exp {
-    RootE -> exp.getAbstractValue().extractPaths()
-    DotE(_, _) -> exp.getAbstractValue().extractPaths()
-    OpE(_, lhs, rhs) -> lhs.getTraversalSummary().union(rhs.getTraversalSummary())
-    AsgnE(_, e) -> e.getTraversalSummary()
-    IfE(e, s1, s2) -> e.getTraversalSummary()
-      .union(s1.getTraversalSummary())
-      .union(s2.getTraversalSummary())
-    ForE(_, e, s) -> e.getTraversalSummary()
-      .union((e.getAbstractValue()..FNL).extractPaths())
-      .union(s.getTraversalSummary())
-    SeqE(s1, s2) -> s1.getTraversalSummary().union(s2.getTraversalSummary())
-    PrintE(e) -> e.getTraversalSummary()
-    _ -> thread/hash-set()
+    RootE -> exp.AVEExp.PEAV
+    DotE(_, _) -> exp.AVEExp.PEAV
+    OpE(_, lhs, rhs) -> lhs.PETS.PEUnion(rhs.PETS)
+    AsgnE(_, e) -> e.PETS
+    IfE(e, s1, s2) -> e.PETS
+      .PEUnion(s1.PETS)
+      .PEUnion(s2.PETS)
+    ForE(_, e, s) -> e.PETS
+      .PEUnion(e.AVEExp.AVEDot(FNL).PEAV)
+      .PEUnion(s.PETS)
+    SeqE(s1, s2) -> s1.PETS.PEUnion(s2.PETS)
+    PrintE(e) -> e.PETS
+    _ -> PEEmpty
   }
 
   exp.setPaths(newPaths)
@@ -509,29 +724,29 @@ fun updatePaths(exp: exp): <exn, attrGrammar> () {
 fun updateOutputStore(exp: exp): <pure, attrGrammar> () {
   val newOutputStore = match exp {
     AsgnE(v, e) -> {
-      val previousV = exp.getInputStore().getOrDefault(v, AVBot)
-      exp.getInputStore().insert(v, previousV.join(e.getAbstractValue()))
+      val previousV = exp.SEIS.AVEStore(v)
+      exp.SEIS.SEInsert(v, previousV.AVEJoin(e.AVEExp))
     }
-    IfE(_, s1, s2) -> s1.getOutputStore().insertAll(s2.getOutputStore())
-    ForE(v, _, s) -> s.getOutputStore().remove(v)
-    SeqE(_, s2) -> s2.getOutputStore()
-    _ -> exp.getInputStore()
+    IfE(_, s1, s2) -> s1.SEOS.SEUnion(s2.SEOS)
+    ForE(v, _, s) -> s.SEOS.SERemove(v)
+    SeqE(_, s2) -> s2.SEOS
+    _ -> exp.SEIS
   }
 
   exp.setOutputStore(newOutputStore)
 }
 
-fun updateInputStore(exp: exp, inputStore: store): <pure, attrGrammar> () {
+fun updateInputStore(exp: exp, inputStore: storeExp): <pure, attrGrammar> () {
   exp.setInputStore(inputStore)
   match exp {
     ForE(v, e, s) -> {
       e.updateInputStore(inputStore)
-      val inputStorePlusV = inputStore.insert(v, (e.getAbstractValue()..FNL))
-      s.updateInputStore(inputStorePlusV.insertAll(s.getOutputStore()))
+      val inputStorePlusV = SEInsert(inputStore, v, AVEDot(AVEExp(e), FNL))
+      s.updateInputStore(SEUnion(inputStorePlusV, SEOS(s)))
     }
     SeqE(s1, s2) -> {
       s1.updateInputStore(inputStore)
-      s2.updateInputStore(s1.getOutputStore())
+      s2.updateInputStore(SEOS(s1))
     }
     DotE(e, _) -> e.updateInputStore(inputStore)
     OpE(_, e1, e2) -> {
@@ -575,14 +790,14 @@ fun absValue/not(absValue: absValue): absValue {
   AVOp(singleton(AOOp(NotOp, [absValue])))
 }
 
-fun updateQueryCondition(exp: exp, queryCondition: absOp): <attrGrammar> () {
+fun updateQueryCondition(exp: exp, queryCondition: absOpExp): <attrGrammar> () {
   setQueryCondition(exp, queryCondition)
   match exp {
     IfE(e, s1, s2) -> {
       e.updateQueryCondition(queryCondition)
       if e.isValidQueryCondition then {
-        s1.updateQueryCondition(queryCondition & e.getAbstractValue())
-        s2.updateQueryCondition(queryCondition & not(e.getAbstractValue()))
+        s1.updateQueryCondition(AOEAnd(queryCondition, AOEAV(AVEExp(e))))
+        s2.updateQueryCondition(AOEAnd(queryCondition, AOENot(AOEAV(AVEExp(e)))))
       } else {
         s1.updateQueryCondition(queryCondition)
         s2.updateQueryCondition(queryCondition)
@@ -647,16 +862,17 @@ fun extends(absValue: absValue, paths: list<path>): bool {
   }
 }
 
-fun updateIteratorContext(exp: exp, paths: list<path>): <exn, attrGrammar> () {
+fun updateIteratorContext(exp: exp, paths: iteratorContextExp): <exn, attrGrammar> () {
   exp.setIteratorContext(paths)
   match exp {
     ForE(_, e, s) -> {
       e.updateIteratorContext(paths)
-      if (e.getAbstractValue()..FNL).extends(paths) then {
-        s.updateIteratorContext((e.getAbstractValue()..FNL).extractPaths.list ++ paths)
-      } else {
-        s.updateIteratorContext(paths)
-      }
+      s.updateIteratorContext(ICEPlusIf(ICEIT(exp), AVEExp(e)))
+      // if (e.getAbstractValue()..FNL).extends(paths) then {
+      //   s.updateIteratorContext((e.getAbstractValue()..FNL).extractPaths.list ++ paths)
+      // } else {
+      //   s.updateIteratorContext(paths)
+      // }
     }
     SeqE(s1, s2) -> {
       s1.updateIteratorContext(paths)
@@ -686,36 +902,41 @@ fun firstOrThrow(l: list<a>): exn a {
 }
 
 fun iter(exp: exp) {
-  val maybeLatestIteratorContext = exp.getIteratorContext.head()
-  match maybeLatestIteratorContext {
-    Just(latestIteratorContext) -> singleton(Path(
-      latestIteratorContext.names,
-      exp.getQueryCondition(),
-      True
-    ))
-    Nothing -> thread/hash-set()
-  }
+  PEValue(PELast(ICEIT(exp)), AOEC(exp), True)
+  // val maybeLatestIteratorContext = exp.getIteratorContext.head()
+  // match maybeLatestIteratorContext {
+  //   Just(latestIteratorContext) -> singleton(Path(
+  //     latestIteratorContext.names,
+  //     exp.getQueryCondition(),
+  //     True
+  //   ))
+  //   Nothing -> thread/hash-set()
+  // }
 }
 
 fun updateTraversalSummary(exp: exp): <exn, attrGrammar> () {
+  fun subfieldPaths(e: exp) {
+    exp.PEP.PEUnion(
+      PECond(e,
+        e.iter(),
+        PEEmpty
+      ))
+  }
+
   val newTraversalSummary = match exp {
     VarE(_) -> {
-      val queryCondition = getQueryCondition(exp)
-      if (exp.getDataDependence()) then {
-        exp.getAbstractValue()
-          .extractPaths.list
-          .list/map(fn(path) Path(path.names, queryCondition, False)).thread/list/hash-set
-      } else {
-        exp.getPaths().list.list/map(fn(path) Path(path.names, queryCondition, False)).thread/list/hash-set
-      }
+      PECond(exp,
+        PEValue(exp.AVEExp.PEAV, exp.AOEC, True),
+        PEValue(exp.PEP, exp.AOEC, False)
+      )
     }
-    AsgnE(_, e) -> e.getTraversalSummary().union(exp.iter())
-    _ ->
-      exp.getPaths().union(if (exp.getDataDependence()) then {
-        exp.iter()
-      } else {
-        thread/hash-set()
-      })
+    AsgnE(_, e) -> e.PETS.PEUnion(exp.iter())
+    DotE(e, _) -> e.subfieldPaths
+    OpE(_, e1, e2) -> PEUnion(e1.subfieldPaths, e2.subfieldPaths)
+    IfE(e, s1, s2) -> PEUnion(e.subfieldPaths, PEUnion(s1.subfieldPaths, s2.subfieldPaths))
+    ForE(_, e, s) -> PEUnion(e.subfieldPaths, s.subfieldPaths)
+    SeqE(s1, s2) -> PEUnion(s1.subfieldPaths, s2.subfieldPaths)
+    _ -> PEEmpty
   }
 
   exp.setTraversalSummary(newTraversalSummary)
@@ -774,13 +995,13 @@ fun visit(exp: exp, f: (exp) -> e ()): e () {
 fun iterateAttributeGrammar(exp: exp) {
   exp.visit(updateSynthesizedAttrs)
   // trace("is")
-  exp.updateInputStore(thread/hash-map())
+  exp.updateInputStore(SEEmpty)
   // trace("c")
-  exp.updateQueryCondition(AOTrue)
+  exp.updateQueryCondition(AOETrue)
   // trace("d")
   exp.updateDataDependence(False)
   // trace("it")
-  exp.updateIteratorContext([])
+  exp.updateIteratorContext(ICEEmpty)
 }
 
 fun getOrDefault(map: hash-map<k, v>, key: k, default: v, ?(==): (k, k) -> bool, ?hash: (k, int64) -> int): v {
@@ -794,27 +1015,27 @@ effect fixpoint {
   fun modified(): ()
 }
 
-fun update(map: hash-map<k, v>, key: k, value: v, ?(==): (k, k) -> bool, ?hash: (k, int64) -> int, ?value/(==): (v, v) -> bool, ?show: (v) -> string): fixpoint hash-map<k, v> {
-  val updated = match map.get(key) {
-    Just(oldValue) -> !(oldValue == value)
-    Nothing -> True
-  }
+// fun update(map: hash-map<k, v>, key: k, value: v, ?(==): (k, k) -> bool, ?hash: (k, int64) -> int, ?value/(==): (v, v) -> bool, ?show: (v) -> string): fixpoint hash-map<k, v> {
+//   val updated = match map.get(key) {
+//     Just(oldValue) -> !(oldValue == value)
+//     Nothing -> True
+//   }
 
-  if updated then {
-    trace(map.get(key).show)
-    trace(value.show)
-    modified()
-    map.insert(key, value)
-  } else {
-    map
-  }
-}
+//   if updated then {
+//     trace(map.get(key).show)
+//     trace(value.show)
+//     modified()
+//     map.insert(key, value)
+//   } else {
+//     map
+//   }
+// }
 
 fun mapShow(map: hash-map<k, v>, ?keyShow: k -> string, ?valueShow: v -> string): string {
   map.show(?key/show = keyShow, ?value/show = valueShow)
 }
 
-fun analyze(root: exp): pure hash-set<path> {
+fun analyze(root: exp): pure (hash-map<int, storeExp>, hash-map<int, pathExp>, hash-map<int, pathExp>) {
   var abstractValues := thread/hash-map()
   var pathsByExp := thread/hash-map()
   var outputStores := thread/hash-map()
@@ -829,27 +1050,27 @@ fun analyze(root: exp): pure hash-set<path> {
     fun modified() -> updatedThisIteration := True
   }
   with handler {
-    fun getAbstractValue(exp: exp) abstractValues.getOrDefault(exp, AVBot)
-    fun setAbstractValue(exp: exp, absValue: absValue) abstractValues := abstractValues.update(exp, absValue)
-    fun getPaths(exp: exp) pathsByExp.getOrDefault(exp, thread/hash-set())
-    fun setPaths(exp: exp, paths: hash-set<path>) pathsByExp := pathsByExp.update(exp, paths)
-    fun getOutputStore(exp: exp) outputStores.getOrDefault(exp, thread/hash-map())
-    fun setOutputStore(exp: exp, outputStore: store) outputStores := outputStores.update(exp, outputStore)
-    fun getInputStore(exp: exp) inputStores.getOrDefault(exp, thread/hash-map())
-    fun setInputStore(exp: exp, inputStore: store) inputStores := inputStores.update(exp, inputStore)
-    fun getQueryCondition(exp: exp) queryConditions.getOrDefault(exp, AOTrue)
-    fun setQueryCondition(exp: exp, queryCondition: absOp) queryConditions := queryConditions.update(exp, queryCondition)
+    fun getAbstractValue(exp: exp) abstractValues.getOrDefault(exp, AVEValue(AVBot))
+    fun setAbstractValue(exp: exp, absValue: absValueExp) abstractValues := abstractValues.insert(exp, absValue)
+    fun getPaths(exp: exp) pathsByExp.getOrDefault(exp, PEEmpty)
+    fun setPaths(exp: exp, paths: pathExp) pathsByExp := pathsByExp.insert(exp, paths)
+    // fun getOutputStore(exp: exp) outputStores.getOrDefault(exp, thread/hash-map())
+    fun setOutputStore(exp: exp, outputStore: storeExp) outputStores := outputStores.insert(exp, outputStore)
+    fun getInputStore(exp: exp) inputStores.getOrDefault(exp, SEEmpty)
+    fun setInputStore(exp: exp, inputStore: storeExp) inputStores := inputStores.insert(exp, inputStore)
+    // fun getQueryCondition(exp: exp) queryConditions.getOrDefault(exp, AOTrue)
+    fun setQueryCondition(exp: exp, queryCondition: absOpExp) queryConditions := queryConditions.insert(exp, queryCondition)
     fun getDataDependence(exp: exp) dataDependences.getOrDefault(exp, False)
-    fun setDataDependence(exp: exp, dependence: bool) dataDependences := dataDependences.update(exp, dependence)
-    fun getIteratorContext(exp: exp) iteratorContexts.getOrDefault(exp, [])
-    fun setIteratorContext(exp: exp, iteratorContext: list<path>) iteratorContexts := iteratorContexts.update(exp, iteratorContext)
-    fun getTraversalSummary(exp: exp) traversalSummaries.getOrDefault(exp, thread/hash-set())
-    fun setTraversalSummary(exp: exp, traversalSummary: hash-set<path>) traversalSummaries:= traversalSummaries.update(exp, traversalSummary)
+    fun setDataDependence(exp: exp, dependence: bool) dataDependences := dataDependences.insert(exp, dependence)
+    fun getIteratorContext(exp: exp) iteratorContexts.getOrDefault(exp, ICEEmpty)
+    fun setIteratorContext(exp: exp, iteratorContext: iteratorContextExp) iteratorContexts := iteratorContexts.insert(exp, iteratorContext)
+    fun getTraversalSummary(exp: exp) traversalSummaries.getOrDefault(exp, PEEmpty)
+    fun setTraversalSummary(exp: exp, traversalSummary: pathExp) traversalSummaries:= traversalSummaries.insert(exp, traversalSummary)
   }
-  var gas := 1000
-  while(fn() updatedThisIteration && gas > 0) {
-    updatedThisIteration := False
-    gas := gas - 1
+  // var gas := 1000
+  // while(fn() updatedThisIteration && gas > 0) {
+  //   updatedThisIteration := False
+  //   gas := gas - 1
 
     // if (gas % 1000 == 0)
     //   then trace("Iteration: " ++ gas.show)
@@ -862,37 +1083,41 @@ fun analyze(root: exp): pure hash-set<path> {
     // trace("IT: " ++ iteratorContexts.show)
     // trace("TS: " ++ traversalSummaries.show)
 
-    root.iterateAttributeGrammar()
-  }
+  root.iterateAttributeGrammar()
+  // }
 
-  if (gas == 0) then {
-    trace("ran out of gas")
-  }
-  root.getTraversalSummary()
+  // if (gas == 0) then {
+  //   trace("ran out of gas")
+  // }
+  (
+    inputStores.unique/map-keys(fn(exp) exp.exp-any/id),
+    pathsByExp.unique/map-keys(fn(exp) exp.exp-any/id).effect/map-values(fn(paths) paths.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify),
+    traversalSummaries.unique/map-keys(fn(exp) exp.exp-any/id).effect/map-values(fn(paths) paths.simplify.simplify.simplify.simplify.simplify)
+  )
 }
 
-val line1 = AsgnE(VarName("zip"), LitE(StringLit("78712"), 2), 1)
+val line1 = AsgnE(VarName("zip"), LitE(StringLit("78712"), 11), 1)
 val paperExample = SeqE(
   line1,
   SeqE(
-    AsgnE(VarName("salaryLimit"), LitE(NumberLit(65000), 5), 4),
+    AsgnE(VarName("salaryLimit"), LitE(NumberLit(65000), 31), 3),
     ForE(
       VarName("e"),
-      DotE(RootE(8), FNNamed("employees"), 7),
+      DotE(RootE(411), FNNamed("employees"), 41),
       IfE(
-        OpE(EqOp, DotE(VarE(VarName("e"), 12), FNNamed("zip"), 11), VarE(VarName("zip"), 13), 10),
+        OpE(EqOp, DotE(VarE(VarName("e"), 5111), FNNamed("zip"), 511), VarE(VarName("zip"), 512), 51),
         IfE(
-          OpE(GtOp, DotE(VarE(VarName("e"), 17), FNNamed("salary"), 16), VarE(VarName("salaryLimit"), 18), 15),
-          PrintE(OpE(PlusOp, DotE(VarE(VarName("e"), 22), FNNamed("name"), 21), OpE(PlusOp, LitE(StringLit(": "), 22), DotE(DotE(VarE(VarName("e"), 28), FNNamed("manager"), 27), FNNamed("name"), 26), 25), 23), 20),
-          NullE(19),
-          14
+          OpE(GtOp, DotE(VarE(VarName("e"), 6111), FNNamed("salary"), 611), VarE(VarName("salaryLimit"), 612), 61),
+          PrintE(OpE(PlusOp, DotE(VarE(VarName("e"), 7111), FNNamed("name"), 711), OpE(PlusOp, LitE(StringLit(": "), 7121), DotE(DotE(VarE(VarName("e"), 712212), FNNamed("manager"), 71221), FNNamed("name"), 7122), 712), 71), 7),
+          NullE(62),
+          6
         ),
-        NullE(29),
-        9
+        NullE(52),
+        5
       ),
-      6
+      4
     ),
-    3
+    2
   ),
   0
 )
@@ -904,4 +1129,10 @@ fun check(expected: a, f: () -> <console,pure|e> a, ?(==): (a, a) -> div bool, ?
     Ok(actual) -> if actual == expected then println("Passed!") else println("Failed!\n\tExpected: " ++ expected.show ++ "\n\tActual: " ++ actual.show) 
 
 fun main()
-  print(paperExample.analyze())
+  val prettyPrintNoDiv = fn(x: hash-map<int, pathExp>) pretend-no-div(fn() hashmap/prettyPrint(x, ?value/show = fn(y) pretend-no-div(fn() show(y))))
+  val prettyPrintNoDivAv = fn(x: hash-map<int, storeExp>) pretend-no-div(fn() hashmap/prettyPrint(x, ?value/show = fn(y) pretend-no-div(fn() show(y))))
+  print(paperExample.analyze(), ?show=fn(x) x.tuple3/show(
+    ?fst/show=prettyPrintNoDivAv, 
+    ?snd/show=prettyPrintNoDiv, 
+    ?thd/show=prettyPrintNoDiv
+  ))
