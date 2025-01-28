@@ -62,16 +62,16 @@ pub value{1,0,1} type op[124,1,130,1] {
   pub con GtOp[128,3,128,6]{0,0,0} : op;
   pub con PlusOp[129,3,129,8]{0,0,0} : op;
 };
-pub recursive type absOp[261,1,264,1] {
-  pub con AOTrue[262,3,262,8]{0,0,0} : absOp;
+pub recursive type absOp[259,1,262,1] {
+  pub con AOTrue[260,3,260,8]{0,0,0} : absOp;
   // This is different than the paper
-  pub con AOOp[263,3,263,6](op: op, values: (std/core/types/list :: V -> V)<absValue>){1,1,8} : (op : op, values : (std/core/types/list :: V -> V)<absValue>) -> absOp;
+  pub con AOOp[261,3,261,6](op: op, values: (std/core/types/list :: V -> V)<absValue>){1,1,8} : (op : op, values : (std/core/types/list :: V -> V)<absValue>) -> absOp;
 };
-pub recursive type absValue[330,1,335,1] {
-  pub con AVBot[331,3,331,7]{0,0,0} : absValue;
-  pub con AVLit[332,3,332,7](lits: (std/data/hashset/hash-set :: V -> V)<literal>){0,1,8} : (lits : (std/data/hashset/hash-set :: V -> V)<literal>) -> absValue;
-  pub con AVOp[333,3,333,6](ops: (std/data/hashset/hash-set :: V -> V)<absOp>){0,1,8} : (ops : (std/data/hashset/hash-set :: V -> V)<absOp>) -> absValue;
-  pub con AVPath[334,3,334,8](paths: (std/data/hashset/hash-set :: V -> V)<path>){0,1,8} : (paths : (std/data/hashset/hash-set :: V -> V)<path>) -> absValue;
+pub recursive type absValue[328,1,333,1] {
+  pub con AVBot[329,3,329,7]{0,0,0} : absValue;
+  pub con AVLit[330,3,330,7](lits: (std/data/hashset/hash-set :: V -> V)<literal>){0,1,8} : (lits : (std/data/hashset/hash-set :: V -> V)<literal>) -> absValue;
+  pub con AVOp[331,3,331,6](ops: (std/data/hashset/hash-set :: V -> V)<absOp>){0,1,8} : (ops : (std/data/hashset/hash-set :: V -> V)<absOp>) -> absValue;
+  pub con AVPath[332,3,332,8](paths: (std/data/hashset/hash-set :: V -> V)<path>){0,1,8} : (paths : (std/data/hashset/hash-set :: V -> V)<path>) -> absValue;
 };
 pub recursive type path[163,1,167,1] {
   pub con Path[163,8,163,11](names: (std/core/types/list :: V -> V)<fieldName>, absOp: absOp, dependence: std/core/types/bool){1,2,8} : (names : (std/core/types/list :: V -> V)<fieldName>, absOp : absOp, dependence : std/core/types/bool) -> path;
@@ -79,50 +79,50 @@ pub recursive type path[163,1,167,1] {
 pub value{0,1,8} type varName[81,1,83,1] {
   pub con VarName[81,8,81,14](name: std/core/types/string){0,1,8} : (name : std/core/types/string) -> varName;
 };
-pub recursive type exp[493,1,505,1] {
-  pub con NullE[494,3,494,7](id: std/core/types/int){0,1,8} : (id : std/core/types/int) -> exp;
-  pub con LitE[495,3,495,6](lit: literal, id: std/core/types/int){0,3,8} : (lit : literal, id : std/core/types/int) -> exp;
-  pub con RootE[496,3,496,7](id: std/core/types/int){0,1,8} : (id : std/core/types/int) -> exp;
-  pub con DotE[497,3,497,6](e: exp, f: fieldName, id: std/core/types/int){0,4,8} : (e : exp, f : fieldName, id : std/core/types/int) -> exp;
-  pub con OpE[498,3,498,5](op: op, lhs: exp, rhs: exp, id: std/core/types/int){1,3,8} : (op : op, lhs : exp, rhs : exp, id : std/core/types/int) -> exp;
-  pub con VarE[499,3,499,6](v: varName, id: std/core/types/int){0,2,8} : (v : varName, id : std/core/types/int) -> exp;
-  pub con AsgnE[500,3,500,7](v: varName, rhs: exp, id: std/core/types/int){0,3,8} : (v : varName, rhs : exp, id : std/core/types/int) -> exp;
-  pub con IfE[501,3,501,5](cont: exp, thn: exp, els: exp, id: std/core/types/int){0,4,8} : (cont : exp, thn : exp, els : exp, id : std/core/types/int) -> exp;
-  pub con ForE[502,3,502,6](v: varName, from: exp, body: exp, id: std/core/types/int){0,4,8} : (v : varName, from : exp, body : exp, id : std/core/types/int) -> exp;
-  pub con SeqE[503,3,503,6](first: exp, second: exp, id: std/core/types/int){0,3,8} : (first : exp, second : exp, id : std/core/types/int) -> exp;
-  pub con PrintE[504,3,504,8](e: exp, id: std/core/types/int){0,2,8} : (e : exp, id : std/core/types/int) -> exp;
+pub recursive type exp[484,1,496,1] {
+  pub con NullE[485,3,485,7](id: std/core/types/int){0,1,8} : (id : std/core/types/int) -> exp;
+  pub con LitE[486,3,486,6](lit: literal, id: std/core/types/int){0,3,8} : (lit : literal, id : std/core/types/int) -> exp;
+  pub con RootE[487,3,487,7](id: std/core/types/int){0,1,8} : (id : std/core/types/int) -> exp;
+  pub con DotE[488,3,488,6](e: exp, f: fieldName, id: std/core/types/int){0,4,8} : (e : exp, f : fieldName, id : std/core/types/int) -> exp;
+  pub con OpE[489,3,489,5](op: op, lhs: exp, rhs: exp, id: std/core/types/int){1,3,8} : (op : op, lhs : exp, rhs : exp, id : std/core/types/int) -> exp;
+  pub con VarE[490,3,490,6](v: varName, id: std/core/types/int){0,2,8} : (v : varName, id : std/core/types/int) -> exp;
+  pub con AsgnE[491,3,491,7](v: varName, rhs: exp, id: std/core/types/int){0,3,8} : (v : varName, rhs : exp, id : std/core/types/int) -> exp;
+  pub con IfE[492,3,492,5](cont: exp, thn: exp, els: exp, id: std/core/types/int){0,4,8} : (cont : exp, thn : exp, els : exp, id : std/core/types/int) -> exp;
+  pub con ForE[493,3,493,6](v: varName, from: exp, body: exp, id: std/core/types/int){0,4,8} : (v : varName, from : exp, body : exp, id : std/core/types/int) -> exp;
+  pub con SeqE[494,3,494,6](first: exp, second: exp, id: std/core/types/int){0,3,8} : (first : exp, second : exp, id : std/core/types/int) -> exp;
+  pub con PrintE[495,3,495,8](e: exp, id: std/core/types/int){0,2,8} : (e : exp, id : std/core/types/int) -> exp;
 };
-pub alias store[442,1,442,41] = (std/data/hashmap/hash-map :: (V, V) -> V)<varName,absValue> = 1;
-pub recursive type absValueExp[377,1,384,1] {
-  pub con AVEExp[378,3,378,8](exp: exp){0,1,8} : (exp : exp) -> absValueExp;
-  pub con AVEValue[379,3,379,10](absValue: absValue){0,1,8} : (absValue : absValue) -> absValueExp;
-  pub con AVEDot[380,3,380,8](absValueExp: absValueExp, f: fieldName){0,3,8} : (absValueExp : absValueExp, f : fieldName) -> absValueExp;
-  pub con AVEOp[381,3,381,7](op: op, e1: absValueExp, e2: absValueExp){1,2,8} : (op : op, e1 : absValueExp, e2 : absValueExp) -> absValueExp;
-  pub con AVEStore[382,3,382,10](storeExp: storeExp, v: varName){0,2,8} : (storeExp : storeExp, v : varName) -> absValueExp;
-  pub con AVEJoin[383,3,383,9](a: absValueExp, b: absValueExp){0,2,8} : (a : absValueExp, b : absValueExp) -> absValueExp;
+pub alias store[433,1,433,41] = (std/data/hashmap/hash-map :: (V, V) -> V)<varName,absValue> = 1;
+pub recursive type absValueExp[375,1,382,1] {
+  pub con AVEExp[376,3,376,8](exp: exp){0,1,8} : (exp : exp) -> absValueExp;
+  pub con AVEValue[377,3,377,10](absValue: absValue){0,1,8} : (absValue : absValue) -> absValueExp;
+  pub con AVEDot[378,3,378,8](absValueExp: absValueExp, f: fieldName){0,3,8} : (absValueExp : absValueExp, f : fieldName) -> absValueExp;
+  pub con AVEOp[379,3,379,7](op: op, e1: absValueExp, e2: absValueExp){1,2,8} : (op : op, e1 : absValueExp, e2 : absValueExp) -> absValueExp;
+  pub con AVEStore[380,3,380,10](storeExp: storeExp, v: varName){0,2,8} : (storeExp : storeExp, v : varName) -> absValueExp;
+  pub con AVEJoin[381,3,381,9](a: absValueExp, b: absValueExp){0,2,8} : (a : absValueExp, b : absValueExp) -> absValueExp;
 };
-pub recursive type storeExp[448,1,456,1] {
-  pub con SEEmpty[449,3,449,9]{0,0,0} : storeExp;
-  pub con SEOS[450,3,450,6](exp: exp){0,1,8} : (exp : exp) -> storeExp;
-  pub con SEIS[451,3,451,6](exp: exp){0,1,8} : (exp : exp) -> storeExp;
-  pub con SEInsert[452,3,452,10](storeExp: storeExp, v: varName, absValueExp: absValueExp){0,3,8} : (storeExp : storeExp, v : varName, absValueExp : absValueExp) -> storeExp;
-  pub con SEUnion[453,3,453,9](a: storeExp, b: storeExp){0,2,8} : (a : storeExp, b : storeExp) -> storeExp;
-  pub con SERemove[454,3,454,10](storeExp: storeExp, v: varName){0,2,8} : (storeExp : storeExp, v : varName) -> storeExp;
-  pub con SEValue[455,3,455,9](store: (store == 1 (std/data/hashmap/hash-map :: (V, V) -> V)<varName,absValue>)){0,1,8} : (store : (store == 1 (std/data/hashmap/hash-map :: (V, V) -> V)<varName,absValue>)) -> storeExp;
+pub recursive type storeExp[439,1,447,1] {
+  pub con SEEmpty[440,3,440,9]{0,0,0} : storeExp;
+  pub con SEOS[441,3,441,6](exp: exp){0,1,8} : (exp : exp) -> storeExp;
+  pub con SEIS[442,3,442,6](exp: exp){0,1,8} : (exp : exp) -> storeExp;
+  pub con SEInsert[443,3,443,10](storeExp: storeExp, v: varName, absValueExp: absValueExp){0,3,8} : (storeExp : storeExp, v : varName, absValueExp : absValueExp) -> storeExp;
+  pub con SEUnion[444,3,444,9](a: storeExp, b: storeExp){0,2,8} : (a : storeExp, b : storeExp) -> storeExp;
+  pub con SERemove[445,3,445,10](storeExp: storeExp, v: varName){0,2,8} : (storeExp : storeExp, v : varName) -> storeExp;
+  pub con SEValue[446,3,446,9](store: (store == 1 (std/data/hashmap/hash-map :: (V, V) -> V)<varName,absValue>)){0,1,8} : (store : (store == 1 (std/data/hashmap/hash-map :: (V, V) -> V)<varName,absValue>)) -> storeExp;
 };
-pub recursive type absOpExp[302,1,308,1] {
-  pub con AOETrue[303,3,303,9]{0,0,0} : absOpExp;
-  pub con AOEC[304,3,304,6](exp: exp){0,1,8} : (exp : exp) -> absOpExp;
-  pub con AOEAnd[305,3,305,8](a: absOpExp, b: absOpExp){0,2,8} : (a : absOpExp, b : absOpExp) -> absOpExp;
-  pub con AOEAV[306,3,306,7](absValueExp: absValueExp){0,1,8} : (absValueExp : absValueExp) -> absOpExp;
-  pub con AOENot[307,3,307,8](absOpExp: absOpExp){0,1,8} : (absOpExp : absOpExp) -> absOpExp;
+pub recursive type absOpExp[300,1,306,1] {
+  pub con AOETrue[301,3,301,9]{0,0,0} : absOpExp;
+  pub con AOEC[302,3,302,6](exp: exp){0,1,8} : (exp : exp) -> absOpExp;
+  pub con AOEAnd[303,3,303,8](a: absOpExp, b: absOpExp){0,2,8} : (a : absOpExp, b : absOpExp) -> absOpExp;
+  pub con AOEAV[304,3,304,7](absValueExp: absValueExp){0,1,8} : (absValueExp : absValueExp) -> absOpExp;
+  pub con AOENot[305,3,305,8](absOpExp: absOpExp){0,1,8} : (absOpExp : absOpExp) -> absOpExp;
 };
-pub recursive type iteratorContextExp[591,1,595,1] {
-  pub con ICEEmpty[592,3,592,10]{0,0,0} : iteratorContextExp;
-  pub con ICEIT[593,3,593,7](exp: exp){0,1,8} : (exp : exp) -> iteratorContextExp;
-  pub con ICEPlusIf[594,3,594,11](itExp: iteratorContextExp, avExp: absValueExp){0,2,8} : (itExp : iteratorContextExp, avExp : absValueExp) -> iteratorContextExp;
+pub recursive type iteratorContextExp[582,1,586,1] {
+  pub con ICEEmpty[583,3,583,10]{0,0,0} : iteratorContextExp;
+  pub con ICEIT[584,3,584,7](exp: exp){0,1,8} : (exp : exp) -> iteratorContextExp;
+  pub con ICEPlusIf[585,3,585,11](itExp: iteratorContextExp, avExp: absValueExp){0,2,8} : (itExp : iteratorContextExp, avExp : absValueExp) -> iteratorContextExp;
 };
-pub recursive type pathExp[193,1,204,1] {
+pub recursive type pathExp[193,1,203,1] {
   pub con PEEmpty[194,3,194,9]{0,0,0} : pathExp;
   pub con PEAV[195,3,195,6](absValue: absValueExp){0,1,8} : (absValue : absValueExp) -> pathExp;
   pub con PEValue[196,3,196,9](paths: pathExp, queryCondition: absOpExp, dependence: std/core/types/bool){1,2,8} : (paths : pathExp, queryCondition : absOpExp, dependence : std/core/types/bool) -> pathExp;
@@ -151,16 +151,8 @@ pub recursive type pathExp[193,1,204,1] {
 // fun getTraversalSummary
 // fun setTraversalSummary
 // ```
-pub recursive effect type attrGrammar[613,1,613,18] <(e :: E),a> :: (E, V) -> V {
-  pub con @Hnd-attrGrammar[613,1,613,18](@cfc: std/core/types/int, @fun-getAbstractValue: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getDataDependence: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getInputStore: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getIteratorContext: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getPaths: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getTraversalSummary: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setAbstractValue: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setDataDependence: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setInputStore: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setIteratorContext: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setOutputStore: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setPaths: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setQueryCondition: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absOpExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setTraversalSummary: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>){0,15,8} : forall<(e :: E),a> (std/core/types/int, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absOpExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>) -> (attrGrammar :: (E, V) -> V)<(e :: E),a>;
-};
-
-// Operations:
-// ```koka
-// fun modified
-// ```
-pub recursive effect type fixpoint[1014,1,1014,15] <(e :: E),a> :: (E, V) -> V {
-  pub con @Hnd-fixpoint[1014,1,1014,15](@cfc: std/core/types/int, @fun-modified: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>){0,2,8} : forall<(e :: E),a> (std/core/types/int, (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>) -> (fixpoint :: (E, V) -> V)<(e :: E),a>;
+pub recursive effect type attrGrammar[604,1,604,18] <(e :: E),a> :: (E, V) -> V {
+  pub con @Hnd-attrGrammar[604,1,604,18](@cfc: std/core/types/int, @fun-getAbstractValue: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getDataDependence: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getInputStore: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getIteratorContext: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getPaths: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-getTraversalSummary: (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setAbstractValue: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setDataDependence: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setInputStore: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setIteratorContext: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setOutputStore: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setPaths: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setQueryCondition: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absOpExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, @fun-setTraversalSummary: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>){0,15,8} : forall<(e :: E),a> (std/core/types/int, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absOpExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>) -> (attrGrammar :: (E, V) -> V)<(e :: E),a>;
 };
 
 // Operations:
@@ -168,16 +160,16 @@ pub recursive effect type fixpoint[1014,1,1014,15] <(e :: E),a> :: (E, V) -> V {
 // ctl choose
 // final ctl fail
 // ```
-pub recursive effect type nondet[637,1,637,13] <(e :: E),a> :: (E, V) -> V {
-  pub con @Hnd-nondet[637,1,637,13](@cfc: std/core/types/int, @ctl-choose: forall<b> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<b,b,b,(nondet :: (E, V) -> V),(e :: E),a>, @brk-fail: forall<b> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<b,(nondet :: (E, V) -> V),(e :: E),a>){0,3,8} : forall<(e :: E),a> (std/core/types/int, forall<b> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<b,b,b,(nondet :: (E, V) -> V),(e :: E),a>, forall<b> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<b,(nondet :: (E, V) -> V),(e :: E),a>) -> (nondet :: (E, V) -> V)<(e :: E),a>;
+pub recursive effect type nondet[628,1,628,13] <(e :: E),a> :: (E, V) -> V {
+  pub con @Hnd-nondet[628,1,628,13](@cfc: std/core/types/int, @ctl-choose: forall<b> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<b,b,b,(nondet :: (E, V) -> V),(e :: E),a>, @brk-fail: forall<b> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<b,(nondet :: (E, V) -> V),(e :: E),a>){0,3,8} : forall<(e :: E),a> (std/core/types/int, forall<b> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<b,b,b,(nondet :: (E, V) -> V),(e :: E),a>, forall<b> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<b,(nondet :: (E, V) -> V),(e :: E),a>) -> (nondet :: (E, V) -> V)<(e :: E),a>;
 };
 
 // Operations:
 // ```koka
 // fun substAV
 // ```
-pub recursive effect type subst[632,1,632,12] <(e :: E),a> :: (E, V) -> V {
-  pub con @Hnd-subst[632,1,632,12](@cfc: std/core/types/int, @fun-substAV: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,exp,absValueExp,(subst :: (E, V) -> V),(e :: E),a>){0,2,8} : forall<(e :: E),a> (std/core/types/int, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,exp,absValueExp,(subst :: (E, V) -> V),(e :: E),a>) -> (subst :: (E, V) -> V)<(e :: E),a>;
+pub recursive effect type subst[623,1,623,12] <(e :: E),a> :: (E, V) -> V {
+  pub con @Hnd-subst[623,1,623,12](@cfc: std/core/types/int, @fun-substAV: (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,exp,absValueExp,(subst :: (E, V) -> V),(e :: E),a>){0,2,8} : forall<(e :: E),a> (std/core/types/int, (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,exp,absValueExp,(subst :: (E, V) -> V),(e :: E),a>) -> (subst :: (E, V) -> V)<(e :: E),a>;
 };
  
 //------------------------------
@@ -202,17 +194,17 @@ pub fip fun is-gtOp[128,3,128,6] : (^ op : op) -> std/core/types/bool;
 // Automatically generated. Tests for the `PlusOp` constructor of the `:op` type.
 pub fip fun is-plusOp[129,3,129,8] : (^ op : op) -> std/core/types/bool;
 // Automatically generated. Tests for the `AOTrue` constructor of the `:absOp` type.
-pub fip fun is-aotrue[262,3,262,8] : (^ absOp : absOp) -> std/core/types/bool;
+pub fip fun is-aotrue[260,3,260,8] : (^ absOp : absOp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AOOp` constructor of the `:absOp` type.
-pub fip fun is-aoop[263,3,263,6] : (^ absOp : absOp) -> std/core/types/bool;
+pub fip fun is-aoop[261,3,261,6] : (^ absOp : absOp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVBot` constructor of the `:absValue` type.
-pub fip fun is-avbot[331,3,331,7] : (^ absValue : absValue) -> std/core/types/bool;
+pub fip fun is-avbot[329,3,329,7] : (^ absValue : absValue) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVLit` constructor of the `:absValue` type.
-pub fip fun is-avlit[332,3,332,7] : (^ absValue : absValue) -> std/core/types/bool;
+pub fip fun is-avlit[330,3,330,7] : (^ absValue : absValue) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVOp` constructor of the `:absValue` type.
-pub fip fun is-avop[333,3,333,6] : (^ absValue : absValue) -> std/core/types/bool;
+pub fip fun is-avop[331,3,331,6] : (^ absValue : absValue) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVPath` constructor of the `:absValue` type.
-pub fip fun is-avpath[334,3,334,8] : (^ absValue : absValue) -> std/core/types/bool;
+pub fip fun is-avpath[332,3,332,8] : (^ absValue : absValue) -> std/core/types/bool;
 // Automatically generated. Retrieves the `names` constructor field of the `:path` type.
 pub  fun path/names[164,3,164,7] : (^ path : path) -> (std/core/types/list :: V -> V)<fieldName>;
 // Automatically generated. Retrieves the `absOp` constructor field of the `:path` type.
@@ -224,71 +216,71 @@ pub  fun path/@copy[163,8,163,11] : (@this : path, names : (std/core/types/@opti
 pub  fun varName/name[82,3,82,6] : (^ varName : varName) -> std/core/types/string;
 pub  fun varName/@copy[81,8,81,14] : (@this : varName, name : (std/core/types/@optional :: V -> V)<std/core/types/string>) -> varName;
 // Automatically generated. Retrieves the `id` constructor field of the `:exp` type.
-pub  fun exp/id[494,9,494,10] : (^ exp : exp) -> std/core/types/int;
+pub  fun exp/id[485,9,485,10] : (^ exp : exp) -> std/core/types/int;
 // Automatically generated. Tests for the `NullE` constructor of the `:exp` type.
-pub fip fun is-nullE[494,3,494,7] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-nullE[485,3,485,7] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `LitE` constructor of the `:exp` type.
-pub fip fun is-litE[495,3,495,6] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-litE[486,3,486,6] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `RootE` constructor of the `:exp` type.
-pub fip fun is-rootE[496,3,496,7] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-rootE[487,3,487,7] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `DotE` constructor of the `:exp` type.
-pub fip fun is-dotE[497,3,497,6] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-dotE[488,3,488,6] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `OpE` constructor of the `:exp` type.
-pub fip fun is-opE[498,3,498,5] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-opE[489,3,489,5] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `VarE` constructor of the `:exp` type.
-pub fip fun is-varE[499,3,499,6] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-varE[490,3,490,6] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AsgnE` constructor of the `:exp` type.
-pub fip fun is-asgnE[500,3,500,7] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-asgnE[491,3,491,7] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `IfE` constructor of the `:exp` type.
-pub fip fun is-ifE[501,3,501,5] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-ifE[492,3,492,5] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `ForE` constructor of the `:exp` type.
-pub fip fun is-forE[502,3,502,6] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-forE[493,3,493,6] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `SeqE` constructor of the `:exp` type.
-pub fip fun is-seqE[503,3,503,6] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-seqE[494,3,494,6] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `PrintE` constructor of the `:exp` type.
-pub fip fun is-printE[504,3,504,8] : (^ exp : exp) -> std/core/types/bool;
+pub fip fun is-printE[495,3,495,8] : (^ exp : exp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVEExp` constructor of the `:absValueExp` type.
-pub fip fun is-aveexp[378,3,378,8] : (^ absValueExp : absValueExp) -> std/core/types/bool;
+pub fip fun is-aveexp[376,3,376,8] : (^ absValueExp : absValueExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVEValue` constructor of the `:absValueExp` type.
-pub fip fun is-avevalue[379,3,379,10] : (^ absValueExp : absValueExp) -> std/core/types/bool;
+pub fip fun is-avevalue[377,3,377,10] : (^ absValueExp : absValueExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVEDot` constructor of the `:absValueExp` type.
-pub fip fun is-avedot[380,3,380,8] : (^ absValueExp : absValueExp) -> std/core/types/bool;
+pub fip fun is-avedot[378,3,378,8] : (^ absValueExp : absValueExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVEOp` constructor of the `:absValueExp` type.
-pub fip fun is-aveop[381,3,381,7] : (^ absValueExp : absValueExp) -> std/core/types/bool;
+pub fip fun is-aveop[379,3,379,7] : (^ absValueExp : absValueExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVEStore` constructor of the `:absValueExp` type.
-pub fip fun is-avestore[382,3,382,10] : (^ absValueExp : absValueExp) -> std/core/types/bool;
+pub fip fun is-avestore[380,3,380,10] : (^ absValueExp : absValueExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AVEJoin` constructor of the `:absValueExp` type.
-pub fip fun is-avejoin[383,3,383,9] : (^ absValueExp : absValueExp) -> std/core/types/bool;
+pub fip fun is-avejoin[381,3,381,9] : (^ absValueExp : absValueExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `SEEmpty` constructor of the `:storeExp` type.
-pub fip fun is-seempty[449,3,449,9] : (^ storeExp : storeExp) -> std/core/types/bool;
+pub fip fun is-seempty[440,3,440,9] : (^ storeExp : storeExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `SEOS` constructor of the `:storeExp` type.
-pub fip fun is-seos[450,3,450,6] : (^ storeExp : storeExp) -> std/core/types/bool;
+pub fip fun is-seos[441,3,441,6] : (^ storeExp : storeExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `SEIS` constructor of the `:storeExp` type.
-pub fip fun is-seis[451,3,451,6] : (^ storeExp : storeExp) -> std/core/types/bool;
+pub fip fun is-seis[442,3,442,6] : (^ storeExp : storeExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `SEInsert` constructor of the `:storeExp` type.
-pub fip fun is-seinsert[452,3,452,10] : (^ storeExp : storeExp) -> std/core/types/bool;
+pub fip fun is-seinsert[443,3,443,10] : (^ storeExp : storeExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `SEUnion` constructor of the `:storeExp` type.
-pub fip fun is-seunion[453,3,453,9] : (^ storeExp : storeExp) -> std/core/types/bool;
+pub fip fun is-seunion[444,3,444,9] : (^ storeExp : storeExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `SERemove` constructor of the `:storeExp` type.
-pub fip fun is-seremove[454,3,454,10] : (^ storeExp : storeExp) -> std/core/types/bool;
+pub fip fun is-seremove[445,3,445,10] : (^ storeExp : storeExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `SEValue` constructor of the `:storeExp` type.
-pub fip fun is-sevalue[455,3,455,9] : (^ storeExp : storeExp) -> std/core/types/bool;
+pub fip fun is-sevalue[446,3,446,9] : (^ storeExp : storeExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AOETrue` constructor of the `:absOpExp` type.
-pub fip fun is-aoetrue[303,3,303,9] : (^ absOpExp : absOpExp) -> std/core/types/bool;
+pub fip fun is-aoetrue[301,3,301,9] : (^ absOpExp : absOpExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AOEC` constructor of the `:absOpExp` type.
-pub fip fun is-aoec[304,3,304,6] : (^ absOpExp : absOpExp) -> std/core/types/bool;
+pub fip fun is-aoec[302,3,302,6] : (^ absOpExp : absOpExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AOEAnd` constructor of the `:absOpExp` type.
-pub fip fun is-aoeand[305,3,305,8] : (^ absOpExp : absOpExp) -> std/core/types/bool;
+pub fip fun is-aoeand[303,3,303,8] : (^ absOpExp : absOpExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AOEAV` constructor of the `:absOpExp` type.
-pub fip fun is-aoeav[306,3,306,7] : (^ absOpExp : absOpExp) -> std/core/types/bool;
+pub fip fun is-aoeav[304,3,304,7] : (^ absOpExp : absOpExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `AOENot` constructor of the `:absOpExp` type.
-pub fip fun is-aoenot[307,3,307,8] : (^ absOpExp : absOpExp) -> std/core/types/bool;
+pub fip fun is-aoenot[305,3,305,8] : (^ absOpExp : absOpExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `ICEEmpty` constructor of the `:iteratorContextExp` type.
-pub fip fun is-iceempty[592,3,592,10] : (^ iteratorContextExp : iteratorContextExp) -> std/core/types/bool;
+pub fip fun is-iceempty[583,3,583,10] : (^ iteratorContextExp : iteratorContextExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `ICEIT` constructor of the `:iteratorContextExp` type.
-pub fip fun is-iceit[593,3,593,7] : (^ iteratorContextExp : iteratorContextExp) -> std/core/types/bool;
+pub fip fun is-iceit[584,3,584,7] : (^ iteratorContextExp : iteratorContextExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `ICEPlusIf` constructor of the `:iteratorContextExp` type.
-pub fip fun is-iceplusIf[594,3,594,11] : (^ iteratorContextExp : iteratorContextExp) -> std/core/types/bool;
+pub fip fun is-iceplusIf[585,3,585,11] : (^ iteratorContextExp : iteratorContextExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `PEEmpty` constructor of the `:pathExp` type.
 pub fip fun is-peempty[194,3,194,9] : (^ pathExp : pathExp) -> std/core/types/bool;
 // Automatically generated. Tests for the `PEAV` constructor of the `:pathExp` type.
@@ -308,463 +300,447 @@ pub fip fun is-pecond[201,3,201,8] : (^ pathExp : pathExp) -> std/core/types/boo
 // Automatically generated. Tests for the `PELast` constructor of the `:pathExp` type.
 pub fip fun is-pelast[202,3,202,8] : (^ pathExp : pathExp) -> std/core/types/bool;
 // Automatically generated. Retrieves the `@cfc` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@cfc[613,1,613,18] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
+ fun attrGrammar/@cfc[604,1,604,18] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
 // Automatically generated. Retrieves the `@fun-getAbstractValue` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-getAbstractValue[614,7,614,45] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-getAbstractValue[605,7,605,45] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-getDataDependence` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-getDataDependence[624,7,624,39] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-getDataDependence[615,7,615,39] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-getInputStore` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-getInputStore[620,7,620,39] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-getInputStore[611,7,611,39] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-getIteratorContext` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-getIteratorContext[626,7,626,54] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-getIteratorContext[617,7,617,54] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-getPaths` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-getPaths[616,7,616,33] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-getPaths[607,7,607,33] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-getTraversalSummary` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-getTraversalSummary[628,7,628,44] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-getTraversalSummary[619,7,619,44] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-setAbstractValue` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-setAbstractValue[615,7,615,59] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-setAbstractValue[606,7,606,59] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-setDataDependence` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-setDataDependence[625,7,625,55] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-setDataDependence[616,7,616,55] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-setInputStore` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-setInputStore[621,7,621,50] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-setInputStore[612,7,612,50] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-setIteratorContext` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-setIteratorContext[627,7,627,65] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-setIteratorContext[618,7,618,65] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-setOutputStore` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-setOutputStore[619,7,619,51] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-setOutputStore[610,7,610,51] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-setPaths` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-setPaths[617,7,617,44] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-setPaths[608,7,608,44] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-setQueryCondition` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-setQueryCondition[623,7,623,54] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absOpExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-setQueryCondition[614,7,614,54] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absOpExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@fun-setTraversalSummary` constructor field of the `:attrGrammar` type.
- fun attrGrammar/@fun-setTraversalSummary[629,7,629,57] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
-// Automatically generated. Retrieves the `@cfc` constructor field of the `:fixpoint` type.
- fun fixpoint/@cfc[1014,1,1014,15] : forall<(e :: E),a> (^ fixpoint : (fixpoint :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
-// Automatically generated. Retrieves the `@fun-modified` constructor field of the `:fixpoint` type.
- fun fixpoint/@fun-modified[1015,7,1015,20] : forall<(e :: E),a> (^ fixpoint : (fixpoint :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>;
+ fun attrGrammar/@fun-setTraversalSummary[620,7,620,57] : forall<(e :: E),a> (^ attrGrammar : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@cfc` constructor field of the `:nondet` type.
- fun nondet/@cfc[637,1,637,13] : forall<(e :: E),a> (^ nondet : (nondet :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
+ fun nondet/@cfc[628,1,628,13] : forall<(e :: E),a> (^ nondet : (nondet :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
 // Automatically generated. Retrieves the `@ctl-choose` constructor field of the `:nondet` type.
- fun nondet/@ctl-choose[638,7,638,27] : forall<(e :: E),a,b> (^ nondet : (nondet :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<b,b,b,(nondet :: (E, V) -> V),(e :: E),a>;
+ fun nondet/@ctl-choose[629,7,629,27] : forall<(e :: E),a,b> (^ nondet : (nondet :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<b,b,b,(nondet :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@brk-fail` constructor field of the `:nondet` type.
- fun nondet/@brk-fail[639,13,639,21] : forall<(e :: E),a,b> (^ nondet : (nondet :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<b,(nondet :: (E, V) -> V),(e :: E),a>;
+ fun nondet/@brk-fail[630,13,630,21] : forall<(e :: E),a,b> (^ nondet : (nondet :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<b,(nondet :: (E, V) -> V),(e :: E),a>;
 // Automatically generated. Retrieves the `@cfc` constructor field of the `:subst` type.
- fun subst/@cfc[632,1,632,12] : forall<(e :: E),a> (^ subst : (subst :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
+ fun subst/@cfc[623,1,623,12] : forall<(e :: E),a> (^ subst : (subst :: (E, V) -> V)<(e :: E),a>) -> std/core/types/int;
 // Automatically generated. Retrieves the `@fun-substAV` constructor field of the `:subst` type.
- fun subst/@fun-substAV[633,7,633,50] : forall<(e :: E),a> (^ subst : (subst :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,exp,absValueExp,(subst :: (E, V) -> V),(e :: E),a>;
+ fun subst/@fun-substAV[624,7,624,50] : forall<(e :: E),a> (^ subst : (subst :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,exp,absValueExp,(subst :: (E, V) -> V),(e :: E),a>;
 pub  fun hashset/list[8,5,8,16] : forall<a> (set : (std/data/hashset/hash-set :: V -> V)<a>) -> (std/core/types/list :: V -> V)<a>;
 pub  fun fieldName/show[67,5,67,18] : (fieldName : fieldName) -> std/core/types/string;
 pub  fun varName/show[89,5,89,16] : (varName : varName) -> std/core/types/string;
 pub  fun op/show[143,5,143,11] : (op : op) -> std/core/types/string;
-pub  fun exp-any/id[575,5,575,14] : (exp : exp) -> std/core/types/int;
+pub  fun exp-any/id[566,5,566,14] : (exp : exp) -> std/core/types/int;
 pub  fun hashset/show[20,5,20,16] : forall<a> (set : (std/data/hashset/hash-set :: V -> V)<a>, ?show : (a) -> std/core/types/string) -> std/core/types/string;
 pub  fun literal/show[110,5,110,16] : (lit : literal) -> std/core/types/string;
-pub  fun absOp/showDiv[279,5,279,17] : (absOp : absOp) -> <(std/core/types/div :: X)> std/core/types/string;
-pub  fun absValue/showDiv[351,5,351,20] : (absValue : absValue) -> <(std/core/types/div :: X)> std/core/types/string;
+pub  fun absOp/showDiv[277,5,277,17] : (absOp : absOp) -> <(std/core/types/div :: X)> std/core/types/string;
+pub  fun absValue/showDiv[349,5,349,20] : (absValue : absValue) -> <(std/core/types/div :: X)> std/core/types/string;
 pub  fun path/showDiv[177,5,177,16] : (path : path) -> <(std/core/types/div :: X)> std/core/types/string;
-pub  fun absOp/show[286,5,286,14] : (absOp : absOp) -> std/core/types/string;
-pub  fun absValue/show[360,5,360,17] : (absValue : absValue) -> std/core/types/string;
+pub  fun absOp/show[284,5,284,14] : (absOp : absOp) -> std/core/types/string;
+pub  fun absValue/show[358,5,358,17] : (absValue : absValue) -> std/core/types/string;
 pub  fun hashmap/show[40,5,40,16] : forall<a,b> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, ?key/show : (a) -> std/core/types/string, ?value/show : (b) -> std/core/types/string) -> std/core/types/string;
-pub  fun store/show[444,5,444,14] : (store : store) -> std/core/types/string;
-pub  fun absValueExp/show[386,5,386,20] : (absValueExp : absValueExp) -> <(std/core/types/div :: X)> std/core/types/string;
-pub  fun storeExp/show[458,5,458,17] : (storeExp : storeExp) -> <(std/core/types/div :: X)> std/core/types/string;
-pub  fun absOpExp/show[310,5,310,17] : (absOpExp : absOpExp) -> <(std/core/types/div :: X)> std/core/types/string;
-pub  fun exp/show[507,5,507,12] : (exp : exp) -> std/core/types/string;
-pub  fun iteratorContextExp/show[597,5,597,27] : (ice : iteratorContextExp) -> <(std/core/types/div :: X)> std/core/types/string;
+pub  fun store/show[435,5,435,14] : (store : store) -> std/core/types/string;
+pub  fun absValueExp/show[384,5,384,20] : (absValueExp : absValueExp) -> <(std/core/types/div :: X)> std/core/types/string;
+pub  fun storeExp/show[449,5,449,17] : (storeExp : storeExp) -> <(std/core/types/div :: X)> std/core/types/string;
+pub  fun absOpExp/show[308,5,308,17] : (absOpExp : absOpExp) -> <(std/core/types/div :: X)> std/core/types/string;
+pub  fun exp/show[498,5,498,12] : (exp : exp) -> std/core/types/string;
+pub  fun iteratorContextExp/show[588,5,588,27] : (ice : iteratorContextExp) -> <(std/core/types/div :: X)> std/core/types/string;
 pub  fun path/show[181,5,181,13] : (path : path) -> std/core/types/string;
-pub  fun pathExp/show[232,5,232,16] : (pathExp : pathExp) -> <(std/core/types/div :: X)> std/core/types/string;
+pub  fun pathExp/show[230,5,230,16] : (pathExp : pathExp) -> <(std/core/types/div :: X)> std/core/types/string;
 pub  fun op/(==)[132,5,132,11] : (a : op, b : op) -> std/core/types/bool;
 pub  fun hashset/(==)[16,5,16,16] : forall<a> (a : (std/data/hashset/hash-set :: V -> V)<a>, b : (std/data/hashset/hash-set :: V -> V)<a>, ?(==) : (a, a) -> std/core/types/bool) -> std/core/types/bool;
 pub  fun literal/(==)[102,5,102,16] : (a : literal, b : literal) -> std/core/types/bool;
 pub  fun fieldName/(==)[59,5,59,18] : (a : fieldName, b : fieldName) -> std/core/types/bool;
-pub  fun absOp/eqDiv[266,5,266,15] : (a : absOp, b : absOp) -> <(std/core/types/div :: X)> std/core/types/bool;
-pub  fun absValue/eqDiv[337,5,337,18] : (a : absValue, b : absValue) -> <(std/core/types/div :: X)> std/core/types/bool;
+pub  fun absOp/eqDiv[264,5,264,15] : (a : absOp, b : absOp) -> <(std/core/types/div :: X)> std/core/types/bool;
+pub  fun absValue/eqDiv[335,5,335,18] : (a : absValue, b : absValue) -> <(std/core/types/div :: X)> std/core/types/bool;
 pub  fun path/eqDiv[169,5,169,14] : (a : path, b : path) -> <(std/core/types/div :: X)> std/core/types/bool;
-pub  fun absOp/(==)[275,5,275,14] : (a : absOp, b : absOp) -> std/core/types/bool;
-pub  fun absValue/(==)[347,5,347,17] : (a : absValue, b : absValue) -> std/core/types/bool;
+pub  fun absOp/(==)[273,5,273,14] : (a : absOp, b : absOp) -> std/core/types/bool;
+pub  fun absValue/(==)[345,5,345,17] : (a : absValue, b : absValue) -> std/core/types/bool;
 pub  fun varName/(==)[85,5,85,16] : (a : varName, b : varName) -> std/core/types/bool;
-pub  fun exp/eqDiv[539,5,539,13] : (a : exp, b : exp) -> <(std/core/types/div :: X)> std/core/types/bool;
-pub  fun exp/(==)[571,5,571,12] : (a : exp, b : exp) -> std/core/types/bool;
+pub  fun exp/eqDiv[530,5,530,13] : (a : exp, b : exp) -> <(std/core/types/div :: X)> std/core/types/bool;
+pub  fun exp/(==)[562,5,562,12] : (a : exp, b : exp) -> std/core/types/bool;
 // monadic lift
- fun absValueExp/(@mlift-x@10962==)[1,0,1,0] : (af : fieldName, bf : fieldName, @y-x10264 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun absValueExp/(@mlift-x@10887==)[1,0,1,0] : (af : fieldName, bf : fieldName, @y-x10250 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun absValueExp/(@mlift-x@10963==)[1,0,1,0] : (ae2 : absValueExp, be2 : absValueExp, @y-x10266 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun absValueExp/(@mlift-x@10888==)[1,0,1,0] : (ae2 : absValueExp, be2 : absValueExp, @y-x10252 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun absValueExp/(@mlift-x@10964==)[1,0,1,0] : (av@0 : varName, bv@0 : varName, @y-x10270 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun absValueExp/(@mlift-x@10889==)[1,0,1,0] : (av@0 : varName, bv@0 : varName, @y-x10256 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun absValueExp/(@mlift-x@10965==)[1,0,1,0] : (ba : absValueExp, bb : absValueExp, @y-x10272 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun absValueExp/(@mlift-x@10890==)[1,0,1,0] : (ba : absValueExp, bb : absValueExp, @y-x10258 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun storeExp/(@mlift-x@10966==)[1,0,1,0] : (aav : absValueExp, av@1 : varName, bav : absValueExp, bv@1 : varName, @y-x10276 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun storeExp/(@mlift-x@10891==)[1,0,1,0] : (aav : absValueExp, av@1 : varName, bav : absValueExp, bv@1 : varName, @y-x10262 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun storeExp/(@mlift-x@10967==)[1,0,1,0] : (ab@0 : storeExp, bb@0 : storeExp, @y-x10280 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun storeExp/(@mlift-x@10892==)[1,0,1,0] : (ab@0 : storeExp, bb@0 : storeExp, @y-x10266 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun storeExp/(@mlift-x@10968==)[1,0,1,0] : (av@0@0 : varName, bv@0@0 : varName, @y-x10283 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
-pub  fun absValueExp/(==)[397,5,397,20] : (a : absValueExp, b : absValueExp) -> <(std/core/pure :: E)> std/core/types/bool;
-pub  fun storeExp/(==)[470,5,470,17] : (a : storeExp, b : storeExp) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun storeExp/(@mlift-x@10893==)[1,0,1,0] : (av@0@0 : varName, bv@0@0 : varName, @y-x10269 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+pub  fun absValueExp/(==)[395,5,395,20] : (a : absValueExp, b : absValueExp) -> <(std/core/pure :: E)> std/core/types/bool;
+pub  fun storeExp/(==)[461,5,461,17] : (a : storeExp, b : storeExp) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun absOpExp/(@mlift-x@10969==)[1,0,1,0] : (ab : absOpExp, bb : absOpExp, @y-x10286 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
-pub  fun absOpExp/(==)[320,5,320,17] : (a : absOpExp, b : absOpExp) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun absOpExp/(@mlift-x@10894==)[1,0,1,0] : (ab : absOpExp, bb : absOpExp, @y-x10272 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+pub  fun absOpExp/(==)[318,5,318,17] : (a : absOpExp, b : absOpExp) -> <(std/core/pure :: E)> std/core/types/bool;
 pub  fun hashmap/(==)[28,5,28,16] : forall<a,b> (a : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, b : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int, ?value/(==) : (b, b) -> std/core/types/bool) -> std/core/types/bool;
 // monadic lift
- fun iteratorContextExp/(@mlift-x@10970==)[1,0,1,0] : (aav : absValueExp, bav : absValueExp, @y-x10293 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
-pub  fun iteratorContextExp/(==)[605,5,605,27] : (a : iteratorContextExp, b : iteratorContextExp) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun iteratorContextExp/(@mlift-x@10895==)[1,0,1,0] : (aav : absValueExp, bav : absValueExp, @y-x10279 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+pub  fun iteratorContextExp/(==)[596,5,596,27] : (a : iteratorContextExp, b : iteratorContextExp) -> <(std/core/pure :: E)> std/core/types/bool;
 pub  fun path/(==)[173,5,173,13] : (a : path, b : path) -> std/core/types/bool;
 // monadic lift
- fun pathExp/(@mlift-x@10971==)[1,0,1,0] : (ad : std/core/types/bool, bd : std/core/types/bool, @y-x10300 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun pathExp/(@mlift-x@10896==)[1,0,1,0] : (ad : std/core/types/bool, bd : std/core/types/bool, @y-x10286 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun pathExp/(@mlift-x@10972==)[1,0,1,0] : (ac : absOpExp, ad : std/core/types/bool, bc : absOpExp, bd : std/core/types/bool, @y-x10299 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun pathExp/(@mlift-x@10897==)[1,0,1,0] : (ac : absOpExp, ad : std/core/types/bool, bc : absOpExp, bd : std/core/types/bool, @y-x10285 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun pathExp/(@mlift-x@10973==)[1,0,1,0] : (ab : pathExp, bb : pathExp, @y-x10303 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+ fun pathExp/(@mlift-x@10898==)[1,0,1,0] : (ab : pathExp, bb : pathExp, @y-x10289 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
 // monadic lift
- fun pathExp/(@mlift-x@10974==)[1,0,1,0] : (aels : pathExp, bels : pathExp, @y-x10306 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
-pub  fun pathExp/(==)[246,5,246,16] : (a : pathExp, b : pathExp) -> <(std/core/pure :: E)> std/core/types/bool;
-pub  fun storeExp/get[482,5,482,16] : (store : storeExp, v : varName) -> (std/core/types/maybe :: V -> V)<absValueExp>;
+ fun pathExp/(@mlift-x@10899==)[1,0,1,0] : (aels : pathExp, bels : pathExp, @y-x10292 : std/core/types/bool) -> <(std/core/pure :: E)> std/core/types/bool;
+pub  fun pathExp/(==)[244,5,244,16] : (a : pathExp, b : pathExp) -> <(std/core/pure :: E)> std/core/types/bool;
+pub  fun storeExp/get[473,5,473,16] : (store : storeExp, v : varName) -> (std/core/types/maybe :: V -> V)<absValueExp>;
 pub  fun hashset/union[24,5,24,17] : forall<a> (a : (std/data/hashset/hash-set :: V -> V)<a>, b : (std/data/hashset/hash-set :: V -> V)<a>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/data/hashset/hash-set :: V -> V)<a>;
 pub  fun hashmap/prettyPrint[46,5,46,23] : forall<a> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,a>, ?value/show : (a) -> std/core/types/string) -> <(std/core/types/div :: X)> std/core/types/string;
 pub  fun op/hash[153,5,153,11] : (op : op, x : std/core/types/int64) -> std/core/types/int;
 pub  fun literal/hash[117,5,117,16] : (a : literal, x : std/core/types/int64) -> std/core/types/int;
 pub  fun fieldName/hash[74,5,74,18] : (fieldName : fieldName, x : std/core/types/int64) -> std/core/types/int;
-pub  fun absOp/divHash[290,5,290,17] : (absOp : absOp, x : std/core/types/int64) -> <(std/core/types/div :: X)> std/core/types/int;
-pub  fun absValue/divHash[364,5,364,20] : (absValue : absValue, x : std/core/types/int64) -> <(std/core/types/div :: X)> std/core/types/int;
+pub  fun absOp/divHash[288,5,288,17] : (absOp : absOp, x : std/core/types/int64) -> <(std/core/types/div :: X)> std/core/types/int;
+pub  fun absValue/divHash[362,5,362,20] : (absValue : absValue, x : std/core/types/int64) -> <(std/core/types/div :: X)> std/core/types/int;
 pub  fun path/divHash[185,5,185,16] : (path : path, x : std/core/types/int64) -> <(std/core/types/div :: X)> std/core/types/int;
-pub  fun absOp/hash[298,5,298,14] : (absOp : absOp, x : std/core/types/int64) -> std/core/types/int;
-pub  fun absValue/hash[373,5,373,17] : (absValue : absValue, x : std/core/types/int64) -> std/core/types/int;
+pub  fun absOp/hash[296,5,296,14] : (absOp : absOp, x : std/core/types/int64) -> std/core/types/int;
+pub  fun absValue/hash[371,5,371,17] : (absValue : absValue, x : std/core/types/int64) -> std/core/types/int;
 pub  fun varName/hash[93,5,93,16] : (varName : varName, x : std/core/types/int64) -> std/core/types/int;
-pub  fun exp/hash[523,5,523,12] : (exp : exp, x : std/core/types/int64) -> std/core/types/int;
+pub  fun exp/hash[514,5,514,12] : (exp : exp, x : std/core/types/int64) -> std/core/types/int;
 pub  fun path/hash[189,5,189,13] : (path : path, x : std/core/types/int64) -> std/core/types/int;
 // runtime tag for the effect `:attrGrammar`
-pub val @tag-attrGrammar[613,1,613,18] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(attrGrammar :: (E, V) -> V)>;
+pub val @tag-attrGrammar[604,1,604,18] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(attrGrammar :: (E, V) -> V)>;
 // handler for the effect `:attrGrammar`
-pub  fun @handle-attrGrammar[613,8,613,18] : forall<a,(e :: E),b> (hnd : (attrGrammar :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
+pub  fun @handle-attrGrammar[604,8,604,18] : forall<a,(e :: E),b> (hnd : (attrGrammar :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
 // select `getAbstractValue` operation out of effect `:attrGrammar`
-pub  fun @select-getAbstractValue[614,7,614,45] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-getAbstractValue[605,7,605,45] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun getAbstractValue` operation of the effect `:attrGrammar`
-pub  fun getAbstractValue[614,7,614,22] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> absValueExp;
+pub  fun getAbstractValue[605,7,605,22] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> absValueExp;
 // select `setAbstractValue` operation out of effect `:attrGrammar`
-pub  fun @select-setAbstractValue[615,7,615,59] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-setAbstractValue[606,7,606,59] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absValueExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun setAbstractValue` operation of the effect `:attrGrammar`
-pub  fun setAbstractValue[615,7,615,22] : (exp : exp, absValue : absValueExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun setAbstractValue[606,7,606,22] : (exp : exp, absValue : absValueExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // select `getPaths` operation out of effect `:attrGrammar`
-pub  fun @select-getPaths[616,7,616,33] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-getPaths[607,7,607,33] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun getPaths` operation of the effect `:attrGrammar`
-pub  fun getPaths[616,7,616,14] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
+pub  fun getPaths[607,7,607,14] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // select `setPaths` operation out of effect `:attrGrammar`
-pub  fun @select-setPaths[617,7,617,44] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-setPaths[608,7,608,44] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun setPaths` operation of the effect `:attrGrammar`
-pub  fun setPaths[617,7,617,14] : (exp : exp, paths : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun setPaths[608,7,608,14] : (exp : exp, paths : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // select `setOutputStore` operation out of effect `:attrGrammar`
-pub  fun @select-setOutputStore[619,7,619,51] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-setOutputStore[610,7,610,51] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // fun getOutputStore(exp: exp): storeExp
 
 // Call the `fun setOutputStore` operation of the effect `:attrGrammar`
-pub  fun setOutputStore[619,7,619,20] : (exp : exp, store : storeExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun setOutputStore[610,7,610,20] : (exp : exp, store : storeExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // select `getInputStore` operation out of effect `:attrGrammar`
-pub  fun @select-getInputStore[620,7,620,39] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-getInputStore[611,7,611,39] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun getInputStore` operation of the effect `:attrGrammar`
-pub  fun getInputStore[620,7,620,19] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> storeExp;
+pub  fun getInputStore[611,7,611,19] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> storeExp;
 // select `setInputStore` operation out of effect `:attrGrammar`
-pub  fun @select-setInputStore[621,7,621,50] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-setInputStore[612,7,612,50] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,storeExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun setInputStore` operation of the effect `:attrGrammar`
-pub  fun setInputStore[621,7,621,19] : (exp : exp, store : storeExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun setInputStore[612,7,612,19] : (exp : exp, store : storeExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // select `setQueryCondition` operation out of effect `:attrGrammar`
-pub  fun @select-setQueryCondition[623,7,623,54] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absOpExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-setQueryCondition[614,7,614,54] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,absOpExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // fun getQueryCondition(exp: exp): absOpExp
 
 // Call the `fun setQueryCondition` operation of the effect `:attrGrammar`
-pub  fun setQueryCondition[623,7,623,23] : (exp : exp, absOp : absOpExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun setQueryCondition[614,7,614,23] : (exp : exp, absOp : absOpExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // select `getDataDependence` operation out of effect `:attrGrammar`
-pub  fun @select-getDataDependence[624,7,624,39] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-getDataDependence[615,7,615,39] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun getDataDependence` operation of the effect `:attrGrammar`
-pub  fun getDataDependence[624,7,624,23] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> std/core/types/bool;
+pub  fun getDataDependence[615,7,615,23] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> std/core/types/bool;
 // select `setDataDependence` operation out of effect `:attrGrammar`
-pub  fun @select-setDataDependence[625,7,625,55] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-setDataDependence[616,7,616,55] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,std/core/types/bool,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun setDataDependence` operation of the effect `:attrGrammar`
-pub  fun setDataDependence[625,7,625,23] : (exp : exp, dependence : std/core/types/bool) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun setDataDependence[616,7,616,23] : (exp : exp, dependence : std/core/types/bool) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // select `getIteratorContext` operation out of effect `:attrGrammar`
-pub  fun @select-getIteratorContext[626,7,626,54] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-getIteratorContext[617,7,617,54] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun getIteratorContext` operation of the effect `:attrGrammar`
-pub  fun getIteratorContext[626,7,626,24] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> iteratorContextExp;
+pub  fun getIteratorContext[617,7,617,24] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> iteratorContextExp;
 // select `setIteratorContext` operation out of effect `:attrGrammar`
-pub  fun @select-setIteratorContext[627,7,627,65] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-setIteratorContext[618,7,618,65] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,iteratorContextExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun setIteratorContext` operation of the effect `:attrGrammar`
-pub  fun setIteratorContext[627,7,627,24] : (exp : exp, paths : iteratorContextExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun setIteratorContext[618,7,618,24] : (exp : exp, paths : iteratorContextExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // select `getTraversalSummary` operation out of effect `:attrGrammar`
-pub  fun @select-getTraversalSummary[628,7,628,44] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-getTraversalSummary[619,7,619,44] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause1 :: (V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun getTraversalSummary` operation of the effect `:attrGrammar`
-pub  fun getTraversalSummary[628,7,628,25] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
+pub  fun getTraversalSummary[619,7,619,25] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // select `setTraversalSummary` operation out of effect `:attrGrammar`
-pub  fun @select-setTraversalSummary[629,7,629,57] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-setTraversalSummary[620,7,620,57] : forall<(e :: E),a> (^ hnd : (attrGrammar :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,pathExp,(),(attrGrammar :: (E, V) -> V),(e :: E),a>;
 // Call the `fun setTraversalSummary` operation of the effect `:attrGrammar`
-pub  fun setTraversalSummary[629,7,629,25] : (exp : exp, summary : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun setTraversalSummary[620,7,620,25] : (exp : exp, summary : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // runtime tag for the effect `:subst`
-pub val @tag-subst[632,1,632,12] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(subst :: (E, V) -> V)>;
+pub val @tag-subst[623,1,623,12] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(subst :: (E, V) -> V)>;
 // handler for the effect `:subst`
-pub  fun @handle-subst[632,8,632,12] : forall<a,(e :: E),b> (hnd : (subst :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(subst :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
+pub  fun @handle-subst[623,8,623,12] : forall<a,(e :: E),b> (hnd : (subst :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(subst :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
 // select `substAV` operation out of effect `:subst`
-pub  fun @select-substAV[633,7,633,50] : forall<(e :: E),a> (^ hnd : (subst :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,exp,absValueExp,(subst :: (E, V) -> V),(e :: E),a>;
+pub  fun @select-substAV[624,7,624,50] : forall<(e :: E),a> (^ hnd : (subst :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<exp,exp,absValueExp,(subst :: (E, V) -> V),(e :: E),a>;
 // runtime tag for the effect `:nondet`
-pub val @tag-nondet[637,1,637,13] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(nondet :: (E, V) -> V)>;
+pub val @tag-nondet[628,1,628,13] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(nondet :: (E, V) -> V)>;
 // handler for the effect `:nondet`
-pub  fun @handle-nondet[637,8,637,13] : forall<a,(e :: E),b> (hnd : (nondet :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(nondet :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
+pub  fun @handle-nondet[628,8,628,13] : forall<a,(e :: E),b> (hnd : (nondet :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(nondet :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
 // select `choose` operation out of effect `:nondet`
-pub  fun @select-choose[638,7,638,27] : forall<a,(e :: E),b> (^ hnd : (nondet :: (E, V) -> V)<(e :: E),b>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<a,a,a,(nondet :: (E, V) -> V),(e :: E),b>;
+pub  fun @select-choose[629,7,629,27] : forall<a,(e :: E),b> (^ hnd : (nondet :: (E, V) -> V)<(e :: E),b>) -> (std/core/hnd/clause2 :: (V, V, V, (E, V) -> V, E, V) -> V)<a,a,a,(nondet :: (E, V) -> V),(e :: E),b>;
 // select `fail` operation out of effect `:nondet`
-pub  fun @select-fail[639,13,639,21] : forall<a,(e :: E),b> (^ hnd : (nondet :: (E, V) -> V)<(e :: E),b>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<a,(nondet :: (E, V) -> V),(e :: E),b>;
-pub  fun (..)[642,5,642,8] : (value : absValue, fieldName : fieldName) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> absValue;
+pub  fun @select-fail[630,13,630,21] : forall<a,(e :: E),b> (^ hnd : (nondet :: (E, V) -> V)<(e :: E),b>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<a,(nondet :: (E, V) -> V),(e :: E),b>;
+pub  fun (..)[633,5,633,8] : (value : absValue, fieldName : fieldName) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> absValue;
 // monadic lift
- fun absValueExp/@mlift-trmc-simplify@10975[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<absValueExp>, @y-x10332 : absValueExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> absValueExp;
+ fun absValueExp/@mlift-trmc-simplify@10900[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<absValueExp>, @y-x10318 : absValueExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> absValueExp;
 // monadic lift
- fun absValueExp/@mlift-trmc-simplify@10976[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<absValueExp>, @y-x10333 : absValue) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X)> absValueExp;
+ fun absValueExp/@mlift-trmc-simplify@10901[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<absValueExp>, @y-x10319 : absValue) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X)> absValueExp;
 // monadic lift
- fun absValueExp/@mlift-trmc-simplify@10977[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<absValueExp>, ave : absValueExp, v : varName, @y-x10336 : storeExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> absValueExp;
-pub  fun absValueExp/@trmc-simplify[409,5,409,24] : (ave : absValueExp, @acc : (std/core/types/ctx :: V -> V)<absValueExp>) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> absValueExp;
-pub  fun absValueExp/simplify[409,5,409,24] : (ave : absValueExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> absValueExp;
+ fun absValueExp/@mlift-trmc-simplify@10902[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<absValueExp>, ave : absValueExp, v : varName, @y-x10322 : storeExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> absValueExp;
+// hand crafted rules to get readable output
+pub  fun absValueExp/@trmc-simplify[408,5,408,24] : (ave : absValueExp, @acc : (std/core/types/ctx :: V -> V)<absValueExp>) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> absValueExp;
+// hand crafted rules to get readable output
+pub  fun absValueExp/simplify[408,5,408,24] : (ave : absValueExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> absValueExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10978[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, @y-x10340 : absValueExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10903[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, @y-x10326 : absValueExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10979[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, pathExp : pathExp, @y-x10342 : iteratorContextExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10904[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, pathExp : pathExp, @y-x10328 : iteratorContextExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> pathExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10980[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, pathExp : pathExp, @y-x10345 : std/core/types/bool) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10905[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, pathExp : pathExp, @y-x10331 : std/core/types/bool) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10981[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, pathExp : pathExp, @y-x10344 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10906[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, pathExp : pathExp, @y-x10330 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10982[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, @y-x10347 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10907[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, @y-x10333 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10983[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, @y-x10350 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10908[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, @y-x10336 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10984[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, b@0 : pathExp, @trmc-x10261 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10909[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, b@0 : pathExp, @trmc-x10247 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10985[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, a@0 : pathExp, b@0 : pathExp, @y-x10351 : std/core/types/bool) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10910[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, a@0 : pathExp, b@0 : pathExp, @y-x10337 : std/core/types/bool) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun pathExp/@mlift-trmc-simplify@10986[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, els : pathExp, thn : pathExp, @y-x10356 : std/core/types/bool) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
+ fun pathExp/@mlift-trmc-simplify@10911[1,0,1,0] : (@acc : (std/core/types/ctx :: V -> V)<pathExp>, els : pathExp, thn : pathExp, @y-x10342 : std/core/types/bool) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
+// hand crafted rules to get good output
 pub  fun pathExp/@trmc-simplify[206,5,206,20] : (pathExp : pathExp, @acc : (std/core/types/ctx :: V -> V)<pathExp>) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
+// hand crafted rules to get good output
 pub  fun pathExp/simplify[206,5,206,20] : (pathExp : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // Call the `fun substAV` operation of the effect `:subst`
-pub  fun substAV[633,7,633,13] : (exp : exp, noCycle : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(subst :: (E, V) -> V)>> absValueExp;
+pub  fun substAV[624,7,624,13] : (exp : exp, noCycle : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(subst :: (E, V) -> V)>> absValueExp;
 // Call the `ctl choose` operation of the effect `:nondet`
-pub  fun choose[638,7,638,12] : forall<a> (x : a, y : a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(nondet :: (E, V) -> V)>> a;
+pub  fun choose[629,7,629,12] : forall<a> (x : a, y : a) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(nondet :: (E, V) -> V)>> a;
 // Call the `final ctl fail` operation of the effect `:nondet`
-pub  fun fail[639,13,639,16] : forall<a> () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(nondet :: (E, V) -> V)>> a;
-pub  fun hash-map/insert[661,5,661,19] : forall<a,b> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, value : b, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>;
-pub  fun hash-set/insert[676,5,676,19] : forall<a> (set : (std/data/hashset/hash-set :: V -> V)<a>, x : a, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/data/hashset/hash-set :: V -> V)<a>;
-pub  fun hashset/singleton[680,5,680,21] : forall<a> (x : a, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/data/hashset/hash-set :: V -> V)<a>;
-pub  fun applyOp[650,5,650,11] : (op : op, a : absValue, b : absValue) -> absValue;
-pub  fun getOrThrow[654,5,654,14] : forall<a,b> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> b;
+pub  fun fail[630,13,630,16] : forall<a> () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(nondet :: (E, V) -> V)>> a;
+pub  fun hash-map/insert[652,5,652,19] : forall<a,b> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, value : b, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>;
+pub  fun hash-set/insert[664,5,664,19] : forall<a> (set : (std/data/hashset/hash-set :: V -> V)<a>, x : a, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/data/hashset/hash-set :: V -> V)<a>;
+pub  fun hashset/singleton[668,5,668,21] : forall<a> (x : a, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/data/hashset/hash-set :: V -> V)<a>;
+pub  fun applyOp[641,5,641,11] : (op : op, a : absValue, b : absValue) -> absValue;
+pub  fun getOrThrow[645,5,645,14] : forall<a,b> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> b;
 // monadic lift
- fun hashmap/@mlift-insertAll@10987[1,0,1,0] : forall<(h :: H),a,b> (@y-x10365 : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, result : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int, @c-x10367 : b) -> ();
+ fun hashmap/@mlift-insertAll@10912[1,0,1,0] : forall<(h :: H),a,b> (@y-x10351 : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, result : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int, @c-x10353 : b) -> ();
 // monadic lift
- fun hashmap/@mlift-insertAll@10988[1,0,1,0] : forall<(h :: H),a,b> (b : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, result : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int, @y-x10365 : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> ();
+ fun hashmap/@mlift-insertAll@10913[1,0,1,0] : forall<(h :: H),a,b> (b : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, result : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int, @y-x10351 : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> ();
 // monadic lift
- fun hashmap/@mlift-insertAll@10989[1,0,1,0] : forall<(h :: H),a,b> (result : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>>, wild_ : ()) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>;
-pub  fun hashmap/insertAll[665,5,665,21] : forall<a,b> (a : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, b : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/core/pure :: E) (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>;
+ fun hashmap/@mlift-insertAll@10914[1,0,1,0] : forall<(h :: H),a,b> (result : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>>, wild_ : ()) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>;
+pub  fun hashmap/insertAll[656,5,656,21] : forall<a,b> (a : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, b : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/core/pure :: E) (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>;
 // monadic lift
- fun @mlift-updateAbstractValue@10990[1,0,1,0] : (exp : exp, @c-x10373 : absValueExp) -> ();
-pub  fun updateAbstractValue[684,5,684,23] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
-pub  fun extractPaths[697,5,697,16] : (absValue : absValue) -> (std/data/hashset/hash-set :: V -> V)<path>;
-pub  fun updatePaths[704,5,704,15] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
-pub  fun updateOutputStore[724,5,724,21] : (exp : exp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateAbstractValue@10915[1,0,1,0] : (exp : exp, @c-x10359 : absValueExp) -> ();
+pub  fun updateAbstractValue[672,5,672,23] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+pub  fun extractPaths[685,5,685,16] : (absValue : absValue) -> (std/data/hashset/hash-set :: V -> V)<path>;
+pub  fun updatePaths[692,5,692,15] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+pub  fun updateOutputStore[712,5,712,21] : (exp : exp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateInputStore@10991[1,0,1,0] : (e : exp, inputStore : storeExp, s : exp, v : varName, wild_@0 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateInputStore@10916[1,0,1,0] : (e : exp, inputStore : storeExp, s : exp, v : varName, wild_@0 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateInputStore@10992[1,0,1,0] : (s1 : exp, s2 : exp, wild_@1 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateInputStore@10917[1,0,1,0] : (s1 : exp, s2 : exp, wild_@1 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateInputStore@10993[1,0,1,0] : (e2 : exp, inputStore : storeExp, wild_@2 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateInputStore@10918[1,0,1,0] : (e2 : exp, inputStore : storeExp, wild_@2 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateInputStore@10994[1,0,1,0] : (inputStore : storeExp, s2@0 : exp, wild_@4 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateInputStore@10919[1,0,1,0] : (inputStore : storeExp, s2@0 : exp, wild_@4 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateInputStore@10995[1,0,1,0] : (inputStore : storeExp, s1@0 : exp, s2@0 : exp, wild_@3 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateInputStore@10920[1,0,1,0] : (inputStore : storeExp, s1@0 : exp, s2@0 : exp, wild_@3 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateInputStore@10996[1,0,1,0] : (exp : exp, inputStore : storeExp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
-pub  fun updateInputStore[739,5,739,20] : (exp : exp, inputStore : storeExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
-pub  fun isValidQueryCondition[767,5,767,25] : (exp : exp) -> std/core/types/bool;
-// not entirely sure if this is what the notation means
-pub  fun absOp/(&)[786,5,786,13] : (absOp : absOp, absValue : absValue) -> absOp;
-pub  fun absValue/not[789,5,789,16] : (absValue : absValue) -> absValue;
+ fun @mlift-updateInputStore@10921[1,0,1,0] : (exp : exp, inputStore : storeExp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+pub  fun updateInputStore[727,5,727,20] : (exp : exp, inputStore : storeExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun isValidQueryCondition[755,5,755,25] : (exp : exp) -> std/core/types/bool;
 // monadic lift
- fun @mlift-updateQueryCondition@10997[1,0,1,0] : (e : exp, queryCondition : absOpExp, s2 : exp, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateQueryCondition@10922[1,0,1,0] : (e : exp, queryCondition : absOpExp, s2 : exp, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateQueryCondition@10998[1,0,1,0] : (queryCondition : absOpExp, s2 : exp, wild_@2 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateQueryCondition@10923[1,0,1,0] : (queryCondition : absOpExp, s2 : exp, wild_@2 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateQueryCondition@10999[1,0,1,0] : (e : exp, queryCondition : absOpExp, s1 : exp, s2 : exp, wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateQueryCondition@10924[1,0,1,0] : (e : exp, queryCondition : absOpExp, s1 : exp, s2 : exp, wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateQueryCondition@11000[1,0,1,0] : (e2 : exp, queryCondition : absOpExp, wild_@3 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateQueryCondition@10925[1,0,1,0] : (e2 : exp, queryCondition : absOpExp, wild_@3 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateQueryCondition@11001[1,0,1,0] : (queryCondition : absOpExp, s : exp, wild_@4 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateQueryCondition@10926[1,0,1,0] : (queryCondition : absOpExp, s : exp, wild_@4 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateQueryCondition@11002[1,0,1,0] : (queryCondition : absOpExp, s2@0 : exp, wild_@5 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateQueryCondition@10927[1,0,1,0] : (queryCondition : absOpExp, s2@0 : exp, wild_@5 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateQueryCondition@11003[1,0,1,0] : (exp : exp, queryCondition : absOpExp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
-pub  fun updateQueryCondition[793,5,793,24] : (exp : exp, queryCondition : absOpExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateQueryCondition@10928[1,0,1,0] : (exp : exp, queryCondition : absOpExp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun updateQueryCondition[773,5,773,24] : (exp : exp, queryCondition : absOpExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateDataDependence@11004[1,0,1,0] : (dependence : std/core/types/bool, e2 : exp, wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateDataDependence@10929[1,0,1,0] : (dependence : std/core/types/bool, e2 : exp, wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateDataDependence@11005[1,0,1,0] : (dependence : std/core/types/bool, s2 : exp, wild_@2 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateDataDependence@10930[1,0,1,0] : (dependence : std/core/types/bool, s2 : exp, wild_@2 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateDataDependence@11006[1,0,1,0] : (dependence : std/core/types/bool, s1 : exp, s2 : exp, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateDataDependence@10931[1,0,1,0] : (dependence : std/core/types/bool, s1 : exp, s2 : exp, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateDataDependence@11007[1,0,1,0] : (dependence : std/core/types/bool, s : exp, wild_@3 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateDataDependence@10932[1,0,1,0] : (dependence : std/core/types/bool, s : exp, wild_@3 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateDataDependence@11008[1,0,1,0] : (dependence : std/core/types/bool, s2@0 : exp, wild_@4 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateDataDependence@10933[1,0,1,0] : (dependence : std/core/types/bool, s2@0 : exp, wild_@4 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateDataDependence@11009[1,0,1,0] : (dependence : std/core/types/bool, exp : exp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
-pub  fun updateDataDependence[825,5,825,24] : (exp : exp, parentDependence : std/core/types/bool) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
-pub  fun extends[856,5,856,11] : (absValue : absValue, paths : (std/core/types/list :: V -> V)<path>) -> std/core/types/bool;
+ fun @mlift-updateDataDependence@10934[1,0,1,0] : (dependence : std/core/types/bool, exp : exp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun updateDataDependence[805,5,805,24] : (exp : exp, parentDependence : std/core/types/bool) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun extends[836,5,836,11] : (absValue : absValue, paths : (std/core/types/list :: V -> V)<path>) -> std/core/types/bool;
 // monadic lift
- fun @mlift-updateIteratorContext@11010[1,0,1,0] : (e : exp, exp : exp, s : exp, wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateIteratorContext@10935[1,0,1,0] : (e : exp, exp : exp, s : exp, wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateIteratorContext@11011[1,0,1,0] : (paths : iteratorContextExp, s2 : exp, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateIteratorContext@10936[1,0,1,0] : (paths : iteratorContextExp, s2 : exp, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateIteratorContext@11012[1,0,1,0] : (e2 : exp, paths : iteratorContextExp, wild_@2 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateIteratorContext@10937[1,0,1,0] : (e2 : exp, paths : iteratorContextExp, wild_@2 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateIteratorContext@11013[1,0,1,0] : (paths : iteratorContextExp, s2@0 : exp, wild_@4 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateIteratorContext@10938[1,0,1,0] : (paths : iteratorContextExp, s2@0 : exp, wild_@4 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateIteratorContext@11014[1,0,1,0] : (paths : iteratorContextExp, s1@0 : exp, s2@0 : exp, wild_@3 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateIteratorContext@10939[1,0,1,0] : (paths : iteratorContextExp, s1@0 : exp, s2@0 : exp, wild_@3 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateIteratorContext@11015[1,0,1,0] : (exp : exp, paths : iteratorContextExp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
-pub  fun updateIteratorContext[865,5,865,25] : (exp : exp, paths : iteratorContextExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
-pub  fun firstOrThrow[897,5,897,16] : forall<a> (l : (std/core/types/list :: V -> V)<a>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> a;
-pub  fun iter[904,5,904,8] : (exp : exp) -> pathExp;
+ fun @mlift-updateIteratorContext@10940[1,0,1,0] : (exp : exp, paths : iteratorContextExp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+pub  fun updateIteratorContext[845,5,845,25] : (exp : exp, paths : iteratorContextExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+pub  fun firstOrThrow[872,5,872,16] : forall<a> (l : (std/core/types/list :: V -> V)<a>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> a;
+pub  fun iter[879,5,879,8] : (exp : exp) -> pathExp;
 // monadic lift
- fun @mlift-updateTraversalSummary@11016[1,0,1,0] : (exp : exp, @c-x10443 : pathExp) -> ();
-pub  fun updateTraversalSummary[917,5,917,26] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
-pub  fun absValue/join[945,5,945,17] : (v1 : absValue, v2 : absValue) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> absValue;
+ fun @mlift-updateTraversalSummary@10941[1,0,1,0] : (exp : exp, @c-x10429 : pathExp) -> ();
+pub  fun updateTraversalSummary[883,5,883,26] : (exp : exp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+pub  fun absValue/join[911,5,911,17] : (v1 : absValue, v2 : absValue) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> absValue;
 // monadic lift
- fun @mlift-updateSynthesizedAttrs@11017[1,0,1,0] : (exp : exp, wild_@1 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateSynthesizedAttrs@10942[1,0,1,0] : (exp : exp, wild_@1 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateSynthesizedAttrs@11018[1,0,1,0] : (exp : exp, wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+ fun @mlift-updateSynthesizedAttrs@10943[1,0,1,0] : (exp : exp, wild_@0 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-updateSynthesizedAttrs@11019[1,0,1,0] : (exp : exp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
-pub  fun updateSynthesizedAttrs[957,5,957,26] : (exp : exp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-updateSynthesizedAttrs@10944[1,0,1,0] : (exp : exp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+pub  fun updateSynthesizedAttrs[923,5,923,26] : (exp : exp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-visit@11020[1,0,1,0] : forall<(e :: E)> (e2 : exp, f : (exp) -> (e :: E) (), wild_@0 : ()) -> (e :: E) ();
+ fun @mlift-visit@10945[1,0,1,0] : forall<(e :: E)> (e2 : exp, f : (exp) -> (e :: E) (), wild_@0 : ()) -> (e :: E) ();
 // monadic lift
- fun @mlift-visit@11021[1,0,1,0] : forall<(e :: E)> (f : (exp) -> (e :: E) (), s2 : exp, wild_@2 : ()) -> (e :: E) ();
+ fun @mlift-visit@10946[1,0,1,0] : forall<(e :: E)> (f : (exp) -> (e :: E) (), s2 : exp, wild_@2 : ()) -> (e :: E) ();
 // monadic lift
- fun @mlift-visit@11022[1,0,1,0] : forall<(e :: E)> (f : (exp) -> (e :: E) (), s1 : exp, s2 : exp, wild_@1 : ()) -> (e :: E) ();
+ fun @mlift-visit@10947[1,0,1,0] : forall<(e :: E)> (f : (exp) -> (e :: E) (), s1 : exp, s2 : exp, wild_@1 : ()) -> (e :: E) ();
 // monadic lift
- fun @mlift-visit@11023[1,0,1,0] : forall<(e :: E)> (f : (exp) -> (e :: E) (), s : exp, wild_@3 : ()) -> (e :: E) ();
+ fun @mlift-visit@10948[1,0,1,0] : forall<(e :: E)> (f : (exp) -> (e :: E) (), s : exp, wild_@3 : ()) -> (e :: E) ();
 // monadic lift
- fun @mlift-visit@11024[1,0,1,0] : forall<(e :: E)> (f : (exp) -> (e :: E) (), s2@0 : exp, wild_@4 : ()) -> (e :: E) ();
+ fun @mlift-visit@10949[1,0,1,0] : forall<(e :: E)> (f : (exp) -> (e :: E) (), s2@0 : exp, wild_@4 : ()) -> (e :: E) ();
 // monadic lift
- fun @mlift-visit@11025[1,0,1,0] : forall<(e :: E)> (exp : exp, f : (exp) -> (e :: E) (), wild_ : ()) -> (e :: E) ();
-pub  fun visit[969,5,969,9] : forall<(e :: E)> (exp : exp, f : (exp) -> (e :: E) ()) -> (e :: E) ();
+ fun @mlift-visit@10950[1,0,1,0] : forall<(e :: E)> (exp : exp, f : (exp) -> (e :: E) (), wild_ : ()) -> (e :: E) ();
+pub  fun visit[930,5,930,9] : forall<(e :: E)> (exp : exp, f : (exp) -> (e :: E) ()) -> (e :: E) ();
 // monadic lift
- fun @mlift-iterateAttributeGrammar@11026[1,0,1,0] : (exp : exp, wild_@2 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> ();
+ fun @mlift-applyAttributeGrammar@10951[1,0,1,0] : (exp : exp, wild_@2 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> ();
 // monadic lift
- fun @mlift-iterateAttributeGrammar@11027[1,0,1,0] : (exp : exp, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> ();
+ fun @mlift-applyAttributeGrammar@10952[1,0,1,0] : (exp : exp, wild_@1 : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)> ();
 // monadic lift
- fun @mlift-iterateAttributeGrammar@11028[1,0,1,0] : (exp : exp, wild_@0 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+ fun @mlift-applyAttributeGrammar@10953[1,0,1,0] : (exp : exp, wild_@0 : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-iterateAttributeGrammar@11029[1,0,1,0] : (exp : exp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
-pub  fun iterateAttributeGrammar[995,5,995,27] : (exp : exp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
-pub  fun getOrDefault[1007,5,1007,16] : forall<a,b> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, default : b, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> b;
-// runtime tag for the effect `:fixpoint`
-pub val @tag-fixpoint[1014,1,1014,15] : (std/core/hnd/htag :: ((E, V) -> V) -> V)<(fixpoint :: (E, V) -> V)>;
-// handler for the effect `:fixpoint`
-pub  fun @handle-fixpoint[1014,8,1014,15] : forall<a,(e :: E),b> (hnd : (fixpoint :: (E, V) -> V)<(e :: E),b>, ret : (res : a) -> (e :: E) b, action : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>|(e :: E)> a) -> (e :: E) b;
-// select `modified` operation out of effect `:fixpoint`
-pub  fun @select-modified[1015,7,1015,20] : forall<(e :: E),a> (^ hnd : (fixpoint :: (E, V) -> V)<(e :: E),a>) -> (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>;
-// Call the `fun modified` operation of the effect `:fixpoint`
-pub  fun modified[1015,7,1015,14] : () -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
-pub  fun mapShow[1034,5,1034,11] : forall<a,b> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, ?keyShow : (a) -> std/core/types/string, ?valueShow : (b) -> std/core/types/string) -> std/core/types/string;
+ fun @mlift-applyAttributeGrammar@10954[1,0,1,0] : (exp : exp, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
+pub  fun applyAttributeGrammar[956,5,956,25] : (exp : exp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ();
+pub  fun getOrDefault[964,5,964,16] : forall<a,b> (map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, default : b, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> b;
 // monadic lift
- fun @mlift-analyze@11030[1,0,1,0] : forall<(h :: H)> (exp : exp, @y-x10473 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,absValueExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> absValueExp;
+ fun @mlift-analyze@10955[1,0,1,0] : forall<(h :: H)> (exp : exp, @y-x10456 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,absValueExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> absValueExp;
 // monadic lift
- fun @mlift-analyze@11031[1,0,1,0] : forall<(h :: H)> (exp@0 : exp, @y-x10474 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,std/core/types/bool>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> std/core/types/bool;
+ fun @mlift-analyze@10956[1,0,1,0] : forall<(h :: H)> (exp@0 : exp, @y-x10457 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,std/core/types/bool>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> std/core/types/bool;
 // monadic lift
- fun @mlift-analyze@11032[1,0,1,0] : forall<(h :: H)> (exp@1 : exp, @y-x10475 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> storeExp;
+ fun @mlift-analyze@10957[1,0,1,0] : forall<(h :: H)> (exp@1 : exp, @y-x10458 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> storeExp;
 // monadic lift
- fun @mlift-analyze@11033[1,0,1,0] : forall<(h :: H)> (exp@2 : exp, @y-x10476 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,iteratorContextExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> iteratorContextExp;
+ fun @mlift-analyze@10958[1,0,1,0] : forall<(h :: H)> (exp@2 : exp, @y-x10459 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,iteratorContextExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> iteratorContextExp;
 // monadic lift
- fun @mlift-analyze@11034[1,0,1,0] : forall<(h :: H)> (exp@3 : exp, @y-x10477 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10959[1,0,1,0] : forall<(h :: H)> (exp@3 : exp, @y-x10460 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11035[1,0,1,0] : forall<(h :: H)> (exp@4 : exp, @y-x10478 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10960[1,0,1,0] : forall<(h :: H)> (exp@4 : exp, @y-x10461 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11036[1,0,1,0] : forall<(h :: H)> (abstractValues : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,absValueExp>>, absValue : absValueExp, exp@5 : exp, @y-x10479 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,absValueExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
+ fun @mlift-analyze@10961[1,0,1,0] : forall<(h :: H)> (abstractValues : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,absValueExp>>, absValue : absValueExp, exp@5 : exp, @y-x10462 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,absValueExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-analyze@11037[1,0,1,0] : forall<(h :: H)> (dataDependences : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,std/core/types/bool>>, dependence : std/core/types/bool, exp@6 : exp, @y-x10481 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,std/core/types/bool>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
+ fun @mlift-analyze@10962[1,0,1,0] : forall<(h :: H)> (dataDependences : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,std/core/types/bool>>, dependence : std/core/types/bool, exp@6 : exp, @y-x10464 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,std/core/types/bool>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-analyze@11038[1,0,1,0] : forall<(h :: H)> (exp@7 : exp, inputStore : storeExp, inputStores : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>>, @y-x10483 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
+ fun @mlift-analyze@10963[1,0,1,0] : forall<(h :: H)> (exp@7 : exp, inputStore : storeExp, inputStores : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>>, @y-x10466 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-analyze@11039[1,0,1,0] : forall<(h :: H)> (exp@8 : exp, iteratorContext : iteratorContextExp, iteratorContexts : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,iteratorContextExp>>, @y-x10485 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,iteratorContextExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
+ fun @mlift-analyze@10964[1,0,1,0] : forall<(h :: H)> (exp@8 : exp, iteratorContext : iteratorContextExp, iteratorContexts : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,iteratorContextExp>>, @y-x10468 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,iteratorContextExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-analyze@11040[1,0,1,0] : forall<(h :: H)> (exp@9 : exp, outputStore : storeExp, outputStores : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>>, @y-x10487 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
+ fun @mlift-analyze@10965[1,0,1,0] : forall<(h :: H)> (exp@9 : exp, outputStore : storeExp, outputStores : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>>, @y-x10470 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-analyze@11041[1,0,1,0] : forall<(h :: H)> (exp@10 : exp, paths : pathExp, pathsByExp : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, @y-x10489 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
+ fun @mlift-analyze@10966[1,0,1,0] : forall<(h :: H)> (exp@10 : exp, paths : pathExp, pathsByExp : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, @y-x10472 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-analyze@11042[1,0,1,0] : forall<(h :: H)> (exp@11 : exp, queryCondition : absOpExp, queryConditions : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,absOpExp>>, @y-x10491 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,absOpExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
+ fun @mlift-analyze@10967[1,0,1,0] : forall<(h :: H)> (exp@11 : exp, queryCondition : absOpExp, queryConditions : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,absOpExp>>, @y-x10474 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,absOpExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-analyze@11043[1,0,1,0] : forall<(h :: H)> (exp@12 : exp, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, traversalSummary : pathExp, @y-x10493 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ();
+ fun @mlift-analyze@10968[1,0,1,0] : forall<(h :: H)> (exp@12 : exp, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, traversalSummary : pathExp, @y-x10476 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ();
 // monadic lift
- fun @mlift-analyze@11044[1,0,1,0] : forall<(h :: H)> (@y-x10525 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10969[1,0,1,0] : (@y-x10507 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11045[1,0,1,0] : forall<(h :: H)> (@y-x10524 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10970[1,0,1,0] : (@y-x10506 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11046[1,0,1,0] : forall<(h :: H)> (@y-x10523 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10971[1,0,1,0] : (@y-x10505 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11047[1,0,1,0] : forall<(h :: H)> (@y-x10522 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10972[1,0,1,0] : forall<(h :: H)> (@y-x10479 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>, @y-x10503 : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, @y-x10510 : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
 // monadic lift
- fun @mlift-analyze@11048[1,0,1,0] : forall<(h :: H)> (@y-x10496 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>, @y-x10520 : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, @y-x10527 : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
+ fun @mlift-analyze@10973[1,0,1,0] : forall<(h :: H)> (@y-x10479 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>, @y-x10503 : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, @y-x10504 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
 // monadic lift
- fun @mlift-analyze@11049[1,0,1,0] : forall<(h :: H)> (@y-x10496 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>, @y-x10520 : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, @y-x10521 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
+ fun @mlift-analyze@10974[1,0,1,0] : (@y-x10500 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11050[1,0,1,0] : forall<(h :: H)> (@y-x10518 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10975[1,0,1,0] : (@y-x10499 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11051[1,0,1,0] : forall<(h :: H)> (@y-x10517 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10976[1,0,1,0] : (@y-x10498 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11052[1,0,1,0] : forall<(h :: H)> (@y-x10516 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10977[1,0,1,0] : (@y-x10497 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11053[1,0,1,0] : forall<(h :: H)> (@y-x10515 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10978[1,0,1,0] : (@y-x10496 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11054[1,0,1,0] : forall<(h :: H)> (@y-x10514 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10979[1,0,1,0] : (@y-x10495 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11055[1,0,1,0] : forall<(h :: H)> (@y-x10513 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10980[1,0,1,0] : (@y-x10494 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11056[1,0,1,0] : forall<(h :: H)> (@y-x10512 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10981[1,0,1,0] : (@y-x10493 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11057[1,0,1,0] : forall<(h :: H)> (@y-x10511 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10982[1,0,1,0] : (@y-x10492 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11058[1,0,1,0] : forall<(h :: H)> (@y-x10510 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10983[1,0,1,0] : (@y-x10491 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11059[1,0,1,0] : forall<(h :: H)> (@y-x10509 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10984[1,0,1,0] : (@y-x10490 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11060[1,0,1,0] : forall<(h :: H)> (@y-x10508 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10985[1,0,1,0] : (@y-x10489 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11061[1,0,1,0] : forall<(h :: H)> (@y-x10507 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10986[1,0,1,0] : (@y-x10488 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11062[1,0,1,0] : forall<(h :: H)> (@y-x10506 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10987[1,0,1,0] : (@y-x10487 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11063[1,0,1,0] : forall<(h :: H)> (@y-x10505 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10988[1,0,1,0] : (@y-x10486 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11064[1,0,1,0] : forall<(h :: H)> (@y-x10504 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10989[1,0,1,0] : (@y-x10485 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11065[1,0,1,0] : forall<(h :: H)> (@y-x10503 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10990[1,0,1,0] : (@y-x10484 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11066[1,0,1,0] : forall<(h :: H)> (@y-x10502 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10991[1,0,1,0] : (@y-x10483 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11067[1,0,1,0] : forall<(h :: H)> (@y-x10501 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10992[1,0,1,0] : (@y-x10482 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11068[1,0,1,0] : forall<(h :: H)> (@y-x10500 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10993[1,0,1,0] : (@y-x10481 : pathExp) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> pathExp;
 // monadic lift
- fun @mlift-analyze@11069[1,0,1,0] : forall<(h :: H)> (@y-x10499 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10994[1,0,1,0] : forall<(h :: H)> (@y-x10479 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, @y-x10503 : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
 // monadic lift
- fun @mlift-analyze@11070[1,0,1,0] : forall<(h :: H)> (@y-x10498 : pathExp) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> pathExp;
+ fun @mlift-analyze@10995[1,0,1,0] : forall<(h :: H)> (@y-x10479 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, @y-x10480 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
 // monadic lift
- fun @mlift-analyze@11071[1,0,1,0] : forall<(h :: H)> (@y-x10496 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, @y-x10520 : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
+ fun @mlift-analyze@10996[1,0,1,0] : forall<(h :: H)> (pathsByExp : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, @y-x10479 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
 // monadic lift
- fun @mlift-analyze@11072[1,0,1,0] : forall<(h :: H)> (@y-x10496 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, @y-x10497 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
+ fun @mlift-analyze@10997[1,0,1,0] : forall<(h :: H)> (inputStores : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>>, pathsByExp : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, wild_ : ()) -> <(std/core/pure :: E),(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
+pub  fun analyze[971,5,971,11] : (root : exp) -> <(std/core/pure :: E)> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
+pub val line1[1009,5,1009,9] : exp;
+pub val paperExample[1010,5,1010,16] : exp;
 // monadic lift
- fun @mlift-analyze@11073[1,0,1,0] : forall<(h :: H)> (pathsByExp : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, @y-x10496 : (std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>) -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
+ fun @mlift-check@10998[1,0,1,0] : forall<a,(e :: E)> (expected : a, ?(==) : (a, a) -> <(std/core/types/div :: X)> std/core/types/bool, ?show : (a) -> <(std/core/types/div :: X)> std/core/types/string, @y-x10521 : (std/core/exn/error :: V -> V)<a>) -> <(std/core/console/console :: X),(std/core/types/div :: X)|(e :: E)> ();
+pub  fun check[1035,5,1035,9] : forall<a,(e :: E)> (expected : a, f : () -> <(std/core/console/console :: X),(std/core/pure :: E)|(e :: E)> a, ?(==) : (a, a) -> <(std/core/types/div :: X)> std/core/types/bool, ?kk-file-line : std/core/types/string, ?show : (a) -> <(std/core/types/div :: X)> std/core/types/string) -> <(std/core/console/console :: X),(std/core/types/div :: X)|(e :: E)> ();
 // monadic lift
- fun @mlift-analyze@11074[1,0,1,0] : forall<(h :: H)> (inputStores : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,storeExp>>, pathsByExp : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, traversalSummaries : (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<exp,pathExp>>, wild_ : ()) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
-pub  fun analyze[1038,5,1038,11] : (root : exp) -> <(std/core/pure :: E)> ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>);
-pub val line1[1099,5,1099,9] : exp;
-pub val paperExample[1100,5,1100,16] : exp;
-// monadic lift
- fun @mlift-check@11075[1,0,1,0] : forall<a,(e :: E)> (expected : a, ?(==) : (a, a) -> <(std/core/types/div :: X)> std/core/types/bool, ?show : (a) -> <(std/core/types/div :: X)> std/core/types/string, @y-x10540 : (std/core/exn/error :: V -> V)<a>) -> <(std/core/console/console :: X),(std/core/types/div :: X)|(e :: E)> ();
-pub  fun check[1125,5,1125,9] : forall<a,(e :: E)> (expected : a, f : () -> <(std/core/console/console :: X),(std/core/pure :: E)|(e :: E)> a, ?(==) : (a, a) -> <(std/core/types/div :: X)> std/core/types/bool, ?kk-file-line : std/core/types/string, ?show : (a) -> <(std/core/types/div :: X)> std/core/types/string) -> <(std/core/console/console :: X),(std/core/types/div :: X)|(e :: E)> ();
-// monadic lift
- fun @mlift-main@11076[1,0,1,0] : (prettyPrintNoDiv : (x : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>) -> std/core/types/string, @y-x10543 : ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>)) -> <(std/core/pure :: E)> ();
-pub  fun main[1131,5,1131,8] : () -> <(std/core/pure :: E),(std/core/console/console :: X)> ();
+ fun @mlift-main@10999[1,0,1,0] : (prettyPrintNoDiv : (x : (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>) -> std/core/types/string, @y-x10524 : ((std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,storeExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>, (std/data/hashmap/hash-map :: (V, V) -> V)<std/core/types/int,pathExp>)) -> <(std/core/pure :: E)> ();
+pub  fun main[1041,5,1041,8] : () -> <(std/core/pure :: E),(std/core/console/console :: X)> ();
  
 //------------------------------
 //#kki: external declarations
@@ -789,52 +765,36 @@ specialize "_*_*_"  fun getOrDefault // inline size: 1
          -> default;
     });
   };
-specialize "***"  fun mapShow // inline size: 1
-  = forall<a,b> fn(map: (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, @implicit/keyShow: (a) -> std/core/types/string, @implicit/valueShow: (b) -> std/core/types/string){
-    main/#hashmap/show<a,b>(map, @implicit/keyShow, @implicit/valueShow);
-  };
 recursive specialize "_*"  fun visit // inline size: 18
   = forall<(e :: E)> fn<(e :: E)>(exp: exp, f: (exp) -> (e :: E) ()){
-    val _[970,3,970,9] : ()
+    val _[931,3,931,9] : ()
           = f(exp);
     (match (exp) {
       ((main/DotE((e: exp) : exp, (@pat@0: fieldName) : fieldName, (@pat@1: std/core/types/int) : std/core/types/int) : exp ) as @pat: exp)
          -> main/visit<(e :: E)>(e, f);
       ((main/OpE((@pat@3: op) : op, (e1: exp) : exp, (e2: exp) : exp, (@pat@4: std/core/types/int) : std/core/types/int) : exp ) as @pat@2: exp)
-         -> val _@0[974,7,974,17] : ()
+         -> val _@0[935,7,935,17] : ()
                   = main/visit<(e :: E)>(e1, f);
         main/visit<(e :: E)>(e2, f);
       ((main/AsgnE(((@skip main/VarName((@pat@7: std/core/types/string) : std/core/types/string) : varName ) as @pat@6: varName) : varName, (e@0: exp) : exp, (@pat@8: std/core/types/int) : std/core/types/int) : exp ) as @pat@5: exp)
          -> main/visit<(e :: E)>(e@0, f);
       ((main/IfE((e@1: exp) : exp, (s1: exp) : exp, (s2: exp) : exp, (@pat@10: std/core/types/int) : std/core/types/int) : exp ) as @pat@9: exp)
-         -> val _@1[979,7,979,16] : ()
+         -> val _@1[940,7,940,16] : ()
               = main/visit<(e :: E)>(e@1, f);
-            val _@2[980,7,980,17] : ()
+            val _@2[941,7,941,17] : ()
               = main/visit<(e :: E)>(s1, f);
         main/visit<(e :: E)>(s2, f);
       ((main/ForE(((@skip main/VarName((@pat@13: std/core/types/string) : std/core/types/string) : varName ) as @pat@12: varName) : varName, (e@2: exp) : exp, (s: exp) : exp, (@pat@14: std/core/types/int) : std/core/types/int) : exp ) as @pat@11: exp)
-         -> val _@3[984,7,984,16] : ()
+         -> val _@3[945,7,945,16] : ()
                   = main/visit<(e :: E)>(e@2, f);
         main/visit<(e :: E)>(s, f);
       ((main/SeqE((s1@0: exp) : exp, (s2@0: exp) : exp, (@pat@16: std/core/types/int) : std/core/types/int) : exp ) as @pat@15: exp)
-         -> val _@4[988,7,988,17] : ()
+         -> val _@4[949,7,949,17] : ()
                   = main/visit<(e :: E)>(s1@0, f);
         main/visit<(e :: E)>(s2@0, f);
       (@pat@17: exp)
          -> std/core/types/Unit;
     });
-  };
-specialize "*_"  fun absOp/(&) // inline size: 1
-  = fn(absOp: absOp, absValue: absValue){
-    val set@10237[1,0,1,0] : (std/data/hashset/hash-set :: V -> V)<absOp>
-          = std/data/hashset/#thread/hash-set<absOp>((std/core/types/@None<std/core/types/int>));
-    main/AOOp(main/AndOp, (std/core/types/Cons<absValue>((main/AVOp((std/data/hashset/insert<absOp>(set@10237, absOp, main/#absOp/hash, main/#absOp/(==), std/data/hashset/when-resize, std/data/hashset/resizer)))), (std/core/types/Cons<absValue>(absValue, (std/core/types/Nil<absValue>))))));
-  };
-specialize "*"  fun absValue/not // inline size: 1
-  = fn(absValue: absValue){
-    val set@10244[1,0,1,0] : (std/data/hashset/hash-set :: V -> V)<absOp>
-          = std/data/hashset/#thread/hash-set<absOp>((std/core/types/@None<std/core/types/int>));
-    main/AVOp((std/data/hashset/insert<absOp>(set@10244, (main/AOOp(main/NotOp, (std/core/types/Cons<absValue>(absValue, (std/core/types/Nil<absValue>))))), main/#absOp/hash, main/#absOp/(==), std/data/hashset/when-resize, std/data/hashset/resizer)));
   };
 specialize "*****"  fun hashmap/(==) // inline size: 1
   = forall<a,b> fn(a: (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, b: (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, @implicit/(==): (a, a) -> std/core/types/bool, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int, @implicit/value/(==): (b, b) -> std/core/types/bool){
@@ -885,7 +845,7 @@ specialize "_***"  fun hashmap/insertAll // inline size: 1
   = forall<a,b> fn<(std/core/pure :: E)>(a: (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, b: (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, @implicit/(==): (a, a) -> std/core/types/bool, @implicit/hash: (a, std/core/types/int64) -> std/core/types/int){
     std/core/types/@open<(std/core/types/total :: E),<(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>>,(action : forall<(h :: H)> () -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>) -> (() -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>),(action : forall<(h :: H)> () -> <(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>) -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> (() -> <(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>)>((std/core/types/unsafe-no-local-cast<(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>,<(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>>>))((forall<(h :: H)> fn<<(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>>>(){
       std/core/hnd/local-var<(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>,(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>,<(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>>,(h :: H)>(a, (fn<<(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>>>(result: (std/core/types/local-var :: (H, V) -> V)<(h :: H),(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>>){
-          val _[669,3,671,4] : ()
+          val _[658,3,660,4] : ()
                 = (std/data/hashmap/foreach-key<<(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>>,a,b>(b, (fn<<(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>>>(key: a){
                     (std/core/types/local-set<(std/data/hashmap/hash-map :: (V, V) -> V)<a,b>,<(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/div :: X)>,(h :: H)>(result, (std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X)>,(map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, value : b, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>,(map : (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key : a, value : b, ?(==) : (a, a) -> std/core/types/bool, ?hash : (a, std/core/types/int64) -> std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>,(std/core/types/local :: H -> X)<(h :: H)>,(std/core/types/div :: X)> (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>>((fn(map: (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, key@0: a, value: b, @implicit/(@x@0==): (a, a) -> std/core/types/bool, @implicit/hash@0: (a, std/core/types/int64) -> std/core/types/int){
                         (std/data/hashmap/insert<a,b>(map, key@0, value, @implicit/hash@0, @implicit/(@x@0==), std/data/hashmap/when-resize, std/data/hashmap/resizer));
@@ -1132,24 +1092,24 @@ inline borrow "^"  fun path/dependence // inline size: 0
  fun path/@copy // inline size: 4
   = fn(@this: path, names: (std/core/types/@optional :: V -> V)<(std/core/types/list :: V -> V)<fieldName>>, absOp: (std/core/types/@optional :: V -> V)<absOp>, dependence: (std/core/types/@optional :: V -> V)<std/core/types/bool>){
     main/Path((match (names) {
-        ((std/core/types/@Optional((@uniq-names@951: (std/core/types/list :: V -> V)<fieldName>) : (std/core/types/list :: V -> V)<fieldName>) : (std/core/types/@optional :: V -> V)<(std/core/types/list :: V -> V)<fieldName>> ) as @pat: ((std/core/types/@optional :: V -> V)<(std/core/types/list :: V -> V)<fieldName>>))
-           -> @uniq-names@951;
+        ((std/core/types/@Optional((@uniq-names@910: (std/core/types/list :: V -> V)<fieldName>) : (std/core/types/list :: V -> V)<fieldName>) : (std/core/types/@optional :: V -> V)<(std/core/types/list :: V -> V)<fieldName>> ) as @pat: ((std/core/types/@optional :: V -> V)<(std/core/types/list :: V -> V)<fieldName>>))
+           -> @uniq-names@910;
         ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<(std/core/types/list :: V -> V)<fieldName>> ) as @pat@0: ((std/core/types/@optional :: V -> V)<(std/core/types/list :: V -> V)<fieldName>>))
            -> (match (@this) {
             ((@skip main/Path((@x: (std/core/types/list :: V -> V)<fieldName>) : (std/core/types/list :: V -> V)<fieldName>, (@pat@0@0: absOp) : absOp, (@pat@1@0: std/core/types/bool) : std/core/types/bool) : path ) as @pat@1: path)
                -> @x;
           });
       }), (match (absOp) {
-        ((std/core/types/@Optional((@uniq-absOp@958: absOp) : absOp) : (std/core/types/@optional :: V -> V)<absOp> ) as @pat@1@1: ((std/core/types/@optional :: V -> V)<absOp>))
-           -> @uniq-absOp@958;
+        ((std/core/types/@Optional((@uniq-absOp@917: absOp) : absOp) : (std/core/types/@optional :: V -> V)<absOp> ) as @pat@1@1: ((std/core/types/@optional :: V -> V)<absOp>))
+           -> @uniq-absOp@917;
         ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<absOp> ) as @pat@2: ((std/core/types/@optional :: V -> V)<absOp>))
            -> (match (@this) {
             ((@skip main/Path((@pat@0@1: (std/core/types/list :: V -> V)<fieldName>) : (std/core/types/list :: V -> V)<fieldName>, (@x@0: absOp) : absOp, (@pat@1@2: std/core/types/bool) : std/core/types/bool) : path ) as @pat@3: path)
                -> @x@0;
           });
       }), (match (dependence) {
-        ((std/core/types/@Optional((@uniq-dependence@965: std/core/types/bool) : std/core/types/bool) : (std/core/types/@optional :: V -> V)<std/core/types/bool> ) as @pat@3@0: ((std/core/types/@optional :: V -> V)<std/core/types/bool>))
-           -> @uniq-dependence@965;
+        ((std/core/types/@Optional((@uniq-dependence@924: std/core/types/bool) : std/core/types/bool) : (std/core/types/@optional :: V -> V)<std/core/types/bool> ) as @pat@3@0: ((std/core/types/@optional :: V -> V)<std/core/types/bool>))
+           -> @uniq-dependence@924;
         ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/bool> ) as @pat@4: ((std/core/types/@optional :: V -> V)<std/core/types/bool>))
            -> (match (@this) {
             ((@skip main/Path((@pat@0@2: (std/core/types/list :: V -> V)<fieldName>) : (std/core/types/list :: V -> V)<fieldName>, (@pat@1@3: absOp) : absOp, (@x@1: std/core/types/bool) : std/core/types/bool) : path ) as @pat@5: path)
@@ -1167,8 +1127,8 @@ inline borrow "^"  fun varName/name // inline size: 0
  fun varName/@copy // inline size: 2
   = fn(@this: varName, name: (std/core/types/@optional :: V -> V)<std/core/types/string>){
     main/VarName((match (name) {
-      ((std/core/types/@Optional((@uniq-name@989: std/core/types/string) : std/core/types/string) : (std/core/types/@optional :: V -> V)<std/core/types/string> ) as @pat: ((std/core/types/@optional :: V -> V)<std/core/types/string>))
-         -> @uniq-name@989;
+      ((std/core/types/@Optional((@uniq-name@948: std/core/types/string) : std/core/types/string) : (std/core/types/@optional :: V -> V)<std/core/types/string> ) as @pat: ((std/core/types/@optional :: V -> V)<std/core/types/string>))
+         -> @uniq-name@948;
       ((@skip std/core/types/@None() : (std/core/types/@optional :: V -> V)<std/core/types/string> ) as @pat@0: ((std/core/types/@optional :: V -> V)<std/core/types/string>))
          -> (match (@this) {
           ((@skip main/VarName((@x: std/core/types/string) : std/core/types/string) : varName ) as @pat@1: varName)
@@ -1677,20 +1637,6 @@ inline borrow "^"  fun attrGrammar/@fun-setTraversalSummary // inline size: 0
          -> @x;
     });
   };
-inline borrow "^"  fun fixpoint/@cfc // inline size: 0
-  = forall<(e :: E),a> fn(fixpoint: (fixpoint :: (E, V) -> V)<(e :: E),a>){
-    (match (fixpoint) {
-      ((@skip main/@Hnd-fixpoint((@x: std/core/types/int) : std/core/types/int, (@pat@0: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>) : (fixpoint :: (E, V) -> V)<(e :: E),a> ) as @pat: ((fixpoint :: (E, V) -> V)<(e :: E),a>))
-         -> @x;
-    });
-  };
-inline borrow "^"  fun fixpoint/@fun-modified // inline size: 0
-  = forall<(e :: E),a> fn(fixpoint: (fixpoint :: (E, V) -> V)<(e :: E),a>){
-    (match (fixpoint) {
-      ((@skip main/@Hnd-fixpoint((@pat@0: std/core/types/int) : std/core/types/int, (@x: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>) : (fixpoint :: (E, V) -> V)<(e :: E),a> ) as @pat: ((fixpoint :: (E, V) -> V)<(e :: E),a>))
-         -> @x;
-    });
-  };
 inline borrow "^"  fun nondet/@cfc // inline size: 0
   = forall<(e :: E),a> fn(nondet: (nondet :: (E, V) -> V)<(e :: E),a>){
     (match (nondet) {
@@ -2163,11 +2109,11 @@ inline  fun fail // inline size: 5
   };
  fun updateSynthesizedAttrs // inline size: 4
   = fn<<(std/core/types/handled :: ((E, V) -> V) -> X)<(attrGrammar :: (E, V) -> V)>,(std/core/types/div :: X),(std/core/types/handled :: ((E, V) -> V) -> X)<(std/core/exn/exn :: (E, V) -> V)>>>(exp: exp){
-    val _[960,3,960,27] : ()
+    val _[924,3,924,27] : ()
       = main/updateAbstractValue(exp);
-    val _@0[962,3,962,19] : ()
+    val _@0[925,3,925,19] : ()
       = main/updatePaths(exp);
-    val _@1[964,3,964,25] : ()
+    val _@1[926,3,926,25] : ()
       = main/updateOutputStore(exp);
     main/updateTraversalSummary(exp);
   };
@@ -2179,19 +2125,4 @@ inline  fun fail // inline size: 5
       ((@skip std/core/types/Nothing() : (std/core/types/maybe :: V -> V)<b> ) as @pat@0: ((std/core/types/maybe :: V -> V)<b>))
          -> default;
     });
-  };
-inline borrow "^"  fun @select-modified // inline size: 0
-  = forall<(e :: E),a> fn(hnd: (fixpoint :: (E, V) -> V)<(e :: E),a>){
-    (match (hnd) {
-      ((@skip main/@Hnd-fixpoint((@pat@0: std/core/types/int) : std/core/types/int, (@fun-modified: (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>) : (std/core/hnd/clause0 :: (V, (E, V) -> V, E, V) -> V)<(),(fixpoint :: (E, V) -> V),(e :: E),a>) : (fixpoint :: (E, V) -> V)<(e :: E),a> ) as @pat: ((fixpoint :: (E, V) -> V)<(e :: E),a>))
-         -> @fun-modified;
-    });
-  };
-inline  fun modified // inline size: 5
-  = fn<<(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>>>(){
-    std/core/hnd/@perform0<(),<(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>>,(fixpoint :: (E, V) -> V)>((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>>,(i : std/core/hnd/ev-index) -> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(fixpoint :: (E, V) -> V)>,(i : std/core/hnd/ev-index) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> (std/core/hnd/ev :: ((E, V) -> V) -> V)<(fixpoint :: (E, V) -> V)>>((std/core/hnd/@evv-at<(fixpoint :: (E, V) -> V)>))((std/core/types/@open<(std/core/types/total :: E),<(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>>,(i : std/core/types/int) -> std/core/types/ssize_t,(i : std/core/types/int) -> <(std/core/types/handled :: ((E, V) -> V) -> X)<(fixpoint :: (E, V) -> V)>> std/core/types/ssize_t>(std/core/types/@make-ssize_t)(0)))), main/@select-modified);
-  };
- fun mapShow // inline size: 1
-  = forall<a,b> fn(map: (std/data/hashmap/hash-map :: (V, V) -> V)<a,b>, @implicit/keyShow: (a) -> std/core/types/string, @implicit/valueShow: (b) -> std/core/types/string){
-    main/#hashmap/show<a,b>(map, @implicit/keyShow, @implicit/valueShow);
   };

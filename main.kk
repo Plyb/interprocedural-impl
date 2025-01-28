@@ -200,9 +200,9 @@ type pathExp {
   PEUnion(a: pathExp, b: pathExp)
   PECond(cond: exp, thn: pathExp, els: pathExp)
   PELast(paths: iteratorContextExp)
-  // PEValues(paths: hash-set<path>)
 }
 
+// hand crafted rules to get good output
 fun pathExp/simplify(pathExp: pathExp) {
   match pathExp {
     PEAV(av) -> PEAV(av.simplify)
@@ -216,15 +216,13 @@ fun pathExp/simplify(pathExp: pathExp) {
       then PEEmpty
       else pathExp
     PETS(e) -> if (e.exp-any/id > 10) then e.getTraversalSummary else pathExp
-    PEP(e) -> e.getPaths
+    PEP(e) -> if (e.exp-any/id > 10) then e.getPaths else pathExp
     PEUnion(a, PEEmpty) -> a
     PEUnion(PEEmpty, b) -> b
     PEUnion(a, b) -> if a == b
       then a
       else PEUnion(a.simplify, b.simplify)
-    // PEUnion(PEValues(aVals), PEValues(bVals)) -> PEValues(aVals.union(bVals))
     PECond(cond, thn, els) -> if cond.getDataDependence then thn.simplify else els.simplify
-    // PELast(it) -> 
     _ -> pathExp
   }
 }
@@ -406,35 +404,28 @@ fun absValueExp/(==)(a: absValueExp, b: absValueExp) {
   }
 }
 
+// hand crafted rules to get readable output
 fun absValueExp/simplify(ave: absValueExp) {
   match ave {
     AVEExp(e) -> e.getAbstractValue
     AVEDot(AVEValue(av), f) -> AVEValue(av..f)
     AVEDot(e, f) -> {
-      // trace("avedot " ++ e.show ++ " " ++ f.show)
       AVEDot(e.simplify, f)
     }
-    // AVEOp(op, AVEValue(aAv), AVEValue(bAv)) -> AVEValue(op.applyOp(aAv, bAv))
-    // AVEOp(op, e1, e2) -> AVEOp(op, e1.simplify, e2.simplify)
     AVEStore(SEIS(e), v) -> if e.exp-any/id > 10
       then match e.getInputStore.get(v) {
         Just(av) -> av
         _ -> {
-          // trace("failed store get " ++ e.exp-any/id.show ++ v.show);
           ave
         }
       }
       else ave
     AVEStore(s, v) -> {
-      // trace("avestore " ++ s.show ++ v.show)
       match s.get(v) {
         Just(av) -> av
         _ -> ave
       }
     }
-    // AVEStore(s, v) -> AVEStore(s.simplify, v)
-    // AVEJoin(AVEValue(a), AVEValue(b)) -> AVEValue(a.join(b))
-    // AVEJoin(a, b) -> AVEJoin(a.simplify, b.simplify)
     _ -> ave
   }
 }
@@ -648,7 +639,7 @@ fun (..)(value: absValue, fieldName: fieldName): exn absValue {
 }
 
 fun applyOp(op: op, a: absValue, b: absValue): absValue {
-  AVOp(singleton(AOOp(op, [a, b])))
+  AVOp(singleton(AOOp(op, [a, b]))) // Stub. Not very interesting to implement fully
 }
 
 fun getOrThrow(map: hash-map<k, v>, key: k, ?(==): (k, k) -> bool, ?hash: (k, int64) -> int): exn v {
@@ -663,14 +654,11 @@ fun hash-map/insert(map: hash-map<k, v>, key: k, value: v, ?(==): (k, k) -> bool
 }
 
 fun hashmap/insertAll(a: hash-map<k, v>, b: hash-map<k, v>, ?(==): (k, k) -> bool, ?hash: (k, int64) -> int): pure hash-map<k, v> {
-  // trace("inserting all")
-  // unsafe-total(fn() {
   var result := a
   b.foreach-key(fn(key) {
     result := result.insert(key, b.getOrThrow(key))
   })
   result
-  // })
 }
 
 fun hash-set/insert(set: hash-set<a>, x: a, ?(==): (a, a) -> bool, ?hash: (a, int64) -> int): hash-set<a> {
@@ -782,14 +770,6 @@ fun isValidQueryCondition(exp: exp): bool {
   }
 }
 
-// not entirely sure if this is what the notation means
-fun absOp/(&)(absOp: absOp, absValue: absValue): absOp {
-  AOOp(AndOp, [AVOp(singleton(absOp)), absValue])
-}
-fun absValue/not(absValue: absValue): absValue {
-  AVOp(singleton(AOOp(NotOp, [absValue])))
-}
-
 fun updateQueryCondition(exp: exp, queryCondition: absOpExp): <attrGrammar> () {
   setQueryCondition(exp, queryCondition)
   match exp {
@@ -868,11 +848,6 @@ fun updateIteratorContext(exp: exp, paths: iteratorContextExp): <exn, attrGramma
     ForE(_, e, s) -> {
       e.updateIteratorContext(paths)
       s.updateIteratorContext(ICEPlusIf(ICEIT(exp), AVEExp(e)))
-      // if (e.getAbstractValue()..FNL).extends(paths) then {
-      //   s.updateIteratorContext((e.getAbstractValue()..FNL).extractPaths.list ++ paths)
-      // } else {
-      //   s.updateIteratorContext(paths)
-      // }
     }
     SeqE(s1, s2) -> {
       s1.updateIteratorContext(paths)
@@ -903,15 +878,6 @@ fun firstOrThrow(l: list<a>): exn a {
 
 fun iter(exp: exp) {
   PEValue(PELast(ICEIT(exp)), AOEC(exp), True)
-  // val maybeLatestIteratorContext = exp.getIteratorContext.head()
-  // match maybeLatestIteratorContext {
-  //   Just(latestIteratorContext) -> singleton(Path(
-  //     latestIteratorContext.names,
-  //     exp.getQueryCondition(),
-  //     True
-  //   ))
-  //   Nothing -> thread/hash-set()
-  // }
 }
 
 fun updateTraversalSummary(exp: exp): <exn, attrGrammar> () {
@@ -955,14 +921,9 @@ fun absValue/join(v1: absValue, v2: absValue): exn absValue {
 }
 
 fun updateSynthesizedAttrs(exp: exp) {
-  // trace(exp.show.slice.take(20).string)
-  // trace("av")
   exp.updateAbstractValue()
-  // trace("p")
   exp.updatePaths()
-  // trace("os")
   exp.updateOutputStore()
-  // trace("ts")
   exp.updateTraversalSummary()
 }
 
@@ -992,15 +953,11 @@ fun visit(exp: exp, f: (exp) -> e ()): e () {
   }
 }
 
-fun iterateAttributeGrammar(exp: exp) {
+fun applyAttributeGrammar(exp: exp) {
   exp.visit(updateSynthesizedAttrs)
-  // trace("is")
   exp.updateInputStore(SEEmpty)
-  // trace("c")
   exp.updateQueryCondition(AOETrue)
-  // trace("d")
   exp.updateDataDependence(False)
-  // trace("it")
   exp.updateIteratorContext(ICEEmpty)
 }
 
@@ -1009,30 +966,6 @@ fun getOrDefault(map: hash-map<k, v>, key: k, default: v, ?(==): (k, k) -> bool,
     Just(value) -> value
     Nothing -> default
   }
-}
-
-effect fixpoint {
-  fun modified(): ()
-}
-
-// fun update(map: hash-map<k, v>, key: k, value: v, ?(==): (k, k) -> bool, ?hash: (k, int64) -> int, ?value/(==): (v, v) -> bool, ?show: (v) -> string): fixpoint hash-map<k, v> {
-//   val updated = match map.get(key) {
-//     Just(oldValue) -> !(oldValue == value)
-//     Nothing -> True
-//   }
-
-//   if updated then {
-//     trace(map.get(key).show)
-//     trace(value.show)
-//     modified()
-//     map.insert(key, value)
-//   } else {
-//     map
-//   }
-// }
-
-fun mapShow(map: hash-map<k, v>, ?keyShow: k -> string, ?valueShow: v -> string): string {
-  map.show(?key/show = keyShow, ?value/show = valueShow)
 }
 
 fun analyze(root: exp): pure (hash-map<int, storeExp>, hash-map<int, pathExp>, hash-map<int, pathExp>) {
@@ -1045,10 +978,6 @@ fun analyze(root: exp): pure (hash-map<int, storeExp>, hash-map<int, pathExp>, h
   var iteratorContexts := thread/hash-map()
   var traversalSummaries := thread/hash-map()
 
-  var updatedThisIteration := True
-  with handler {
-    fun modified() -> updatedThisIteration := True
-  }
   with handler {
     fun getAbstractValue(exp: exp) abstractValues.getOrDefault(exp, AVEValue(AVBot))
     fun setAbstractValue(exp: exp, absValue: absValueExp) abstractValues := abstractValues.insert(exp, absValue)
@@ -1067,28 +996,9 @@ fun analyze(root: exp): pure (hash-map<int, storeExp>, hash-map<int, pathExp>, h
     fun getTraversalSummary(exp: exp) traversalSummaries.getOrDefault(exp, PEEmpty)
     fun setTraversalSummary(exp: exp, traversalSummary: pathExp) traversalSummaries:= traversalSummaries.insert(exp, traversalSummary)
   }
-  // var gas := 1000
-  // while(fn() updatedThisIteration && gas > 0) {
-  //   updatedThisIteration := False
-  //   gas := gas - 1
 
-    // if (gas % 1000 == 0)
-    //   then trace("Iteration: " ++ gas.show)
-    // trace("AV: " ++ abstractValues.show)
-    // trace("P: " ++ pathsByExp.show)
-    // trace("OS: " ++ outputStores.show)
-    // trace("IS: " ++ inputStores.show)
-    // trace("C: " ++ queryConditions.show)
-    // trace("D: " ++ dataDependences.show)
-    // trace("IT: " ++ iteratorContexts.show)
-    // trace("TS: " ++ traversalSummaries.show)
+  root.applyAttributeGrammar()
 
-  root.iterateAttributeGrammar()
-  // }
-
-  // if (gas == 0) then {
-  //   trace("ran out of gas")
-  // }
   (
     inputStores.unique/map-keys(fn(exp) exp.exp-any/id),
     pathsByExp.unique/map-keys(fn(exp) exp.exp-any/id).effect/map-values(fn(paths) paths.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify.simplify),
